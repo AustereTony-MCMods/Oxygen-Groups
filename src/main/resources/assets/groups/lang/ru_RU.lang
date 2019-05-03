@@ -1,0 +1,44 @@
+key.groups.groupMenu=Меню Группы
+
+groups.gui.interaction.inviteToGroup=Пригласить в Группу
+
+contextaction.inviteToGroup=Пригласить в Группу
+
+groups.request.groupInvite=%s пригласил вас в группу.
+groups.request.readinessCheck=Проверка готовности группы. Вы готовы?
+groups.request.kickPlayer=Изгнать игрока %s из группы?
+
+groups.gui.inviteButton=Пригласить
+groups.gui.leaveButton=Выйти
+groups.gui.checkButton=Проверка
+
+groups.gui.groupMenu=Группа
+
+groups.gui.action.kick=Изгнать
+groups.gui.action.promoteToLeader=Сделать Лидером
+
+groups.gui.invitePlayerCallback=Пригласить Игрока
+groups.gui.invitePlayerCallback.request=Пригласить игрока в группу.
+groups.gui.leaveGroupCallback=Покинуть Группу
+groups.gui.leaveGroupCallback.request=Вы уверены?
+groups.gui.readinessCheckCallback=Проверка Готовности
+groups.gui.readinessCheckCallback.request=Начать проверку готовности?
+groups.gui.promoteToLeaderCallback=Смена Лидера
+groups.gui.promoteToLeaderCallback.request=Игрок %s будет назначен лидером группы.
+groups.gui.kickPlayerCallback=Изгнание Игрока
+groups.gui.kickPlayerCallback.request=Начать голосование за изгнание игрока %s?
+
+groups.message.groupRequest.sender.accepted=Ваше приглашение в группу принято.
+groups.message.groupRequest.target.accepted=Вы приняли приглашение в группу.
+groups.message.groupRequest.sender.rejected=Ваше приглашение в группу отклонено.
+groups.message.groupRequest.target.rejected=Вы отклонили приглошение в группу.
+groups.message.readinessCheck.started=Начата проверка готовности группы.
+groups.message.readinessCheck.ready=Группа готова.
+groups.message.readinessCheck.notReady=Группа не готова.
+groups.message.playerKickVoting.started=Началось голосование за изгнание из группы игрока %s.
+groups.message.playerKickVoting.kicked=Игрок %s изгнан.
+groups.message.playerKickVoting.notKicked=Игрок %s не изгнан.
+
+groups.groupMode.squad=Отряд
+groups.groupMode.raid=Рейд
+groups.groupMode.party=Пати
