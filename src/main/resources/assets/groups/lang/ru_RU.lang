@@ -17,6 +17,7 @@ groups.gui.groupMenu=Группа
 groups.gui.action.kick=Изгнать
 groups.gui.action.promoteToLeader=Сделать Лидером
 
+groups.gui.autoAccept=Принимать Приглашения
 groups.gui.invitePlayerCallback=Пригласить Игрока
 groups.gui.invitePlayerCallback.request=Пригласить игрока в группу.
 groups.gui.leaveGroupCallback=Покинуть Группу

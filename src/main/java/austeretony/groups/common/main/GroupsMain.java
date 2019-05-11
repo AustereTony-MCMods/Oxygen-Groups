@@ -43,7 +43,7 @@ import net.minecraftforge.fml.relauncher.Side;
         modid = GroupsMain.MODID, 
         name = GroupsMain.NAME, 
         version = GroupsMain.VERSION,
-        dependencies = "required-after:oxygen@[0.4.1,);",//TODO Always check required Oxygen version before build
+        dependencies = "required-after:oxygen@[0.5.0,);",//TODO Always check required Oxygen version before build
         certificateFingerprint = "@FINGERPRINT@",
         updateJSON = GroupsMain.VERSIONS_FORGE_URL)
 public class GroupsMain {
@@ -51,19 +51,22 @@ public class GroupsMain {
     public static final String 
     MODID = "groups", 
     NAME = "Groups", 
-    VERSION = "0.1.0", 
+    VERSION = "0.1.1", 
     VERSION_CUSTOM = VERSION + ":alpha:0",
     GAME_VERSION = "1.12.2",
     VERSIONS_FORGE_URL = "https://raw.githubusercontent.com/AustereTony-MCMods/Oxygen-Groups/info/mod_versions_forge.json";
 
     public static final int 
-    GROUPS_MOD_INDEX = 2,//Oxygen - 0, Teleportation - 1
+    GROUPS_MOD_INDEX = 2,//Oxygen - 0, Teleportation - 1, Exchange - 3
 
     GROUP_REQUEST_ID = 20,
     READINESS_CHECK_REQUEST_ID = 21,
     VOTE_KICK_REQUEST_ID = 22,
 
-    GROUP_MENU_SCREEN_ID = 20;
+    GROUP_MENU_SCREEN_ID = 20,
+
+    HIDE_GROUP_OVERLAY_SETTING = 20,
+    AUTO_ACCEPT_GROUP_INVITE_SETTING = 21;
 
     public static final Logger LOGGER = LogManager.getLogger(NAME);
 
@@ -106,6 +109,9 @@ public class GroupsMain {
             OxygenHelperClient.registerNotificationIcon(GROUP_REQUEST_ID, OxygenGUITextures.REQUEST_ICON);
             OxygenHelperClient.registerNotificationIcon(READINESS_CHECK_REQUEST_ID, OxygenGUITextures.REQUEST_ICON);
             OxygenHelperClient.registerNotificationIcon(VOTE_KICK_REQUEST_ID, OxygenGUITextures.REQUEST_ICON);
+
+            OxygenHelperClient.registerClientSetting(HIDE_GROUP_OVERLAY_SETTING);
+            OxygenHelperClient.registerClientSetting(AUTO_ACCEPT_GROUP_INVITE_SETTING);
         }
     }
 

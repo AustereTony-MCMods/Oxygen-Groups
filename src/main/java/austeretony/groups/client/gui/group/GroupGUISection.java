@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import austeretony.alternateui.screen.browsing.GUIScroller;
 import austeretony.alternateui.screen.button.GUIButton;
+import austeretony.alternateui.screen.button.GUICheckBoxButton;
 import austeretony.alternateui.screen.button.GUISlider;
 import austeretony.alternateui.screen.callback.AbstractGUICallback;
 import austeretony.alternateui.screen.contextmenu.AbstractContextAction;
@@ -53,7 +54,9 @@ public class GroupGUISection extends AbstractGUISection {
     private GUIButton downloadButton, refreshButton, inviteButton, leaveButton, checkButton, sortDownStatusButton, sortUpStatusButton, 
     sortDownUsernameButton, sortUpUsernameButton;
 
-    private GUITextLabel groupModeTextLabel, playersOnlineTextLabel, playerNameTextLabel;
+    private GUICheckBoxButton autoAcceptButton, hideOverlayButton;
+
+    private GUITextLabel playersOnlineTextLabel, playerNameTextLabel, autoAcceptTextlabel, hideOverlayTextLabel;
 
     private GUIButtonPanel playersPanel;
 
@@ -82,11 +85,19 @@ public class GroupGUISection extends AbstractGUISection {
         this.addElement(new GUITextLabel(2, 4).setDisplayText(title, false, GUISettings.instance().getTitleScale()));
         this.addElement(this.downloadButton = new GUIButton(this.textWidth(title, GUISettings.instance().getTitleScale()) + 4, 4, 8, 8).setSound(OxygenSoundEffects.BUTTON_CLICK).setTexture(OxygenGUITextures.DOWNLOAD_ICONS, 8, 8).initSimpleTooltip(I18n.format("oxygen.tooltip.download"), GUISettings.instance().getTooltipScale()));
 
-        this.addElement(this.groupModeTextLabel = new GUITextLabel(2, 15).setDisplayText(GroupsManagerClient.instance().getGroupData().getMode().localizedName(), false, GUISettings.instance().getTextScale()));       
-
-        this.addElement(this.refreshButton = new GUIButton(79, 14, 10, 10).setSound(OxygenSoundEffects.BUTTON_CLICK).setTexture(OxygenGUITextures.REFRESH_ICONS, 9, 9).initSimpleTooltip(I18n.format("oxygen.tooltip.refresh"), GUISettings.instance().getTooltipScale()));         
-        this.addElement(this.playerNameTextLabel = new GUITextLabel(91, 15).setDisplayText(OxygenHelperClient.getSharedClientPlayerData().getUsername(), false, GUISettings.instance().getSubTextScale()));
+        this.addElement(this.refreshButton = new GUIButton(2, 14, 10, 10).setSound(OxygenSoundEffects.BUTTON_CLICK).setTexture(OxygenGUITextures.REFRESH_ICONS, 9, 9).initSimpleTooltip(I18n.format("oxygen.tooltip.refresh"), GUISettings.instance().getTooltipScale()));         
+        this.addElement(this.playerNameTextLabel = new GUITextLabel(14, 15).setDisplayText(OxygenHelperClient.getSharedClientPlayerData().getUsername(), false, GUISettings.instance().getSubTextScale()));
         this.addElement(this.playersOnlineTextLabel = new GUITextLabel(0, 15).setTextScale(GUISettings.instance().getSubTextScale()).initSimpleTooltip(I18n.format("oxygen.tooltip.online"), GUISettings.instance().getTooltipScale())); 
+
+        this.addElement(this.hideOverlayButton = new GUICheckBoxButton(110, 16, 6).setSound(OxygenSoundEffects.BUTTON_CLICK)
+                .enableDynamicBackground(GUISettings.instance().getEnabledButtonColor(), GUISettings.instance().getDisabledButtonColor(), GUISettings.instance().getHoveredButtonColor()));
+        this.addElement(this.hideOverlayTextLabel = new GUITextLabel(118, 15).setDisplayText(I18n.format("oxygen.gui.notifications.hideOverlay"), false, GUISettings.instance().getSubTextScale()));
+        this.hideOverlayButton.setToggled(OxygenHelperClient.getClientSettingBoolean(GroupsMain.HIDE_GROUP_OVERLAY_SETTING));
+
+        this.addElement(this.autoAcceptButton = new GUICheckBoxButton(148, this.getHeight() - 9, 6).setSound(OxygenSoundEffects.BUTTON_CLICK)
+                .enableDynamicBackground(GUISettings.instance().getEnabledButtonColor(), GUISettings.instance().getDisabledButtonColor(), GUISettings.instance().getHoveredButtonColor()));
+        this.addElement(this.autoAcceptTextlabel = new GUITextLabel(156, this.getHeight() - 10).setDisplayText(I18n.format("groups.gui.autoAccept"), false, GUISettings.instance().getSubTextScale()));
+        this.autoAcceptButton.setToggled(OxygenHelperClient.getClientSettingBoolean(GroupsMain.AUTO_ACCEPT_GROUP_INVITE_SETTING));
 
         this.addElement(this.sortDownStatusButton = new GUIButton(7, 29, 3, 3).setSound(OxygenSoundEffects.BUTTON_CLICK).setTexture(OxygenGUITextures.SORT_DOWN_ICONS, 3, 3).initSimpleTooltip(I18n.format("oxygen.tooltip.sort"), GUISettings.instance().getTooltipScale())); 
         this.addElement(this.sortUpStatusButton = new GUIButton(7, 25, 3, 3).setSound(OxygenSoundEffects.BUTTON_CLICK).setTexture(OxygenGUITextures.SORT_UP_ICONS, 3, 3).initSimpleTooltip(I18n.format("oxygen.tooltip.sort"), GUISettings.instance().getTooltipScale())); 
@@ -295,6 +306,22 @@ public class GroupGUISection extends AbstractGUISection {
             GroupEntryGUIButton entry = (GroupEntryGUIButton) element;
             if (entry != this.currentEntry)
                 this.currentEntry = entry;
+        } else if (element == this.autoAcceptButton) {
+            if (this.autoAcceptButton.isToggled()) {
+                OxygenHelperClient.setClientSetting(GroupsMain.AUTO_ACCEPT_GROUP_INVITE_SETTING, true);
+                OxygenHelperClient.saveClientSettings();
+            } else {
+                OxygenHelperClient.setClientSetting(GroupsMain.AUTO_ACCEPT_GROUP_INVITE_SETTING, false);
+                OxygenHelperClient.saveClientSettings();
+            }
+        } else if (element == this.hideOverlayButton) {
+            if (this.hideOverlayButton.isToggled()) {
+                OxygenHelperClient.setClientSetting(GroupsMain.HIDE_GROUP_OVERLAY_SETTING, true);
+                OxygenHelperClient.saveClientSettings();
+            } else {
+                OxygenHelperClient.setClientSetting(GroupsMain.HIDE_GROUP_OVERLAY_SETTING, false);
+                OxygenHelperClient.saveClientSettings();
+            }
         }
     }
 

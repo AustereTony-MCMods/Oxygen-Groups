@@ -11,6 +11,7 @@ import austeretony.groups.client.GroupEntryClient;
 import austeretony.groups.client.GroupsManagerClient;
 import austeretony.groups.client.gui.GroupsGUITextures;
 import austeretony.groups.common.config.GroupsConfig;
+import austeretony.groups.common.main.GroupsMain;
 import austeretony.oxygen.client.gui.settings.GUISettings;
 import austeretony.oxygen.common.api.OxygenHelperClient;
 import austeretony.oxygen.common.core.api.ClientReference;
@@ -44,7 +45,7 @@ public class GroupGUIOverlay {
     }
 
     private void drawOverlay() {
-        if (!GroupsManagerClient.instance().haveGroup()) 
+        if (!GroupsManagerClient.instance().haveGroup() || OxygenHelperClient.getClientSettingBoolean(GroupsMain.HIDE_GROUP_OVERLAY_SETTING)) 
             return;        
         GroupDataClient group = GroupsManagerClient.instance().getGroupData();
         float scale = 1.0F;
@@ -60,7 +61,7 @@ public class GroupGUIOverlay {
             break;
         }
         GlStateManager.pushMatrix();           
-        GlStateManager.translate(10.0F, 25.0F, 0.0F);//top left corner           
+        GlStateManager.translate(10.0F, 30.0F, 0.0F);//top left corner           
         GlStateManager.scale(scale, scale, 0.0F);  
         Set<GroupEntryClient> ordered = new TreeSet<GroupEntryClient>(group.getPlayersData());
         int 
@@ -110,8 +111,8 @@ public class GroupGUIOverlay {
         return (int) (curr / max * 100.0F);
     }
 
-    private void drawGroupMark(EntityPlayer target, RenderLivingBase render, double x, double y, double z) {
-        if (target == render.getRenderManager().renderViewEntity || render.getRenderManager().options.hideGUI)
+    private void drawGroupMark(EntityPlayer target, RenderLivingBase render, double x, double y, double z) { 
+        if (!GroupsManagerClient.instance().haveGroup() || target == render.getRenderManager().renderViewEntity || render.getRenderManager().options.hideGUI)
             return;
         double 
         distance = target.getDistanceSq(render.getRenderManager().renderViewEntity),

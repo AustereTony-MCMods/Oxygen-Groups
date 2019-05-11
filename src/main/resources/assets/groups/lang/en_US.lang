@@ -17,6 +17,7 @@ groups.gui.groupMenu=Group
 groups.gui.action.kick=Kick
 groups.gui.action.promoteToLeader=Set Leader
 
+groups.gui.autoAccept=Accept Invitations
 groups.gui.invitePlayerCallback=Invite Player
 groups.gui.invitePlayerCallback.request=Invite player to group.
 groups.gui.leaveGroupCallback=Leave Group
