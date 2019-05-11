@@ -1,2 +1,6 @@
+0.1.1a
++Added option to hide group overlay (checkbox button in group menu).
++Added option to accept all incoming group invitations (checkbox button in friendlist menu).
+
 0.1.0a
 +Initial release.
