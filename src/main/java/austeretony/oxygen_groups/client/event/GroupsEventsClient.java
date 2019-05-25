@@ -1,0 +1,31 @@
+package austeretony.oxygen_groups.client.event;
+
+import austeretony.oxygen.client.api.OxygenHelperClient;
+import austeretony.oxygen.client.api.event.OxygenChatMessageEvent;
+import austeretony.oxygen.client.api.event.OxygenClientInitEvent;
+import austeretony.oxygen.client.api.event.OxygenNotificationRecievedEvent;
+import austeretony.oxygen_groups.client.GroupsManagerClient;
+import austeretony.oxygen_groups.common.main.EnumGroupsChatMessages;
+import austeretony.oxygen_groups.common.main.GroupsMain;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+public class GroupsEventsClient {
+
+    @SubscribeEvent     
+    public void onClientInit(OxygenClientInitEvent event) {
+        GroupsManagerClient.instance().reset();
+    }
+
+    @SubscribeEvent
+    public void onChatMessage(OxygenChatMessageEvent event) {
+        if (event.modIndex == GroupsMain.GROUPS_MOD_INDEX)
+            EnumGroupsChatMessages.values()[event.messageIndex].show(event.args);
+    }
+
+    @SubscribeEvent
+    public void onNotificationRecieved(OxygenNotificationRecievedEvent event) {
+        if (event.notification.getIndex() == GroupsMain.GROUP_REQUEST_ID 
+                && OxygenHelperClient.getClientSettingBoolean(GroupsMain.AUTO_ACCEPT_GROUP_INVITE_SETTING))
+            event.notification.accepted(null);
+    }
+}
