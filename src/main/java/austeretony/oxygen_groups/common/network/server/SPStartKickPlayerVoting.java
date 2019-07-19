@@ -3,7 +3,7 @@ package austeretony.oxygen_groups.common.network.server;
 import java.util.UUID;
 
 import austeretony.oxygen.common.network.ProxyPacket;
-import austeretony.oxygen.common.util.PacketBufferUtils;
+import austeretony.oxygen.util.PacketBufferUtils;
 import austeretony.oxygen_groups.common.GroupsManagerServer;
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.PacketBuffer;

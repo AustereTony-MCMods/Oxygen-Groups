@@ -17,11 +17,11 @@ public class CPUpdateLeader extends ProxyPacket {
 
     @Override
     public void write(PacketBuffer buffer, INetHandler netHandler) {
-        buffer.writeShort(this.index);
+        buffer.writeInt(this.index);
     }
 
     @Override
     public void read(PacketBuffer buffer, INetHandler netHandler) {
-        GroupsManagerClient.instance().updateLeader(buffer.readShort());
+        GroupsManagerClient.instance().updateLeader(buffer.readInt());
     }
 }

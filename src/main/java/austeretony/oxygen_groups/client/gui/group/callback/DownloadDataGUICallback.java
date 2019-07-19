@@ -38,14 +38,16 @@ public class DownloadDataGUICallback extends AbstractGUICallback {
         this.addElement(this.confirmButton = new GUIButton(15, this.getHeight() - 12, 40, 10).setSound(OxygenSoundEffects.BUTTON_CLICK.soundEvent).enableDynamicBackground().setDisplayText(I18n.format("oxygen.gui.confirmButton"), true, GUISettings.instance().getButtonTextScale()));
         this.addElement(this.cancelButton = new GUIButton(this.getWidth() - 55, this.getHeight() - 12, 40, 10).setSound(OxygenSoundEffects.BUTTON_CLICK.soundEvent).enableDynamicBackground().setDisplayText(I18n.format("oxygen.gui.cancelButton"), true, GUISettings.instance().getButtonTextScale()));
     }
-    
+
     @Override
     public void handleElementClick(AbstractGUISection section, GUIBaseElement element, int mouseButton) {
-        if (element == this.cancelButton)
-            this.close();
-        else if (element == this.confirmButton) {
-            GroupsManagerClient.instance().downloadGroupDataSynced();
-            this.close();            
+        if (mouseButton == 0) {
+            if (element == this.cancelButton)
+                this.close();
+            else if (element == this.confirmButton) {
+                GroupsManagerClient.instance().downloadGroupDataSynced();
+                this.close();            
+            }
         }
     }
 }

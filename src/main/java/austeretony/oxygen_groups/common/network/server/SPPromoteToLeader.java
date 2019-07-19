@@ -17,11 +17,11 @@ public class SPPromoteToLeader extends ProxyPacket {
 
     @Override
     public void write(PacketBuffer buffer, INetHandler netHandler) {
-        buffer.writeShort(this.index);
+        buffer.writeInt(this.index);
     }
 
     @Override
     public void read(PacketBuffer buffer, INetHandler netHandler) {
-        GroupsManagerServer.instance().promoteToLeader(getEntityPlayerMP(netHandler), buffer.readShort());
+        GroupsManagerServer.instance().promoteToLeader(getEntityPlayerMP(netHandler), buffer.readInt());
     }
 }

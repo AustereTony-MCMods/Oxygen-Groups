@@ -29,7 +29,7 @@ public class GroupsConfig extends AbstractConfigHolder {
 
     @Override
     public String getExternalPath() {
-        return CommonReference.getGameFolder() + "/config/oxygen/groups/groups.json";
+        return CommonReference.getGameFolder() + "/config/oxygen/groups.json";
     }
 
     @Override

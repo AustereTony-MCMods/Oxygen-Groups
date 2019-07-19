@@ -32,7 +32,7 @@ public class SPGroupsRequest extends ProxyPacket {
     @Override
     public void read(PacketBuffer buffer, INetHandler netHandler) {
         EntityPlayerMP playerMP = getEntityPlayerMP(netHandler);
-        UUID playerUUID = CommonReference.uuid(playerMP);
+        UUID playerUUID = CommonReference.getPersistentUUID(playerMP);
         this.request = EnumRequest.values()[buffer.readByte()];
         switch (this.request) {
         case OPEN_GROUP_MENU:

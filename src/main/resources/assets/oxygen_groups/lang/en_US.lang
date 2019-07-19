@@ -1,4 +1,4 @@
-key.groups.groupMenu=Group Menu
+key.groups.groupMenu=Open Group Menu
 
 groups.gui.interaction.inviteToGroup=Invite to Group
 
@@ -13,6 +13,9 @@ groups.gui.leaveButton=Leave
 groups.gui.checkButton=Check
 
 groups.gui.groupMenu=Group
+
+groups.gui.group.setting.acceptInvitations=Auto Accept Invitations
+groups.gui.group.setting.hideOverlay=Hide Group Overlay
 
 groups.gui.action.kick=Kick
 groups.gui.action.promoteToLeader=Set Leader

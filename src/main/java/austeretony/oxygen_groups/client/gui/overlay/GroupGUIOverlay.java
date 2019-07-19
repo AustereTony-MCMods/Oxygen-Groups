@@ -61,7 +61,7 @@ public class GroupGUIOverlay {
             break;
         }
         GlStateManager.pushMatrix();           
-        GlStateManager.translate(10.0F, 30.0F, 0.0F);//top left corner           
+        GlStateManager.translate(10.0F, 40.0F, 0.0F);//top left corner           
         GlStateManager.scale(scale, scale, 0.0F);  
         Set<GroupEntryClient> ordered = new TreeSet<GroupEntryClient>(group.getPlayersData());
         int 

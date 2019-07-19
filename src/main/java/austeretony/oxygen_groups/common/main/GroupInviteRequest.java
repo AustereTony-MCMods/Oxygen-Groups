@@ -5,7 +5,7 @@ import java.util.UUID;
 import austeretony.oxygen.common.api.OxygenHelperServer;
 import austeretony.oxygen.common.api.notification.AbstractNotification;
 import austeretony.oxygen.common.core.api.CommonReference;
-import austeretony.oxygen.common.notification.EnumNotifications;
+import austeretony.oxygen.common.notification.EnumNotification;
 import austeretony.oxygen_groups.common.GroupsManagerServer;
 import austeretony.oxygen_groups.common.config.GroupsConfig;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,8 +25,8 @@ public class GroupInviteRequest extends AbstractNotification {
     }
 
     @Override
-    public EnumNotifications getType() {
-        return EnumNotifications.REQUEST;
+    public EnumNotification getType() {
+        return EnumNotification.REQUEST;
     }
 
     @Override

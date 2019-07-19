@@ -1,4 +1,4 @@
-key.groups.groupMenu=Меню Группы
+key.groups.groupMenu=Открыть Меню Группы
 
 groups.gui.interaction.inviteToGroup=Пригласить в Группу
 
@@ -13,6 +13,9 @@ groups.gui.leaveButton=Выйти
 groups.gui.checkButton=Проверка
 
 groups.gui.groupMenu=Группа
+
+groups.gui.group.setting.acceptInvitations=Автоматически Принимать Приглашения
+groups.gui.group.setting.hideOverlay=Скрыть Оверлэй Группы
 
 groups.gui.action.kick=Изгнать
 groups.gui.action.promoteToLeader=Сделать Лидером

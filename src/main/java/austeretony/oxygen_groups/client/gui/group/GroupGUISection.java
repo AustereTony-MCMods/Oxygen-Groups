@@ -10,7 +10,6 @@ import java.util.UUID;
 
 import austeretony.alternateui.screen.browsing.GUIScroller;
 import austeretony.alternateui.screen.button.GUIButton;
-import austeretony.alternateui.screen.button.GUICheckBoxButton;
 import austeretony.alternateui.screen.button.GUISlider;
 import austeretony.alternateui.screen.callback.AbstractGUICallback;
 import austeretony.alternateui.screen.contextmenu.AbstractContextAction;
@@ -25,6 +24,7 @@ import austeretony.alternateui.screen.text.GUITextLabel;
 import austeretony.alternateui.util.EnumGUIAlignment;
 import austeretony.oxygen.client.OxygenManagerClient;
 import austeretony.oxygen.client.api.OxygenHelperClient;
+import austeretony.oxygen.client.core.api.ClientReference;
 import austeretony.oxygen.client.gui.OxygenGUITextures;
 import austeretony.oxygen.client.gui.StatusGUIDropDownElement;
 import austeretony.oxygen.client.gui.settings.GUISettings;
@@ -33,6 +33,7 @@ import austeretony.oxygen.common.main.OxygenMain;
 import austeretony.oxygen.common.main.OxygenPlayerData;
 import austeretony.oxygen.common.main.OxygenSoundEffects;
 import austeretony.oxygen.common.main.SharedPlayerData;
+import austeretony.oxygen.util.MathUtils;
 import austeretony.oxygen_groups.client.GroupsManagerClient;
 import austeretony.oxygen_groups.client.gui.group.callback.DownloadDataGUICallback;
 import austeretony.oxygen_groups.client.gui.group.callback.InvitePlayerGUICallback;
@@ -40,24 +41,21 @@ import austeretony.oxygen_groups.client.gui.group.callback.KickPlayerGUICallback
 import austeretony.oxygen_groups.client.gui.group.callback.LeaveGroupGUICallback;
 import austeretony.oxygen_groups.client.gui.group.callback.PromoteToLeaderGUICallback;
 import austeretony.oxygen_groups.client.gui.group.callback.ReadinessCheckGUICallback;
+import austeretony.oxygen_groups.client.gui.group.callback.SettingsGUICallback;
 import austeretony.oxygen_groups.client.gui.group.context.KickPlayerContextAction;
 import austeretony.oxygen_groups.client.gui.group.context.PromoteToLeaderContextAction;
 import austeretony.oxygen_groups.client.input.GroupsKeyHandler;
 import austeretony.oxygen_groups.common.config.GroupsConfig;
 import austeretony.oxygen_groups.common.main.GroupsMain;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.math.MathHelper;
 
 public class GroupGUISection extends AbstractGUISection {
 
     private GroupMenuGUIScreen screen;
 
-    private GUIButton downloadButton, refreshButton, inviteButton, leaveButton, checkButton, sortDownStatusButton, sortUpStatusButton, 
+    private GUIButton downloadButton, settingsButton, refreshButton, inviteButton, leaveButton, checkButton, sortDownStatusButton, sortUpStatusButton, 
     sortDownUsernameButton, sortUpUsernameButton;
 
-    private GUICheckBoxButton autoAcceptButton, hideOverlayButton;
-
-    private GUITextLabel playersOnlineTextLabel, playerNameTextLabel, autoAcceptTextlabel, hideOverlayTextLabel;
+    private GUITextLabel playersOnlineTextLabel, playerNameTextLabel;
 
     private GUIButtonPanel playersPanel;
 
@@ -67,7 +65,7 @@ public class GroupGUISection extends AbstractGUISection {
 
     private GUIImageLabel statusImageLabel;
 
-    private AbstractGUICallback downloadDataCallback, invitePlayerCallback, leaveGroupCallback, readinessCheckCallback, kickPlayerCallback, 
+    private AbstractGUICallback downloadDataCallback, settingsCallback, invitePlayerCallback, leaveGroupCallback, readinessCheckCallback, kickPlayerCallback, 
     promoteToLeaderCallback;
 
     private GroupEntryGUIButton currentEntry;
@@ -82,34 +80,25 @@ public class GroupGUISection extends AbstractGUISection {
     @Override
     public void init() {
         this.addElement(new GroupMenuBackgroungGUIFiller(0, 0, this.getWidth(), this.getHeight()));
-        String title = I18n.format("groups.gui.groupMenu");
+        String title = ClientReference.localize("groups.gui.groupMenu");
         this.addElement(new GUITextLabel(2, 4).setDisplayText(title, false, GUISettings.instance().getTitleScale()));
-        this.addElement(this.downloadButton = new GUIButton(this.textWidth(title, GUISettings.instance().getTitleScale()) + 4, 4, 8, 8).setSound(OxygenSoundEffects.BUTTON_CLICK.soundEvent).setTexture(OxygenGUITextures.DOWNLOAD_ICONS, 8, 8).initSimpleTooltip(I18n.format("oxygen.tooltip.download"), GUISettings.instance().getTooltipScale()));
+        this.addElement(this.downloadButton = new GUIButton(this.textWidth(title, GUISettings.instance().getTitleScale()) + 4, 4, 8, 8).setSound(OxygenSoundEffects.BUTTON_CLICK.soundEvent).setTexture(OxygenGUITextures.DOWNLOAD_ICONS, 8, 8).initSimpleTooltip(ClientReference.localize("oxygen.tooltip.download"), GUISettings.instance().getTooltipScale()));
+        this.addElement(this.settingsButton = new GUIButton(this.getWidth() - 12, 1, 10, 10).setSound(OxygenSoundEffects.BUTTON_CLICK.soundEvent).setTexture(OxygenGUITextures.SETTINGS_ICONS, 10, 10).initSimpleTooltip(ClientReference.localize("oxygen.tooltip.settings"), GUISettings.instance().getTooltipScale()));
 
-        this.addElement(this.refreshButton = new GUIButton(2, 14, 10, 10).setSound(OxygenSoundEffects.BUTTON_CLICK.soundEvent).setTexture(OxygenGUITextures.REFRESH_ICONS, 9, 9).initSimpleTooltip(I18n.format("oxygen.tooltip.refresh"), GUISettings.instance().getTooltipScale()));         
+        this.addElement(this.refreshButton = new GUIButton(2, 14, 10, 10).setSound(OxygenSoundEffects.BUTTON_CLICK.soundEvent).setTexture(OxygenGUITextures.REFRESH_ICONS, 9, 9).initSimpleTooltip(ClientReference.localize("oxygen.tooltip.refresh"), GUISettings.instance().getTooltipScale()));         
         this.addElement(this.playerNameTextLabel = new GUITextLabel(14, 15).setDisplayText(OxygenHelperClient.getSharedClientPlayerData().getUsername(), false, GUISettings.instance().getSubTextScale()));
-        this.addElement(this.playersOnlineTextLabel = new GUITextLabel(0, 15).setTextScale(GUISettings.instance().getSubTextScale()).initSimpleTooltip(I18n.format("oxygen.tooltip.online"), GUISettings.instance().getTooltipScale())); 
+        this.addElement(this.playersOnlineTextLabel = new GUITextLabel(0, 15).setTextScale(GUISettings.instance().getSubTextScale()).initSimpleTooltip(ClientReference.localize("oxygen.tooltip.online"), GUISettings.instance().getTooltipScale())); 
 
-        this.addElement(this.hideOverlayButton = new GUICheckBoxButton(110, 16, 6).setSound(OxygenSoundEffects.BUTTON_CLICK.soundEvent)
-                .enableDynamicBackground(GUISettings.instance().getEnabledButtonColor(), GUISettings.instance().getDisabledButtonColor(), GUISettings.instance().getHoveredButtonColor()));
-        this.addElement(this.hideOverlayTextLabel = new GUITextLabel(118, 15).setDisplayText(I18n.format("oxygen.gui.notifications.hideOverlay"), false, GUISettings.instance().getSubTextScale()));
-        this.hideOverlayButton.setToggled(OxygenHelperClient.getClientSettingBoolean(GroupsMain.HIDE_GROUP_OVERLAY_SETTING));
-
-        this.addElement(this.autoAcceptButton = new GUICheckBoxButton(148, this.getHeight() - 9, 6).setSound(OxygenSoundEffects.BUTTON_CLICK.soundEvent)
-                .enableDynamicBackground(GUISettings.instance().getEnabledButtonColor(), GUISettings.instance().getDisabledButtonColor(), GUISettings.instance().getHoveredButtonColor()));
-        this.addElement(this.autoAcceptTextlabel = new GUITextLabel(156, this.getHeight() - 10).setDisplayText(I18n.format("groups.gui.autoAccept"), false, GUISettings.instance().getSubTextScale()));
-        this.autoAcceptButton.setToggled(OxygenHelperClient.getClientSettingBoolean(GroupsMain.AUTO_ACCEPT_GROUP_INVITE_SETTING));
-
-        this.addElement(this.sortDownStatusButton = new GUIButton(7, 29, 3, 3).setSound(OxygenSoundEffects.BUTTON_CLICK.soundEvent).setTexture(OxygenGUITextures.SORT_DOWN_ICONS, 3, 3).initSimpleTooltip(I18n.format("oxygen.tooltip.sort"), GUISettings.instance().getTooltipScale())); 
-        this.addElement(this.sortUpStatusButton = new GUIButton(7, 25, 3, 3).setSound(OxygenSoundEffects.BUTTON_CLICK.soundEvent).setTexture(OxygenGUITextures.SORT_UP_ICONS, 3, 3).initSimpleTooltip(I18n.format("oxygen.tooltip.sort"), GUISettings.instance().getTooltipScale())); 
-        this.addElement(this.sortDownUsernameButton = new GUIButton(19, 29, 3, 3).setSound(OxygenSoundEffects.BUTTON_CLICK.soundEvent).setTexture(OxygenGUITextures.SORT_DOWN_ICONS, 3, 3).initSimpleTooltip(I18n.format("oxygen.tooltip.sort"), GUISettings.instance().getTooltipScale())); 
-        this.addElement(this.sortUpUsernameButton = new GUIButton(19, 25, 3, 3).setSound(OxygenSoundEffects.BUTTON_CLICK.soundEvent).setTexture(OxygenGUITextures.SORT_UP_ICONS, 3, 3).initSimpleTooltip(I18n.format("oxygen.tooltip.sort"), GUISettings.instance().getTooltipScale())); 
-        this.addElement(new GUITextLabel(24, 25).setDisplayText(I18n.format("oxygen.gui.friends.username")).setTextScale(GUISettings.instance().getTextScale())); 
-        this.addElement(new GUITextLabel(110, 25).setDisplayText(I18n.format("oxygen.gui.friends.dimension")).setTextScale(GUISettings.instance().getTextScale())); 
+        this.addElement(this.sortDownStatusButton = new GUIButton(7, 29, 3, 3).setSound(OxygenSoundEffects.BUTTON_CLICK.soundEvent).setTexture(OxygenGUITextures.SORT_DOWN_ICONS, 3, 3).initSimpleTooltip(ClientReference.localize("oxygen.tooltip.sort"), GUISettings.instance().getTooltipScale())); 
+        this.addElement(this.sortUpStatusButton = new GUIButton(7, 25, 3, 3).setSound(OxygenSoundEffects.BUTTON_CLICK.soundEvent).setTexture(OxygenGUITextures.SORT_UP_ICONS, 3, 3).initSimpleTooltip(ClientReference.localize("oxygen.tooltip.sort"), GUISettings.instance().getTooltipScale())); 
+        this.addElement(this.sortDownUsernameButton = new GUIButton(19, 29, 3, 3).setSound(OxygenSoundEffects.BUTTON_CLICK.soundEvent).setTexture(OxygenGUITextures.SORT_DOWN_ICONS, 3, 3).initSimpleTooltip(ClientReference.localize("oxygen.tooltip.sort"), GUISettings.instance().getTooltipScale())); 
+        this.addElement(this.sortUpUsernameButton = new GUIButton(19, 25, 3, 3).setSound(OxygenSoundEffects.BUTTON_CLICK.soundEvent).setTexture(OxygenGUITextures.SORT_UP_ICONS, 3, 3).initSimpleTooltip(ClientReference.localize("oxygen.tooltip.sort"), GUISettings.instance().getTooltipScale())); 
+        this.addElement(new GUITextLabel(24, 25).setDisplayText(ClientReference.localize("oxygen.gui.username")).setTextScale(GUISettings.instance().getTextScale())); 
+        this.addElement(new GUITextLabel(100, 25).setDisplayText(ClientReference.localize("oxygen.gui.dimension")).setTextScale(GUISettings.instance().getTextScale())); 
 
         this.playersPanel = new GUIButtonPanel(GUIEnumOrientation.VERTICAL, 0, 35, this.getWidth() - 3, 10).setButtonsOffset(1).setTextScale(GUISettings.instance().getPanelTextScale());
         this.addElement(this.playersPanel);
-        GUIScroller scroller = new GUIScroller(MathHelper.clamp(GroupsConfig.PLAYERS_PER_PARTY.getIntValue(), 14, 50), 14);
+        GUIScroller scroller = new GUIScroller(MathUtils.clamp(GroupsConfig.PLAYERS_PER_PARTY.getIntValue(), 14, 50), 14);
         this.playersPanel.initScroller(scroller);
         GUISlider slider = new GUISlider(this.getWidth() - 2, 35, 2, this.getHeight() - 49);
         slider.setDynamicBackgroundColor(GUISettings.instance().getEnabledSliderColor(), GUISettings.instance().getDisabledSliderColor(), GUISettings.instance().getHoveredSliderColor());
@@ -131,18 +120,18 @@ public class GroupGUISection extends AbstractGUISection {
 
         this.addElement(this.inviteButton = new GUIButton(4, this.getHeight() - 11,  40, 10).setSound(OxygenSoundEffects.BUTTON_CLICK.soundEvent)
                 .enableDynamicBackground(GUISettings.instance().getEnabledButtonColor(), GUISettings.instance().getDisabledButtonColor(), GUISettings.instance().getHoveredButtonColor())
-                .setDisplayText(I18n.format("groups.gui.inviteButton"), true, GUISettings.instance().getButtonTextScale()));     
+                .setDisplayText(ClientReference.localize("groups.gui.inviteButton"), true, GUISettings.instance().getButtonTextScale()));     
         this.lockInviteButton();
 
         this.addElement(this.leaveButton = new GUIButton(54, this.getHeight() - 11,  40, 10).setSound(OxygenSoundEffects.BUTTON_CLICK.soundEvent)
                 .enableDynamicBackground(GUISettings.instance().getEnabledButtonColor(), GUISettings.instance().getDisabledButtonColor(), GUISettings.instance().getHoveredButtonColor())
-                .setDisplayText(I18n.format("groups.gui.leaveButton"), true, GUISettings.instance().getButtonTextScale())); 
+                .setDisplayText(ClientReference.localize("groups.gui.leaveButton"), true, GUISettings.instance().getButtonTextScale())); 
         if (!GroupsManagerClient.instance().haveGroup())
             this.leaveButton.disable();
 
         this.addElement(this.checkButton = new GUIButton(104, this.getHeight() - 11,  40, 10).setSound(OxygenSoundEffects.BUTTON_CLICK.soundEvent)
                 .enableDynamicBackground(GUISettings.instance().getEnabledButtonColor(), GUISettings.instance().getDisabledButtonColor(), GUISettings.instance().getHoveredButtonColor())
-                .setDisplayText(I18n.format("groups.gui.checkButton"), true, GUISettings.instance().getButtonTextScale()));   
+                .setDisplayText(ClientReference.localize("groups.gui.checkButton"), true, GUISettings.instance().getButtonTextScale()));   
         if (!GroupsManagerClient.instance().haveGroup() || !GroupsManagerClient.instance().getGroupData().isClientLeader())
             this.checkButton.disable();
 
@@ -167,6 +156,8 @@ public class GroupGUISection extends AbstractGUISection {
         this.addElement(this.statusDropDownList);   
 
         this.downloadDataCallback = new DownloadDataGUICallback(this.screen, this, 140, 40).enableDefaultBackground();
+        this.settingsCallback = new SettingsGUICallback(this.screen, this, 140, 48).enableDefaultBackground();
+
         this.invitePlayerCallback = new InvitePlayerGUICallback(this.screen, this, 140, 68).enableDefaultBackground();
         this.leaveGroupCallback = new LeaveGroupGUICallback(this.screen, this, 140, 40).enableDefaultBackground();
         this.readinessCheckCallback = new ReadinessCheckGUICallback(this.screen, this, 140, 40).enableDefaultBackground();
@@ -248,87 +239,76 @@ public class GroupGUISection extends AbstractGUISection {
 
     @Override
     public void handleElementClick(AbstractGUISection section, GUIBaseElement element, int mouseButton) {
-        if (element == this.downloadButton)
-            this.downloadDataCallback.open();
-        else if (element == this.refreshButton)
-            this.sortPlayers(0);
-        else if (element == this.sortDownStatusButton) {
-            if (!this.sortDownStatusButton.isToggled()) {
-                this.sortPlayers(1);
-                this.sortUpStatusButton.setToggled(false);
-                this.sortDownStatusButton.toggle(); 
-
-                this.sortDownUsernameButton.setToggled(false);
-                this.sortUpUsernameButton.setToggled(false);
-            }
-        } else if (element == this.sortUpStatusButton) {
-            if (!this.sortUpStatusButton.isToggled()) {
+        if (mouseButton == 0) {
+            if (element == this.downloadButton)
+                this.downloadDataCallback.open();
+            if (element == this.settingsButton)
+                this.settingsCallback.open();
+            else if (element == this.refreshButton)
                 this.sortPlayers(0);
-                this.sortDownStatusButton.setToggled(false);
-                this.sortUpStatusButton.toggle();
+            else if (element == this.sortDownStatusButton) {
+                if (!this.sortDownStatusButton.isToggled()) {
+                    this.sortPlayers(1);
+                    this.sortUpStatusButton.setToggled(false);
+                    this.sortDownStatusButton.toggle(); 
 
-                this.sortDownUsernameButton.setToggled(false);
-                this.sortUpUsernameButton.setToggled(false);
-            }
-        } else if (element == this.sortDownUsernameButton) {
-            if (!this.sortDownUsernameButton.isToggled()) {
-                this.sortPlayers(3);
-                this.sortUpUsernameButton.setToggled(false);
-                this.sortDownUsernameButton.toggle(); 
+                    this.sortDownUsernameButton.setToggled(false);
+                    this.sortUpUsernameButton.setToggled(false);
+                }
+            } else if (element == this.sortUpStatusButton) {
+                if (!this.sortUpStatusButton.isToggled()) {
+                    this.sortPlayers(0);
+                    this.sortDownStatusButton.setToggled(false);
+                    this.sortUpStatusButton.toggle();
 
-                this.sortDownStatusButton.setToggled(false);
-                this.sortUpStatusButton.setToggled(false);
-            }
-        } else if (element == this.sortUpUsernameButton) {
-            if (!this.sortUpUsernameButton.isToggled()) {
-                this.sortPlayers(2);
-                this.sortDownUsernameButton.setToggled(false);
-                this.sortUpUsernameButton.toggle();
+                    this.sortDownUsernameButton.setToggled(false);
+                    this.sortUpUsernameButton.setToggled(false);
+                }
+            } else if (element == this.sortDownUsernameButton) {
+                if (!this.sortDownUsernameButton.isToggled()) {
+                    this.sortPlayers(3);
+                    this.sortUpUsernameButton.setToggled(false);
+                    this.sortDownUsernameButton.toggle(); 
 
-                this.sortDownStatusButton.setToggled(false);
-                this.sortUpStatusButton.setToggled(false);
+                    this.sortDownStatusButton.setToggled(false);
+                    this.sortUpStatusButton.setToggled(false);
+                }
+            } else if (element == this.sortUpUsernameButton) {
+                if (!this.sortUpUsernameButton.isToggled()) {
+                    this.sortPlayers(2);
+                    this.sortDownUsernameButton.setToggled(false);
+                    this.sortUpUsernameButton.toggle();
+
+                    this.sortDownStatusButton.setToggled(false);
+                    this.sortUpStatusButton.setToggled(false);
+                }
+            } else if (element == this.inviteButton)
+                this.invitePlayerCallback.open();
+            else if (element == this.leaveButton)
+                this.leaveGroupCallback.open();
+            else if (element == this.checkButton)
+                this.readinessCheckCallback.open();
+            else if (element instanceof StatusGUIDropDownElement) {
+                StatusGUIDropDownElement profileButton = (StatusGUIDropDownElement) element;
+                if (profileButton.status != this.currentStatus) {
+                    OxygenManagerClient.instance().changeActivityStatusSynced(profileButton.status);
+                    this.currentStatus = profileButton.status;
+                    this.statusImageLabel.setTextureUV(this.currentStatus.ordinal() * 3, 0);
+                    OxygenHelperClient.getSharedClientPlayerData().setByte(OxygenMain.ACTIVITY_STATUS_SHARED_DATA_ID, profileButton.status.ordinal());
+                    this.sortPlayers(0);
+                }
             }
-        } else if (element == this.inviteButton)
-            this.invitePlayerCallback.open();
-        else if (element == this.leaveButton)
-            this.leaveGroupCallback.open();
-        else if (element == this.checkButton)
-            this.readinessCheckCallback.open();
-        else if (element instanceof StatusGUIDropDownElement) {
-            StatusGUIDropDownElement profileButton = (StatusGUIDropDownElement) element;
-            if (profileButton.status != this.currentStatus) {
-                OxygenManagerClient.instance().getFriendListManager().changeStatusSynced(profileButton.status);
-                this.currentStatus = profileButton.status;
-                this.statusImageLabel.setTextureUV(this.currentStatus.ordinal() * 3, 0);
-                OxygenHelperClient.getSharedClientPlayerData().getData(OxygenMain.STATUS_DATA_ID).put(0, (byte) profileButton.status.ordinal());
-                this.sortPlayers(0);
-            }
-        } else if (element instanceof GroupEntryGUIButton) {
+        }
+        if (element instanceof GroupEntryGUIButton) {
             GroupEntryGUIButton entry = (GroupEntryGUIButton) element;
             if (entry != this.currentEntry)
                 this.currentEntry = entry;
-        } else if (element == this.autoAcceptButton) {
-            if (this.autoAcceptButton.isToggled()) {
-                OxygenHelperClient.setClientSetting(GroupsMain.AUTO_ACCEPT_GROUP_INVITE_SETTING, true);
-                OxygenHelperClient.saveClientSettings();
-            } else {
-                OxygenHelperClient.setClientSetting(GroupsMain.AUTO_ACCEPT_GROUP_INVITE_SETTING, false);
-                OxygenHelperClient.saveClientSettings();
-            }
-        } else if (element == this.hideOverlayButton) {
-            if (this.hideOverlayButton.isToggled()) {
-                OxygenHelperClient.setClientSetting(GroupsMain.HIDE_GROUP_OVERLAY_SETTING, true);
-                OxygenHelperClient.saveClientSettings();
-            } else {
-                OxygenHelperClient.setClientSetting(GroupsMain.HIDE_GROUP_OVERLAY_SETTING, false);
-                OxygenHelperClient.saveClientSettings();
-            }
         }
     }
 
     @Override
     public boolean keyTyped(char typedChar, int keyCode) {   
-        if (keyCode == GroupsKeyHandler.GROUP_MENU.getKeyBinding().getKeyCode() && !this.hasCurrentCallback())
+        if (keyCode == GroupsKeyHandler.GROUP_MENU.getKeyCode() && !this.hasCurrentCallback())
             this.screen.close();
         return super.keyTyped(typedChar, keyCode); 
     }

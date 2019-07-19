@@ -1,7 +1,7 @@
 package austeretony.oxygen_groups.common.main;
 
 import austeretony.oxygen.common.api.notification.AbstractNotification;
-import austeretony.oxygen.common.notification.EnumNotifications;
+import austeretony.oxygen.common.notification.EnumNotification;
 import austeretony.oxygen_groups.common.GroupsManagerServer;
 import austeretony.oxygen_groups.common.config.GroupsConfig;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,8 +18,8 @@ public class KickPlayerRequest extends AbstractNotification {
     }
 
     @Override
-    public EnumNotifications getType() {
-        return EnumNotifications.REQUEST;
+    public EnumNotification getType() {
+        return EnumNotification.REQUEST;
     }
 
     @Override
@@ -48,9 +48,7 @@ public class KickPlayerRequest extends AbstractNotification {
     }
 
     @Override
-    public void rejected(EntityPlayer player) {
-        GroupsManagerServer.instance().processVoteAgainst(player);
-    }
+    public void rejected(EntityPlayer player) {}
 
     @Override
     public void expired() {}

@@ -37,11 +37,11 @@ public class CommandGroupMessage extends CommandBase {
         if (args.length == 0)
             throw new WrongUsageException(this.getUsage(sender));   
         EntityPlayerMP playerMP = getCommandSenderAsPlayer(sender);
-        UUID playerUUID = CommonReference.uuid(playerMP);
+        UUID playerUUID = CommonReference.getPersistentUUID(playerMP);
         if (GroupsManagerServer.instance().haveGroup(playerUUID)) {
             StringBuilder builder = new StringBuilder()
                     .append("<")
-                    .append(CommonReference.username(playerMP))
+                    .append(CommonReference.getName(playerMP))
                     .append("> ");
             for (String s : args)
                 builder.append(s).append(" ");

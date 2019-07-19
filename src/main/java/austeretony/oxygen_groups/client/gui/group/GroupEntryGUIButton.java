@@ -1,17 +1,17 @@
-        package austeretony.oxygen_groups.client.gui.group;
+package austeretony.oxygen_groups.client.gui.group;
 
 import austeretony.alternateui.screen.image.GUIImageLabel;
 import austeretony.oxygen.client.api.OxygenHelperClient;
+import austeretony.oxygen.client.core.api.ClientReference;
 import austeretony.oxygen.client.gui.OxygenGUITextures;
 import austeretony.oxygen.client.gui.PlayerGUIButton;
 import austeretony.oxygen.client.gui.settings.GUISettings;
-import austeretony.oxygen.common.api.EnumDimensions;
+import austeretony.oxygen.common.api.EnumDimension;
 import austeretony.oxygen.common.main.OxygenPlayerData;
 import austeretony.oxygen.common.main.SharedPlayerData;
 import austeretony.oxygen_groups.client.GroupsManagerClient;
 import austeretony.oxygen_groups.client.gui.GroupsGUITextures;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.resources.I18n;
 
 public class GroupEntryGUIButton extends PlayerGUIButton {
 
@@ -26,7 +26,7 @@ public class GroupEntryGUIButton extends PlayerGUIButton {
     public GroupEntryGUIButton(SharedPlayerData sharedData, OxygenPlayerData.EnumActivityStatus status) {
         super(sharedData.getPlayerUUID());
         this.isLeader = GroupsManagerClient.instance().getGroupData().isLeader(sharedData.getPlayerUUID());
-        this.dimension = EnumDimensions.getLocalizedNameFromId(OxygenHelperClient.getPlayerDimension(sharedData));
+        this.dimension = EnumDimension.getLocalizedNameFromId(OxygenHelperClient.getPlayerDimension(sharedData));
         this.setDisplayText(sharedData.getUsername());//need for search mechanic
         this.statusIconU = status.ordinal() * 3;
         if (status == OxygenPlayerData.EnumActivityStatus.OFFLINE) {
@@ -39,19 +39,19 @@ public class GroupEntryGUIButton extends PlayerGUIButton {
                 if (hours >= 24L)
                     mode = 1;               
                 if (mode == 0) {
-                    if (hours == 1L || hours == 21L)
-                        this.lastActivity = I18n.format("oxygen.friends.lastActivity.hour", hours);
+                    if (hours % 10 == 1L)
+                        this.lastActivity = ClientReference.localize("oxygen.lastActivity.hour", hours);
                     else
-                        this.lastActivity = I18n.format("oxygen.friends.lastActivity.hours", hours);
+                        this.lastActivity = ClientReference.localize("oxygen.lastActivity.hours", hours);
                 } else {
                     days = hours / 24L;
-                    if (days == 1L || days == 21L || days == 31L)//need something better
-                        this.lastActivity = I18n.format("oxygen.friends.lastActivity.day", days);
+                    if (days % 10 == 1L)
+                        this.lastActivity = ClientReference.localize("oxygen.lastActivity.day", days);
                     else               
-                        this.lastActivity = I18n.format("oxygen.friends.lastActivity.days", days);
+                        this.lastActivity = ClientReference.localize("oxygen.lastActivity.days", days);
                 }
             } else
-                this.lastActivity = I18n.format("oxygen.friends.lastActivity.noData");
+                this.lastActivity = ClientReference.localize("oxygen.friends.lastActivity.noData");
         }
     }
 
@@ -87,14 +87,14 @@ public class GroupEntryGUIButton extends PlayerGUIButton {
             this.mc.fontRenderer.drawString(this.getDisplayText(), 0, 0, textColor, this.isTextShadowEnabled());
             GlStateManager.popMatrix();
             GlStateManager.pushMatrix();    
-            GlStateManager.translate(110.0F, textY, 0.0F); 
+            GlStateManager.translate(100.0F, textY, 0.0F); 
             GlStateManager.scale(this.getTextScale(), this.getTextScale(), 0.0F); 
             this.mc.fontRenderer.drawString(this.dimension, 0, 0, textColor, this.isTextShadowEnabled());
             GlStateManager.popMatrix();
             this.statusImageLabel.draw(mouseX, mouseY);
             if (this.isLeader) {
                 this.mc.getTextureManager().bindTexture(GroupsGUITextures.LEADER_MARK); 
-                drawCustomSizedTexturedRect(190, 3, 0, 0, 6, 6, 6, 6);  
+                drawCustomSizedTexturedRect(180, 3, 0, 0, 6, 6, 6, 6);  
             }
             GlStateManager.popMatrix();
         }
@@ -102,7 +102,7 @@ public class GroupEntryGUIButton extends PlayerGUIButton {
 
     @Override
     public void drawTooltip(int mouseX, int mouseY) {
-        this.statusImageLabel.drawTooltip(mouseX - this.getX(), mouseY);
+        this.statusImageLabel.drawTooltip(mouseX, mouseY);
     }
 
     @Override

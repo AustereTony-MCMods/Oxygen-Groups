@@ -42,7 +42,7 @@ public class GroupsManagerClient {
             @Override
             public void execute() {
                 try {
-                    Thread.sleep(5000);//wait for 5 seconds, affects oxygen routine client thread 
+                    Thread.sleep(5000);//wait for 5 seconds before group initialization
                 } catch (InterruptedException exception) {      
                     exception.printStackTrace();
                 }       
@@ -67,8 +67,8 @@ public class GroupsManagerClient {
         GroupsMain.network().sendToServer(new SPGroupsRequest(SPGroupsRequest.EnumRequest.DOWNLOAD_GROUP_DATA_OPEN));
     }
 
-    public void inviteToGroupSynced(UUID targetUUID) {
-        GroupsMain.network().sendToServer(new SPInviteToGroup(targetUUID));
+    public void inviteToGroupSynced(int index) {
+        GroupsMain.network().sendToServer(new SPInviteToGroup(index));
     }
 
     public void addToGroup(int index) {

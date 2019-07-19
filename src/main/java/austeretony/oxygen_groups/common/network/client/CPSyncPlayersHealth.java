@@ -27,7 +27,7 @@ public class CPSyncPlayersHealth extends ProxyPacket {
     public void write(PacketBuffer buffer, INetHandler netHandler) {
         buffer.writeByte(this.indexes.length);
         for (int i = 0; i < this.indexes.length; i++) {
-            buffer.writeShort(this.indexes[i]);
+            buffer.writeInt(this.indexes[i]);
             buffer.writeFloat(this.currHealth[i]);
             buffer.writeFloat(this.maxHealth[i]);
         }
@@ -41,7 +41,7 @@ public class CPSyncPlayersHealth extends ProxyPacket {
         UUID playerUUID;
         GroupEntryClient data;
         for (int i = 0; i < amount; i++) {
-            index = buffer.readShort();
+            index = buffer.readInt();
             if (OxygenHelperClient.isOnline(index)) {
                 playerUUID = OxygenHelperClient.getSharedPlayerData(index).getPlayerUUID();
                 if (GroupsManagerClient.instance().getGroupData().exist(playerUUID)) {

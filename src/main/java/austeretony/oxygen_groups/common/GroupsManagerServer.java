@@ -13,7 +13,7 @@ import austeretony.oxygen.common.core.api.CommonReference;
 import austeretony.oxygen.common.main.EnumOxygenChatMessages;
 import austeretony.oxygen.common.main.OxygenMain;
 import austeretony.oxygen.common.main.SharedPlayerData;
-import austeretony.oxygen.common.util.StreamUtils;
+import austeretony.oxygen.util.StreamUtils;
 import austeretony.oxygen_groups.common.config.GroupsConfig;
 import austeretony.oxygen_groups.common.main.EnumGroupsChatMessages;
 import austeretony.oxygen_groups.common.main.GroupInviteRequest;
@@ -40,8 +40,6 @@ public class GroupsManagerServer implements IPersistentData {
 
     private final Map<UUID, Long> groupAccess = new ConcurrentHashMap<UUID, Long>();
 
-    private GroupsManagerServer() {}
-
     public static void create() {
         if (instance == null) 
             instance = new GroupsManagerServer();
@@ -67,28 +65,34 @@ public class GroupsManagerServer implements IPersistentData {
         return this.groupAccess.containsKey(playerUUID);
     }
 
-    public void inviteToGroup(EntityPlayerMP playerMP, UUID targetUUID) {
-        UUID senderUUID = CommonReference.uuid(playerMP);
-        if (!senderUUID.equals(targetUUID) 
-                && OxygenHelperServer.isOnline(targetUUID)
-                && this.canInvite(senderUUID) 
-                && this.canBeInvited(targetUUID)) {
-            OxygenHelperServer.sendRequest(playerMP, CommonReference.playerByUUID(targetUUID), 
-                    new GroupInviteRequest(GroupsMain.GROUP_REQUEST_ID, senderUUID, CommonReference.username(playerMP)), true);
-        } else
-            OxygenHelperServer.sendMessage(playerMP, OxygenMain.OXYGEN_MOD_INDEX, EnumOxygenChatMessages.REQUEST_RESET.ordinal());
+    public void inviteToGroup(EntityPlayerMP playerMP, int targetIndex) {
+        UUID 
+        senderUUID = CommonReference.getPersistentUUID(playerMP),
+        targetUUID;
+        if (OxygenHelperServer.isOnline(targetIndex)) {
+            targetUUID = OxygenHelperServer.getSharedPlayerData(targetIndex).getPlayerUUID();
+            if (!senderUUID.equals(targetUUID) 
+                    && this.canInvite(senderUUID) 
+                    && this.canBeInvited(targetUUID)) {
+                OxygenHelperServer.sendRequest(playerMP, CommonReference.playerByUUID(targetUUID), 
+                        new GroupInviteRequest(GroupsMain.GROUP_REQUEST_ID, senderUUID, CommonReference.getName(playerMP)), true);
+            } else
+                OxygenHelperServer.sendMessage(playerMP, OxygenMain.OXYGEN_MOD_INDEX, EnumOxygenChatMessages.REQUEST_RESET.ordinal());
+        }
     }
 
     public void processAcceptedGroupRequest(EntityPlayer player, UUID leaderUUID) {
-        if (this.haveGroup(leaderUUID))
-            this.addToGroup(player, leaderUUID);
-        else
-            this.createGroup(player, leaderUUID);
-        OxygenHelperServer.saveWorldDataDelegated(this);
+        if (this.canBeInvited(CommonReference.getPersistentUUID(player))) {
+            if (this.haveGroup(leaderUUID))
+                this.addToGroup(player, leaderUUID);
+            else
+                this.createGroup(player, leaderUUID);
+            OxygenHelperServer.savePersistentDataDelegated(this);
+        }
     }
 
     private void createGroup(EntityPlayer player, UUID leaderUUID) {
-        UUID invitedUUID = CommonReference.uuid(player);
+        UUID invitedUUID = CommonReference.getPersistentUUID(player);
         Group group = new Group();
         group.createId();
         group.setLeader(leaderUUID);
@@ -106,7 +110,7 @@ public class GroupsManagerServer implements IPersistentData {
     }   
 
     private void addToGroup(EntityPlayer player, UUID leaderUUID) {   
-        UUID invitedUUID = CommonReference.uuid(player);
+        UUID invitedUUID = CommonReference.getPersistentUUID(player);
         Group group = this.getGroup(leaderUUID);
 
         for (UUID uuid : group.getPlayers()) {
@@ -160,7 +164,7 @@ public class GroupsManagerServer implements IPersistentData {
                 if (OxygenHelperServer.isOnline(uuid))
                     GroupsMain.network().sendTo(new CPRemovePlayerFromGroup(playerUUID), CommonReference.playerByUUID(uuid));
 
-            OxygenHelperServer.saveWorldDataDelegated(this);
+            OxygenHelperServer.savePersistentDataDelegated(this);
         }
     }
 
@@ -177,11 +181,11 @@ public class GroupsManagerServer implements IPersistentData {
         OxygenHelperServer.saveObservedPlayersData();
         this.groups.remove(group.getId());
 
-        OxygenHelperServer.saveWorldDataDelegated(this);
+        OxygenHelperServer.savePersistentDataDelegated(this);
     }
 
     public void startReadinessCheck(EntityPlayerMP playerMP) {
-        UUID playerUUID = CommonReference.uuid(playerMP);
+        UUID playerUUID = CommonReference.getPersistentUUID(playerMP);
         Group group;
         if (this.haveGroup(playerUUID) && (group = this.getGroup(playerUUID)).isLeader(playerUUID)) {
             if (!group.isVoting()) {
@@ -202,12 +206,10 @@ public class GroupsManagerServer implements IPersistentData {
     }
 
     public void processVoteFor(EntityPlayer player) {
-        UUID playerUUID = CommonReference.uuid(player);
+        UUID playerUUID = CommonReference.getPersistentUUID(player);
         if (this.haveGroup(playerUUID))
             this.getGroup(playerUUID).voteFor();
     }
-
-    public void processVoteAgainst(EntityPlayer player) {}//empty
 
     public void stopReadinessCheck(long groupId) {
         if (this.groupExist(groupId)) {
@@ -221,7 +223,7 @@ public class GroupsManagerServer implements IPersistentData {
     }
 
     public void promoteToLeader(EntityPlayerMP playerMP, int index) {
-        UUID leaderUUID = CommonReference.uuid(playerMP);
+        UUID leaderUUID = CommonReference.getPersistentUUID(playerMP);
         Group group;
         if (this.haveGroup(leaderUUID) && (group = this.getGroup(leaderUUID)).isLeader(leaderUUID)) {
             if (OxygenHelperServer.isOnline(index)) {
@@ -232,13 +234,13 @@ public class GroupsManagerServer implements IPersistentData {
                     if (OxygenHelperServer.isOnline(uuid))
                         GroupsMain.network().sendTo(new CPUpdateLeader(index), CommonReference.playerByUUID(uuid));
 
-                OxygenHelperServer.saveWorldDataDelegated(this);
+                OxygenHelperServer.savePersistentDataDelegated(this);
             }
         }
     }
 
     public void startKickPlayerVoting(EntityPlayerMP playerMP, UUID kickUUID) {
-        UUID playerUUID = CommonReference.uuid(playerMP);
+        UUID playerUUID = CommonReference.getPersistentUUID(playerMP);
         Group group;
         if (this.haveGroup(playerUUID)) {
             group = this.getGroup(playerUUID);
@@ -276,14 +278,14 @@ public class GroupsManagerServer implements IPersistentData {
                     OxygenHelperServer.sendMessage(CommonReference.playerByUUID(uuid), GroupsMain.GROUPS_MOD_INDEX, msg.ordinal(), username);
         }
     }
-    
+
     //TODO onPlayerLoggedIn()
     public void onPlayerLoaded(EntityPlayer player) {    
-        UUID playerUUID = CommonReference.uuid(player);
+        UUID playerUUID = CommonReference.getPersistentUUID(player);
         if (this.haveGroup(playerUUID))
             GroupsMain.network().sendTo(new CPSyncGroupOnLoad(this.getGroup(playerUUID)), (EntityPlayerMP) player);
     }
-    
+
     private boolean canInvite(UUID playerUUID) {
         if (!this.haveGroup(playerUUID))
             return true;
@@ -298,39 +300,39 @@ public class GroupsManagerServer implements IPersistentData {
     }
 
     public void runGroupDataSynchronization() {
-            UUID[] online;
-            EntityPlayerMP[] players;
-            EntityPlayerMP playerMP;
-            int[] indexes;
-            float[] currHealth, maxHealth;
-            int count;
-            for (Group group : this.groups.values()) {
-                count = 0;
-                online = new UUID[group.getSize()];
-                for (UUID uuid : group.getPlayers())
-                    if (OxygenHelperServer.isOnline(uuid))
-                        online[count++] = uuid;
+        UUID[] online;
+        EntityPlayerMP[] players;
+        EntityPlayerMP playerMP;
+        int[] indexes;
+        float[] currHealth, maxHealth;
+        int count;
+        for (Group group : this.groups.values()) {
+            count = 0;
+            online = new UUID[group.getSize()];
+            for (UUID uuid : group.getPlayers())
+                if (OxygenHelperServer.isOnline(uuid))
+                    online[count++] = uuid;
 
-                indexes = new int[count];
-                currHealth = new float[count];
-                maxHealth = new float[count];
-                players = new EntityPlayerMP[count];
-                count = 0;
+            indexes = new int[count];
+            currHealth = new float[count];
+            maxHealth = new float[count];
+            players = new EntityPlayerMP[count];
+            count = 0;
 
-                for (UUID uuid : online) {
-                    if (uuid == null) break;
-                    playerMP = CommonReference.playerByUUID(uuid);
-                    if (playerMP == null) return;//TODO Debug
-                    players[count] = playerMP;
-                    indexes[count] = OxygenHelperServer.getPlayerIndex(uuid);
-                    currHealth[count] = playerMP.getHealth();
-                    maxHealth[count] = playerMP.getMaxHealth();   
-                    count++;
-                }
-
-                for (EntityPlayerMP player : players)
-                    GroupsMain.routineNetwork().sendTo(new CPSyncPlayersHealth(indexes, currHealth, maxHealth), player);
+            for (UUID uuid : online) {
+                if (uuid == null) break;
+                playerMP = CommonReference.playerByUUID(uuid);
+                if (playerMP == null) return;//TODO Debug
+                players[count] = playerMP;
+                indexes[count] = OxygenHelperServer.getPlayerIndex(uuid);
+                currHealth[count] = playerMP.getHealth();
+                maxHealth[count] = playerMP.getMaxHealth();   
+                count++;
             }
+
+            for (EntityPlayerMP player : players)
+                GroupsMain.routineNetwork().sendTo(new CPSyncPlayersHealth(indexes, currHealth, maxHealth), player);
+        }
     }
 
     @Override
@@ -345,7 +347,7 @@ public class GroupsManagerServer implements IPersistentData {
 
     @Override
     public String getPath() {
-        return "groups/groups.dat";
+        return "world/groups/groups.dat";
     }
 
     @Override

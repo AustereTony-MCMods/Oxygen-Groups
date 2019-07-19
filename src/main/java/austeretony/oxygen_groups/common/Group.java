@@ -6,13 +6,13 @@ import java.io.IOException;
 import java.util.Set;
 import java.util.UUID;
 
+import austeretony.oxygen.client.core.api.ClientReference;
 import austeretony.oxygen.common.api.OxygenHelperServer;
-import austeretony.oxygen.common.util.OxygenUtils;
-import austeretony.oxygen.common.util.PacketBufferUtils;
-import austeretony.oxygen.common.util.StreamUtils;
+import austeretony.oxygen.util.OxygenUtils;
+import austeretony.oxygen.util.PacketBufferUtils;
+import austeretony.oxygen.util.StreamUtils;
 import austeretony.oxygen_groups.common.config.GroupsConfig;
 import io.netty.util.internal.ConcurrentSet;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.network.PacketBuffer;
 
 public class Group {
@@ -26,8 +26,6 @@ public class Group {
     private volatile int voteCounter;
 
     private volatile boolean voting;
-
-    public Group() {}
 
     public long getId() {
         return this.groupId;
@@ -55,7 +53,7 @@ public class Group {
 
     public UUID getRandomOnlinePlayer() {
         for (UUID uuid : this.players)
-            if (OxygenHelperServer.isOnline(uuid))
+            if (OxygenHelperServer.isOnline(uuid) && !uuid.equals(this.groupLeader))
                 return uuid;
         return null;
     }
@@ -150,7 +148,7 @@ public class Group {
         PARTY;
 
         public String localizedName() {
-            return I18n.format("groups.groupMode." + this.toString().toLowerCase());
+            return ClientReference.localize("groups.groupMode." + this.toString().toLowerCase());
         }  
     }
 }

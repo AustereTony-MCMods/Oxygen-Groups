@@ -26,7 +26,7 @@ public class ReadinessCheckGUICallback extends AbstractGUICallback {
         this.screen = screen;
         this.section = section;
     }
-    
+
     @Override
     public void init() {
         this.addElement(new GUIImageLabel(- 1, - 1, this.getWidth() + 2, this.getHeight() + 2).enableStaticBackground(GUISettings.instance().getBaseGUIBackgroundColor()));//main background 1st layer
@@ -41,12 +41,14 @@ public class ReadinessCheckGUICallback extends AbstractGUICallback {
 
     @Override
     public void handleElementClick(AbstractGUISection section, GUIBaseElement element, int mouseButton) {
-        if (element == this.cancelButton)
-            this.close();
-        else if (element == this.confirmButton) {
-            GroupsManagerClient.instance().startReadinessCheckSynced();
-            this.close();            
-            this.screen.close();
+        if (mouseButton == 0) {
+            if (element == this.cancelButton)
+                this.close();
+            else if (element == this.confirmButton) {
+                GroupsManagerClient.instance().startReadinessCheckSynced();
+                this.close();            
+                this.screen.close();
+            }
         }
     }
 }
