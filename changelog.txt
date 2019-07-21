@@ -1,3 +1,6 @@
+0.1.4b
++Last activity time tooltip for offline players now shows correct time (displayed when you hover over the activity icon).
+
 0.1.3a
 +Compatibility with Oxygen Core 0.7.0a.
 
