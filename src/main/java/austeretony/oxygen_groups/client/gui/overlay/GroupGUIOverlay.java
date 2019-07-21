@@ -45,7 +45,7 @@ public class GroupGUIOverlay {
     }
 
     private void drawOverlay() {
-        if (!GroupsManagerClient.instance().haveGroup() || OxygenHelperClient.getClientSettingBoolean(GroupsMain.HIDE_GROUP_OVERLAY_SETTING)) 
+        if (!GroupsManagerClient.instance().haveGroup() || OxygenHelperClient.getClientSettingBoolean(GroupsMain.HIDE_GROUP_OVERLAY_SETTING_ID)) 
             return;        
         GroupDataClient group = GroupsManagerClient.instance().getGroupData();
         float scale = 1.0F;

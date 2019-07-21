@@ -192,18 +192,15 @@ public class GroupGUISection extends AbstractGUISection {
                         return entry2Status.ordinal() - entry1Status.ordinal();
                 }
             });
-        } else if (mode == 2 || mode == 3) {//by username: 2 - A -> z; 3 - vice versa.
+        } else {//by username: 2 - A -> z; 3 - vice versa.
             Collections.sort(players, new Comparator<SharedPlayerData>() {
 
                 @Override
                 public int compare(SharedPlayerData entry1, SharedPlayerData entry2) {
-                    String 
-                    username1 = entry1.getUsername(), 
-                    username2 = entry2.getUsername();
                     if (mode == 2)
-                        return username1.compareTo(username2);
+                        return entry1.getUsername().compareTo(entry2.getUsername());
                     else
-                        return username2.compareTo(username1);
+                        return entry2.getUsername().compareTo(entry1.getUsername());
                 }
             });
         }

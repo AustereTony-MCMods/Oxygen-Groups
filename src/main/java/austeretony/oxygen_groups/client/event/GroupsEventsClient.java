@@ -25,7 +25,7 @@ public class GroupsEventsClient {
     @SubscribeEvent
     public void onNotificationRecieved(OxygenNotificationRecievedEvent event) {
         if (event.notification.getIndex() == GroupsMain.GROUP_REQUEST_ID 
-                && OxygenHelperClient.getClientSettingBoolean(GroupsMain.AUTO_ACCEPT_GROUP_INVITE_SETTING))
+                && OxygenHelperClient.getClientSettingBoolean(GroupsMain.AUTO_ACCEPT_GROUP_INVITE_SETTING_ID))
             event.notification.accepted(null);
     }
 }

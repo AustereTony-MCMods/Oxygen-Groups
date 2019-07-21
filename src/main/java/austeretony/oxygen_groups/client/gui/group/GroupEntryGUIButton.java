@@ -2,13 +2,13 @@ package austeretony.oxygen_groups.client.gui.group;
 
 import austeretony.alternateui.screen.image.GUIImageLabel;
 import austeretony.oxygen.client.api.OxygenHelperClient;
-import austeretony.oxygen.client.core.api.ClientReference;
 import austeretony.oxygen.client.gui.OxygenGUITextures;
 import austeretony.oxygen.client.gui.PlayerGUIButton;
 import austeretony.oxygen.client.gui.settings.GUISettings;
 import austeretony.oxygen.common.api.EnumDimension;
 import austeretony.oxygen.common.main.OxygenPlayerData;
 import austeretony.oxygen.common.main.SharedPlayerData;
+import austeretony.oxygen.util.OxygenUtils;
 import austeretony.oxygen_groups.client.GroupsManagerClient;
 import austeretony.oxygen_groups.client.gui.GroupsGUITextures;
 import net.minecraft.client.renderer.GlStateManager;
@@ -29,30 +29,8 @@ public class GroupEntryGUIButton extends PlayerGUIButton {
         this.dimension = EnumDimension.getLocalizedNameFromId(OxygenHelperClient.getPlayerDimension(sharedData));
         this.setDisplayText(sharedData.getUsername());//need for search mechanic
         this.statusIconU = status.ordinal() * 3;
-        if (status == OxygenPlayerData.EnumActivityStatus.OFFLINE) {
-            if (sharedData.getLastActivityTime() > 0L) {
-                int mode = 0;
-                long 
-                diff = System.currentTimeMillis() - sharedData.getLastActivityTime(),
-                hours = diff / 86_400_000L,
-                days;
-                if (hours >= 24L)
-                    mode = 1;               
-                if (mode == 0) {
-                    if (hours % 10 == 1L)
-                        this.lastActivity = ClientReference.localize("oxygen.lastActivity.hour", hours);
-                    else
-                        this.lastActivity = ClientReference.localize("oxygen.lastActivity.hours", hours);
-                } else {
-                    days = hours / 24L;
-                    if (days % 10 == 1L)
-                        this.lastActivity = ClientReference.localize("oxygen.lastActivity.day", days);
-                    else               
-                        this.lastActivity = ClientReference.localize("oxygen.lastActivity.days", days);
-                }
-            } else
-                this.lastActivity = ClientReference.localize("oxygen.friends.lastActivity.noData");
-        }
+        if (status == OxygenPlayerData.EnumActivityStatus.OFFLINE)
+            this.lastActivity = OxygenUtils.getLastActivityTimeLocalizedString(sharedData.getLastActivityTime());
     }
 
     @Override
@@ -94,7 +72,7 @@ public class GroupEntryGUIButton extends PlayerGUIButton {
             this.statusImageLabel.draw(mouseX, mouseY);
             if (this.isLeader) {
                 this.mc.getTextureManager().bindTexture(GroupsGUITextures.LEADER_MARK); 
-                drawCustomSizedTexturedRect(180, 3, 0, 0, 6, 6, 6, 6);  
+                drawCustomSizedTexturedRect(this.getWidth() - 15, 3, 0, 0, 6, 6, 6, 6);  
             }
             GlStateManager.popMatrix();
         }
