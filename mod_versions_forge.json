@@ -1,10 +1,10 @@
 {
-  "homepage": "https://minecraft.curseforge.com/projects/oxygen-groups",
+  "homepage": "https://www.curseforge.com/minecraft/mc-mods/oxygen-groups",
   "1.12.2": {
-    "0.1.4": "Last activity time tooltip for offline players now shows correct time."
+    "0.8.0": "Performance improvements."
   },
   "promos": {
-    "1.12.2-latest": "0.1.4",
-    "1.12.2-recommended": "0.1.4"
+    "1.12.2-latest": "0.8.0",
+    "1.12.2-recommended": "0.8.0"
   }
 }
