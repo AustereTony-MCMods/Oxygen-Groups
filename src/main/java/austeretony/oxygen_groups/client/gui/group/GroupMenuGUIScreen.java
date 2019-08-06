@@ -1,21 +1,29 @@
 package austeretony.oxygen_groups.client.gui.group;
 
-import austeretony.alternateui.screen.core.AbstractGUIScreen;
 import austeretony.alternateui.screen.core.AbstractGUISection;
 import austeretony.alternateui.screen.core.GUIBaseElement;
 import austeretony.alternateui.screen.core.GUIWorkspace;
 import austeretony.alternateui.util.EnumGUIAlignment;
-import austeretony.oxygen.common.api.OxygenGUIHelper;
+import austeretony.oxygen.client.gui.SynchronizedGUIScreen;
 import austeretony.oxygen_groups.common.main.GroupsMain;
 import net.minecraft.util.ResourceLocation;
 
-public class GroupMenuGUIScreen extends AbstractGUIScreen {
+public class GroupMenuGUIScreen extends SynchronizedGUIScreen {
 
-    public static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation(GroupsMain.MODID, "textures/gui/players/background.png");
+    public static final ResourceLocation 
+    GROUP_MENU_BACKGROUND = new ResourceLocation(GroupsMain.MODID, "textures/gui/group/group_menu.png"),
+    SETTINGS_CALLBACK_BACKGROUND = new ResourceLocation(GroupsMain.MODID, "textures/gui/group/settings_callback.png"),
+    INVITE_CALLBACK_BACKGROUND = new ResourceLocation(GroupsMain.MODID, "textures/gui/group/invite_callback.png"),
+    LEAVE_CALLBACK_BACKGROUND = new ResourceLocation(GroupsMain.MODID, "textures/gui/group/leave_callback.png"),
+    KICK_CALLBACK_BACKGROUND = new ResourceLocation(GroupsMain.MODID, "textures/gui/group/kick_callback.png"),
+    PROMOTE_CALLBACK_BACKGROUND = new ResourceLocation(GroupsMain.MODID, "textures/gui/group/promote_callback.png"),
+    READINESS_CHECK_CALLBACK_BACKGROUND = new ResourceLocation(GroupsMain.MODID, "textures/gui/group/readiness_check_callback.png");
 
     protected GroupGUISection mainSection;
 
-    private boolean initialized;
+    public GroupMenuGUIScreen() {
+        super(GroupsMain.GROUP_MENU_SCREEN_ID);
+    }
 
     @Override
     protected GUIWorkspace initWorkspace() {
@@ -24,8 +32,7 @@ public class GroupMenuGUIScreen extends AbstractGUIScreen {
 
     @Override
     protected void initSections() {
-        this.mainSection = new GroupGUISection(this);
-        this.getWorkspace().initSection(this.mainSection);        
+        this.getWorkspace().initSection(this.mainSection = new GroupGUISection(this));        
     }
 
     @Override
@@ -42,23 +49,7 @@ public class GroupMenuGUIScreen extends AbstractGUIScreen {
     }
 
     @Override
-    public void updateScreen() {    
-        super.updateScreen();
-        if (!this.initialized//reduce map calls
-                && OxygenGUIHelper.isNeedSync(GroupsMain.GROUP_MENU_SCREEN_ID)
-                && OxygenGUIHelper.isScreenInitialized(GroupsMain.GROUP_MENU_SCREEN_ID)
-                && OxygenGUIHelper.isDataRecieved(GroupsMain.GROUP_MENU_SCREEN_ID)) {
-            this.initialized = true;
-            OxygenGUIHelper.resetNeedSync(GroupsMain.GROUP_MENU_SCREEN_ID);
-            this.mainSection.sortPlayers(0);
-        }
-    }
-
-    @Override
-    public void onGuiClosed() {
-        super.onGuiClosed();
-        OxygenGUIHelper.resetNeedSync(GroupsMain.GROUP_MENU_SCREEN_ID);
-        OxygenGUIHelper.resetScreenInitialized(GroupsMain.GROUP_MENU_SCREEN_ID);
-        OxygenGUIHelper.resetDataRecieved(GroupsMain.GROUP_MENU_SCREEN_ID);
+    public void loadData() {
+        this.mainSection.sortPlayers(0);
     }
 }

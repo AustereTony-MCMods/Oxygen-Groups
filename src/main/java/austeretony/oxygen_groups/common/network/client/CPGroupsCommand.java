@@ -24,9 +24,6 @@ public class CPGroupsCommand extends ProxyPacket {
     public void read(PacketBuffer buffer, INetHandler netHandler) {
         this.command = EnumCommand.values()[buffer.readByte()];
         switch (this.command) {
-        case OPEN_GROUP_MENU:
-            GroupsManagerClient.instance().openGroupMenuDelegated();
-            break;
         case LEAVE_GROUP:
             GroupsManagerClient.instance().leaveGroup();
             break;
@@ -35,7 +32,6 @@ public class CPGroupsCommand extends ProxyPacket {
 
     public enum EnumCommand {
 
-        OPEN_GROUP_MENU,
         LEAVE_GROUP
     }
 }

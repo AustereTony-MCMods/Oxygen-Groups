@@ -1,9 +1,12 @@
 package austeretony.oxygen_groups.client.gui.group;
 
+import java.util.UUID;
+
 import austeretony.alternateui.screen.image.GUIImageLabel;
 import austeretony.oxygen.client.api.OxygenHelperClient;
+import austeretony.oxygen.client.core.api.ClientReference;
+import austeretony.oxygen.client.gui.IndexedGUIButton;
 import austeretony.oxygen.client.gui.OxygenGUITextures;
-import austeretony.oxygen.client.gui.PlayerGUIButton;
 import austeretony.oxygen.client.gui.settings.GUISettings;
 import austeretony.oxygen.common.api.EnumDimension;
 import austeretony.oxygen.common.main.OxygenPlayerData;
@@ -13,7 +16,7 @@ import austeretony.oxygen_groups.client.GroupsManagerClient;
 import austeretony.oxygen_groups.client.gui.GroupsGUITextures;
 import net.minecraft.client.renderer.GlStateManager;
 
-public class GroupEntryGUIButton extends PlayerGUIButton {
+public class GroupEntryGUIButton extends IndexedGUIButton<UUID> {
 
     private String dimension, lastActivity;
 
@@ -30,7 +33,7 @@ public class GroupEntryGUIButton extends PlayerGUIButton {
         this.setDisplayText(sharedData.getUsername());//need for search mechanic
         this.statusIconU = status.ordinal() * 3;
         if (status == OxygenPlayerData.EnumActivityStatus.OFFLINE)
-            this.lastActivity = OxygenUtils.getLastActivityTimeLocalizedString(sharedData.getLastActivityTime());
+            this.lastActivity = ClientReference.localize("oxygen.gui.lastActivityTime", OxygenUtils.getTimePassedLocalizedString(sharedData.getLastActivityTime()));
     }
 
     @Override

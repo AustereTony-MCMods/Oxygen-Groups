@@ -21,7 +21,7 @@ public class ReadinessCheckRequest extends AbstractNotification {
 
     @Override
     public String getDescription() {
-        return "groups.request.readinessCheck";
+        return "oxygen_groups.request.readinessCheck";
     }
 
     @Override

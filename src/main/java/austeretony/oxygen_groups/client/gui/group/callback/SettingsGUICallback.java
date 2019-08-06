@@ -5,7 +5,6 @@ import austeretony.alternateui.screen.button.GUICheckBoxButton;
 import austeretony.alternateui.screen.callback.AbstractGUICallback;
 import austeretony.alternateui.screen.core.AbstractGUISection;
 import austeretony.alternateui.screen.core.GUIBaseElement;
-import austeretony.alternateui.screen.image.GUIImageLabel;
 import austeretony.alternateui.screen.text.GUITextLabel;
 import austeretony.oxygen.client.api.OxygenHelperClient;
 import austeretony.oxygen.client.core.api.ClientReference;
@@ -33,18 +32,16 @@ public class SettingsGUICallback extends AbstractGUICallback {
 
     @Override
     public void init() {
-        this.addElement(new GUIImageLabel(- 1, - 1, this.getWidth() + 2, this.getHeight() + 2).enableStaticBackground(GUISettings.instance().getBaseGUIBackgroundColor()));//main background 1st layer
-        this.addElement(new GUIImageLabel(0, 0, this.getWidth(), 11).enableStaticBackground(GUISettings.instance().getAdditionalGUIBackgroundColor()));//main background 2nd layer
-        this.addElement(new GUIImageLabel(0, 12, this.getWidth(), this.getHeight() - 12).enableStaticBackground(GUISettings.instance().getAdditionalGUIBackgroundColor()));//main background 2nd layer
-        this.addElement(new GUITextLabel(2, 2).setDisplayText(ClientReference.localize("oxygen.gui.settingsCallback"), true, GUISettings.instance().getTitleScale()));
+        this.addElement(new SettingsCallbackGUIFiller(0, 0, this.getWidth(), this.getHeight()));
+        this.addElement(new GUITextLabel(2, 2).setDisplayText(ClientReference.localize("oxygen.gui.callback.settings"), true, GUISettings.instance().getTitleScale()));
 
         this.addElement(this.hideOverlayButton = new GUICheckBoxButton(2, 16, 6).setSound(OxygenSoundEffects.BUTTON_CLICK.soundEvent)
                 .enableDynamicBackground(GUISettings.instance().getEnabledButtonColor(), GUISettings.instance().getDisabledButtonColor(), GUISettings.instance().getHoveredButtonColor()));
-        this.addElement(new GUITextLabel(10, 15).setDisplayText(ClientReference.localize("groups.gui.group.setting.hideOverlay"), false, GUISettings.instance().getSubTextScale()));
+        this.addElement(new GUITextLabel(10, 15).setDisplayText(ClientReference.localize("oxygen_groups.gui.group.setting.hideOverlay"), false, GUISettings.instance().getSubTextScale()));
 
         this.addElement(this.autoAcceptButton = new GUICheckBoxButton(2, 26, 6).setSound(OxygenSoundEffects.BUTTON_CLICK.soundEvent)
                 .enableDynamicBackground(GUISettings.instance().getEnabledButtonColor(), GUISettings.instance().getDisabledButtonColor(), GUISettings.instance().getHoveredButtonColor()));
-        this.addElement(new GUITextLabel(10, 25).setDisplayText(ClientReference.localize("groups.gui.group.setting.acceptInvitations"), false, GUISettings.instance().getSubTextScale()));
+        this.addElement(new GUITextLabel(10, 25).setDisplayText(ClientReference.localize("oxygen_groups.gui.group.setting.acceptInvitations"), false, GUISettings.instance().getSubTextScale()));
 
         this.addElement(this.closeButton = new GUIButton(this.getWidth() - 42, this.getHeight() - 12, 40, 10).setSound(OxygenSoundEffects.BUTTON_CLICK.soundEvent).enableDynamicBackground().setDisplayText(ClientReference.localize("oxygen.gui.closeButton"), true, GUISettings.instance().getButtonTextScale()));
     }

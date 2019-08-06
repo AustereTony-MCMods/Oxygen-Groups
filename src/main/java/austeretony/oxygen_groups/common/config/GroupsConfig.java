@@ -1,6 +1,6 @@
 package austeretony.oxygen_groups.common.config;
 
-import java.util.Queue;
+import java.util.List;
 
 import austeretony.oxygen.common.api.config.AbstractConfigHolder;
 import austeretony.oxygen.common.api.config.ConfigValue;
@@ -38,7 +38,7 @@ public class GroupsConfig extends AbstractConfigHolder {
     }
 
     @Override
-    public void getValues(Queue<ConfigValue> values) {
+    public void getValues(List<ConfigValue> values) {
         values.add(GROUP_INVITE_REQUEST_EXPIRE_TIME);
         values.add(READINESS_CHECK_REQUEST_EXPIRE_TIME);
         values.add(VOTE_KICK_REQUEST_EXPIRE_TIME);

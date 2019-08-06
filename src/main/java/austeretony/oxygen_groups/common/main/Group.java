@@ -1,4 +1,4 @@
-package austeretony.oxygen_groups.common;
+package austeretony.oxygen_groups.common.main;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

@@ -31,7 +31,7 @@ public class GroupInviteRequest extends AbstractNotification {
 
     @Override
     public String getDescription() {
-        return "groups.request.groupInvite";
+        return "oxygen_groups.request.groupInvite";
     }
 
     @Override
@@ -54,8 +54,8 @@ public class GroupInviteRequest extends AbstractNotification {
         GroupsManagerServer.instance().processAcceptedGroupRequest(player, this.senderUUID);
 
         if (OxygenHelperServer.isOnline(this.senderUUID))
-            OxygenHelperServer.sendMessage(CommonReference.playerByUUID(this.senderUUID), GroupsMain.GROUPS_MOD_INDEX, EnumGroupsChatMessages.GROUP_REQUEST_ACCEPTED_SENDER.ordinal());
-        OxygenHelperServer.sendMessage(player, GroupsMain.GROUPS_MOD_INDEX, EnumGroupsChatMessages.GROUP_REQUEST_ACCEPTED_TARGET.ordinal());
+            OxygenHelperServer.sendMessage(CommonReference.playerByUUID(this.senderUUID), GroupsMain.GROUPS_MOD_INDEX, EnumGroupsChatMessage.GROUP_REQUEST_ACCEPTED_SENDER.ordinal());
+        OxygenHelperServer.sendMessage(player, GroupsMain.GROUPS_MOD_INDEX, EnumGroupsChatMessage.GROUP_REQUEST_ACCEPTED_TARGET.ordinal());
 
         OxygenHelperServer.setRequesting(this.senderUUID, false);
     }
@@ -63,8 +63,8 @@ public class GroupInviteRequest extends AbstractNotification {
     @Override
     public void rejected(EntityPlayer player) {
         if (OxygenHelperServer.isOnline(this.senderUUID))
-            OxygenHelperServer.sendMessage(CommonReference.playerByUUID(this.senderUUID), GroupsMain.GROUPS_MOD_INDEX, EnumGroupsChatMessages.GROUP_REQUEST_REJECTED_SENDER.ordinal());
-        OxygenHelperServer.sendMessage(player, GroupsMain.GROUPS_MOD_INDEX, EnumGroupsChatMessages.GROUP_REQUEST_REJECTED_TARGET.ordinal());
+            OxygenHelperServer.sendMessage(CommonReference.playerByUUID(this.senderUUID), GroupsMain.GROUPS_MOD_INDEX, EnumGroupsChatMessage.GROUP_REQUEST_REJECTED_SENDER.ordinal());
+        OxygenHelperServer.sendMessage(player, GroupsMain.GROUPS_MOD_INDEX, EnumGroupsChatMessage.GROUP_REQUEST_REJECTED_TARGET.ordinal());
 
         OxygenHelperServer.setRequesting(this.senderUUID, false);
     }

@@ -2,7 +2,7 @@ package austeretony.oxygen_groups.common.network.client;
 
 import austeretony.oxygen.common.network.ProxyPacket;
 import austeretony.oxygen_groups.client.GroupsManagerClient;
-import austeretony.oxygen_groups.common.Group;
+import austeretony.oxygen_groups.common.main.Group;
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.PacketBuffer;
 

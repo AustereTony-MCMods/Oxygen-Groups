@@ -3,12 +3,12 @@ package austeretony.oxygen_groups.client;
 import java.util.UUID;
 
 import austeretony.oxygen.client.api.OxygenHelperClient;
-import austeretony.oxygen.client.core.api.ClientReference;
-import austeretony.oxygen.common.api.IOxygenTask;
-import austeretony.oxygen.common.api.OxygenGUIHelper;
+import austeretony.oxygen.client.privilege.api.PrivilegeProviderClient;
+import austeretony.oxygen.common.main.EnumOxygenPrivilege;
+import austeretony.oxygen.common.main.OxygenPlayerData;
+import austeretony.oxygen.common.main.OxygenPlayerData.EnumActivityStatus;
 import austeretony.oxygen.common.main.SharedPlayerData;
-import austeretony.oxygen_groups.client.gui.group.GroupMenuGUIScreen;
-import austeretony.oxygen_groups.common.Group;
+import austeretony.oxygen_groups.common.main.Group;
 import austeretony.oxygen_groups.common.main.GroupsMain;
 import austeretony.oxygen_groups.common.network.server.SPGroupsRequest;
 import austeretony.oxygen_groups.common.network.server.SPInviteToGroup;
@@ -37,17 +37,7 @@ public class GroupsManagerClient {
     }
 
     public void readGroupOnLoad(Group group) {
-        OxygenHelperClient.addRoutineTask(new IOxygenTask() {
-
-            @Override
-            public void execute() {
-                try {
-                    Thread.sleep(5000);//wait for 5 seconds before group initialization
-                } catch (InterruptedException exception) {      
-                    exception.printStackTrace();
-                }       
-                readGroup(group);
-            }});
+        OxygenHelperClient.addTemporaryProcess(new GroupLoadingProcess(group));
     }
 
     public void readGroup(Group group) {   
@@ -63,8 +53,7 @@ public class GroupsManagerClient {
     }
 
     public void downloadGroupDataSynced() {
-        this.reset();
-        GroupsMain.network().sendToServer(new SPGroupsRequest(SPGroupsRequest.EnumRequest.DOWNLOAD_GROUP_DATA_OPEN));
+        GroupsMain.network().sendToServer(new SPGroupsRequest(SPGroupsRequest.EnumRequest.DOWNLOAD_GROUP_DATA));
     }
 
     public void inviteToGroupSynced(int index) {
@@ -121,23 +110,22 @@ public class GroupsManagerClient {
         return this.groupData;
     }
 
-    public void openGroupMenuSynced() {
-        OxygenGUIHelper.needSync(GroupsMain.GROUP_MENU_SCREEN_ID);
-        GroupsMain.network().sendToServer(new SPGroupsRequest(SPGroupsRequest.EnumRequest.OPEN_GROUP_MENU));
+    public static EnumActivityStatus getActivityStatus(SharedPlayerData sharedData) {
+        EnumActivityStatus activityStatus = EnumActivityStatus.OFFLINE;
+        if (OxygenHelperClient.isOnline(sharedData.getPlayerUUID()))
+            activityStatus = OxygenHelperClient.getPlayerStatus(sharedData.getPlayerUUID());
+        return activityStatus;
     }
 
-    public void openGroupMenuDelegated() {
-        ClientReference.getMinecraft().addScheduledTask(new Runnable() {
-
-            @Override
-            public void run() {
-                openGroupMenu();
-            }
-        });    
-    }
-
-    private void openGroupMenu() {
-        ClientReference.displayGuiScreen(new GroupMenuGUIScreen());
+    public static boolean isPlayerAvailable(String username) {
+        if (username.equals(OxygenHelperClient.getSharedClientPlayerData().getUsername()))
+            return false;
+        SharedPlayerData sharedData = OxygenHelperClient.getSharedPlayerData(username);
+        if (sharedData != null) {
+            if (OxygenHelperClient.getPlayerStatus(sharedData) != OxygenPlayerData.EnumActivityStatus.OFFLINE || PrivilegeProviderClient.getPrivilegeValue(EnumOxygenPrivilege.EXPOSE_PLAYERS_OFFLINE.toString(), false))
+                return true;
+        }
+        return false;
     }
 
     public void reset() {

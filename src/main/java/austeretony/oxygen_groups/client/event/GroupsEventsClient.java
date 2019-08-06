@@ -5,7 +5,7 @@ import austeretony.oxygen.client.api.event.OxygenChatMessageEvent;
 import austeretony.oxygen.client.api.event.OxygenClientInitEvent;
 import austeretony.oxygen.client.api.event.OxygenNotificationRecievedEvent;
 import austeretony.oxygen_groups.client.GroupsManagerClient;
-import austeretony.oxygen_groups.common.main.EnumGroupsChatMessages;
+import austeretony.oxygen_groups.common.main.EnumGroupsChatMessage;
 import austeretony.oxygen_groups.common.main.GroupsMain;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -19,7 +19,7 @@ public class GroupsEventsClient {
     @SubscribeEvent
     public void onChatMessage(OxygenChatMessageEvent event) {
         if (event.modIndex == GroupsMain.GROUPS_MOD_INDEX)
-            EnumGroupsChatMessages.values()[event.messageIndex].show(event.args);
+            EnumGroupsChatMessage.values()[event.messageIndex].show(event.args);
     }
 
     @SubscribeEvent

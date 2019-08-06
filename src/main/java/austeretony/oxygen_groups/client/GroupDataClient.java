@@ -7,8 +7,8 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import austeretony.oxygen.client.api.OxygenHelperClient;
-import austeretony.oxygen_groups.common.Group;
 import austeretony.oxygen_groups.common.config.GroupsConfig;
+import austeretony.oxygen_groups.common.main.Group;
 
 public class GroupDataClient {
 

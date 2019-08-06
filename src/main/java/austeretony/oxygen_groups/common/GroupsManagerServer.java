@@ -10,12 +10,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import austeretony.oxygen.common.api.IPersistentData;
 import austeretony.oxygen.common.api.OxygenHelperServer;
 import austeretony.oxygen.common.core.api.CommonReference;
-import austeretony.oxygen.common.main.EnumOxygenChatMessages;
+import austeretony.oxygen.common.main.EnumOxygenChatMessage;
 import austeretony.oxygen.common.main.OxygenMain;
 import austeretony.oxygen.common.main.SharedPlayerData;
 import austeretony.oxygen.util.StreamUtils;
 import austeretony.oxygen_groups.common.config.GroupsConfig;
-import austeretony.oxygen_groups.common.main.EnumGroupsChatMessages;
+import austeretony.oxygen_groups.common.main.EnumGroupsChatMessage;
+import austeretony.oxygen_groups.common.main.Group;
 import austeretony.oxygen_groups.common.main.GroupInviteRequest;
 import austeretony.oxygen_groups.common.main.GroupReadinessCheckProcess;
 import austeretony.oxygen_groups.common.main.GroupsMain;
@@ -77,7 +78,7 @@ public class GroupsManagerServer implements IPersistentData {
                 OxygenHelperServer.sendRequest(playerMP, CommonReference.playerByUUID(targetUUID), 
                         new GroupInviteRequest(GroupsMain.GROUP_REQUEST_ID, senderUUID, CommonReference.getName(playerMP)), true);
             } else
-                OxygenHelperServer.sendMessage(playerMP, OxygenMain.OXYGEN_MOD_INDEX, EnumOxygenChatMessages.REQUEST_RESET.ordinal());
+                OxygenHelperServer.sendMessage(playerMP, OxygenMain.OXYGEN_MOD_INDEX, EnumOxygenChatMessage.REQUEST_RESET.ordinal());
         }
     }
 
@@ -136,13 +137,13 @@ public class GroupsManagerServer implements IPersistentData {
             Group group = this.getGroup(playerUUID);
 
             if (group.getSize() == 2) {
-                this.dismissGroup(group);
+                this.disbandGroup(group);
                 return;
             }
             if (group.isLeader(playerUUID)) {
                 UUID uuid = group.getRandomOnlinePlayer();
                 if (uuid == null) {
-                    this.dismissGroup(group);
+                    this.disbandGroup(group);
                     return;
                 }
                 group.setLeader(uuid);
@@ -168,7 +169,7 @@ public class GroupsManagerServer implements IPersistentData {
         }
     }
 
-    public void dismissGroup(Group group) {
+    public void disbandGroup(Group group) {
         for (UUID playerUUID : group.getPlayers()) {
             this.groupAccess.remove(playerUUID);
 
@@ -195,7 +196,7 @@ public class GroupsManagerServer implements IPersistentData {
                 for (UUID uuid : group.getPlayers()) {
                     if (OxygenHelperServer.isOnline(uuid)) {
                         player = CommonReference.playerByUUID(uuid);
-                        OxygenHelperServer.sendMessage(player, GroupsMain.GROUPS_MOD_INDEX, EnumGroupsChatMessages.GROUP_READINESS_CHECK_STARTED.ordinal());
+                        OxygenHelperServer.sendMessage(player, GroupsMain.GROUPS_MOD_INDEX, EnumGroupsChatMessage.GROUP_READINESS_CHECK_STARTED.ordinal());
                         OxygenHelperServer.addNotification(player, new ReadinessCheckRequest(GroupsMain.READINESS_CHECK_REQUEST_ID));
                     }
                 }
@@ -215,7 +216,7 @@ public class GroupsManagerServer implements IPersistentData {
         if (this.groupExist(groupId)) {
             Group group = GroupsManagerServer.instance().getGroup(groupId);
             group.stopVote();
-            EnumGroupsChatMessages msg = group.getVoteResult() ? EnumGroupsChatMessages.GROUP_READY : EnumGroupsChatMessages.GROUP_NOT_READY;
+            EnumGroupsChatMessage msg = group.getVoteResult() ? EnumGroupsChatMessage.GROUP_READY : EnumGroupsChatMessage.GROUP_NOT_READY;
             for (UUID uuid : group.getPlayers())
                 if (OxygenHelperServer.isOnline(uuid))
                     OxygenHelperServer.sendMessage(CommonReference.playerByUUID(uuid), GroupsMain.GROUPS_MOD_INDEX, msg.ordinal());
@@ -253,7 +254,7 @@ public class GroupsManagerServer implements IPersistentData {
                 for (UUID uuid : group.getPlayers()) {
                     if (OxygenHelperServer.isOnline(uuid) && !uuid.equals(kickUUID)) {
                         player = CommonReference.playerByUUID(uuid);
-                        OxygenHelperServer.sendMessage(player, GroupsMain.GROUPS_MOD_INDEX, EnumGroupsChatMessages.KICK_PLAYER_VOTING_STARTED.ordinal(), kickData.getUsername());
+                        OxygenHelperServer.sendMessage(player, GroupsMain.GROUPS_MOD_INDEX, EnumGroupsChatMessage.KICK_PLAYER_VOTING_STARTED.ordinal(), kickData.getUsername());
                         OxygenHelperServer.addNotification(player, new KickPlayerRequest(GroupsMain.READINESS_CHECK_REQUEST_ID, kickData.getUsername()));
                     }
                 }       
@@ -267,10 +268,10 @@ public class GroupsManagerServer implements IPersistentData {
         if (this.groupExist(groupId)) {
             Group group = GroupsManagerServer.instance().getGroup(groupId);
             group.stopVote();
-            EnumGroupsChatMessages msg = EnumGroupsChatMessages.PLAYER_NOT_KICKED;
+            EnumGroupsChatMessage msg = EnumGroupsChatMessage.PLAYER_NOT_KICKED;
             if (group.getVoteResult()) {
                 this.leaveGroup(playerUUID);
-                msg = EnumGroupsChatMessages.PLAYER_KICKED;
+                msg = EnumGroupsChatMessage.PLAYER_KICKED;
             }
             String username = OxygenHelperServer.getPersistentSharedData(playerUUID).getUsername();
             for (UUID uuid : group.getPlayers())

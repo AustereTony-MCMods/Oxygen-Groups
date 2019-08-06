@@ -7,8 +7,6 @@ import austeretony.oxygen.common.core.api.CommonReference;
 import austeretony.oxygen.common.network.ProxyPacket;
 import austeretony.oxygen_groups.common.GroupsManagerServer;
 import austeretony.oxygen_groups.common.main.GroupsMain;
-import austeretony.oxygen_groups.common.network.client.CPGroupsCommand;
-import austeretony.oxygen_groups.common.network.client.CPSyncGroup;
 import austeretony.oxygen_groups.common.network.client.CPSyncGroupOnLoad;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.INetHandler;
@@ -34,21 +32,7 @@ public class SPGroupsRequest extends ProxyPacket {
         EntityPlayerMP playerMP = getEntityPlayerMP(netHandler);
         UUID playerUUID = CommonReference.getPersistentUUID(playerMP);
         this.request = EnumRequest.values()[buffer.readByte()];
-        switch (this.request) {
-        case OPEN_GROUP_MENU:
-            if (!OxygenHelperServer.isSyncing(playerUUID)) {
-                OxygenHelperServer.syncSharedPlayersData(playerMP, OxygenHelperServer.getSharedDataIdentifiersForScreen(GroupsMain.GROUP_MENU_SCREEN_ID));
-                GroupsMain.network().sendTo(new CPGroupsCommand(CPGroupsCommand.EnumCommand.OPEN_GROUP_MENU), playerMP);
-            }
-            break;
-        case DOWNLOAD_GROUP_DATA_OPEN:
-            if (!OxygenHelperServer.isSyncing(playerUUID)) {
-                OxygenHelperServer.syncSharedPlayersData(playerMP, OxygenHelperServer.getSharedDataIdentifiersForScreen(GroupsMain.GROUP_MENU_SCREEN_ID));
-                if (GroupsManagerServer.instance().haveGroup(playerUUID))
-                    GroupsMain.network().sendTo(new CPSyncGroup(GroupsManagerServer.instance().getGroup(playerUUID)), playerMP);
-                GroupsMain.network().sendTo(new CPGroupsCommand(CPGroupsCommand.EnumCommand.OPEN_GROUP_MENU), playerMP);
-            }
-            break;      
+        switch (this.request) {    
         case DOWNLOAD_GROUP_DATA:
             if (!OxygenHelperServer.isSyncing(playerUUID)) {
                 OxygenHelperServer.syncSharedPlayersData(playerMP, OxygenHelperServer.getSharedDataIdentifiersForScreen(GroupsMain.GROUP_MENU_SCREEN_ID));
@@ -67,8 +51,6 @@ public class SPGroupsRequest extends ProxyPacket {
 
     public enum EnumRequest {
 
-        OPEN_GROUP_MENU,
-        DOWNLOAD_GROUP_DATA_OPEN,
         DOWNLOAD_GROUP_DATA,
         LEAVE_GROUP,
         START_READINESS_CHECK

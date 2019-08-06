@@ -5,7 +5,7 @@ import java.util.UUID;
 import austeretony.oxygen.client.api.OxygenHelperClient;
 import austeretony.oxygen.client.interaction.IInteractionMenuExecutor;
 import austeretony.oxygen.client.privilege.api.PrivilegeProviderClient;
-import austeretony.oxygen.common.main.EnumOxygenPrivileges;
+import austeretony.oxygen.common.main.EnumOxygenPrivilege;
 import austeretony.oxygen_groups.client.GroupsManagerClient;
 import net.minecraft.util.ResourceLocation;
 
@@ -13,7 +13,7 @@ public class InviteToGroupInteractionExecutor implements IInteractionMenuExecuto
 
     @Override
     public String getName() {
-        return "groups.gui.interaction.inviteToGroup";
+        return "oxygen_groups.gui.interaction.inviteToGroup";
     }
 
     @Override
@@ -23,7 +23,7 @@ public class InviteToGroupInteractionExecutor implements IInteractionMenuExecuto
 
     @Override
     public boolean isValid(UUID playerUUID) {
-        return !OxygenHelperClient.isOfflineStatus(playerUUID) || PrivilegeProviderClient.getPrivilegeValue(EnumOxygenPrivileges.EXPOSE_PLAYERS_OFFLINE.toString(), false);
+        return !OxygenHelperClient.isOfflineStatus(playerUUID) || PrivilegeProviderClient.getPrivilegeValue(EnumOxygenPrivilege.EXPOSE_PLAYERS_OFFLINE.toString(), false);
     }
 
     @Override

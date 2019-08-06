@@ -3,9 +3,9 @@ package austeretony.oxygen_groups.client.gui.group.context;
 import austeretony.alternateui.screen.contextmenu.AbstractContextAction;
 import austeretony.alternateui.screen.core.GUIBaseElement;
 import austeretony.oxygen.client.api.OxygenHelperClient;
+import austeretony.oxygen.client.core.api.ClientReference;
 import austeretony.oxygen_groups.client.GroupsManagerClient;
 import austeretony.oxygen_groups.client.gui.group.GroupGUISection;
-import net.minecraft.client.resources.I18n;
 
 public class PromoteToLeaderContextAction extends AbstractContextAction {
 
@@ -17,14 +17,14 @@ public class PromoteToLeaderContextAction extends AbstractContextAction {
 
     @Override
     protected String getName(GUIBaseElement currElement) {
-        return I18n.format("groups.gui.action.promoteToLeader");
+        return ClientReference.localize("oxygen_groups.gui.action.promoteToLeader");
     }
 
     @Override
     protected boolean isValid(GUIBaseElement currElement) {
-        return !this.section.getCurrentEntry().playerUUID.equals(OxygenHelperClient.getPlayerUUID()) 
+        return !this.section.getCurrentEntry().index.equals(OxygenHelperClient.getPlayerUUID()) 
                 && GroupsManagerClient.instance().getGroupData().isClientLeader() 
-                && (OxygenHelperClient.isOnline(this.section.getCurrentEntry().playerUUID) && !OxygenHelperClient.isOfflineStatus(this.section.getCurrentEntry().playerUUID));
+                && (OxygenHelperClient.isOnline(this.section.getCurrentEntry().index) && !OxygenHelperClient.isOfflineStatus(this.section.getCurrentEntry().index));
     }
 
     @Override

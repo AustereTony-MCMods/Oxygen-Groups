@@ -23,6 +23,9 @@ public class KickPlayerVotingProcess extends AbstractTemporaryProcess {
     }
 
     @Override
+    public void process() {}
+
+    @Override
     public void expired() {
         GroupsManagerServer.instance().stopKickPlayerVoting(this.groupId, this.playerUUID);
     }

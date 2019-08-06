@@ -24,7 +24,7 @@ public class KickPlayerRequest extends AbstractNotification {
 
     @Override
     public String getDescription() {
-        return "groups.request.kickPlayer";
+        return "oxygen_groups.request.kickPlayer";
     }
 
     @Override

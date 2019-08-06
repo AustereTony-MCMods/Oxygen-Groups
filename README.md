@@ -1,3 +1,3 @@
 # Oxygen-Groups
-Possibility to unite in groups for joint activity.
+The ability to join groups for joint activities.
 Project page: https://www.curseforge.com/minecraft/mc-mods/oxygen-groups

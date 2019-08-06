@@ -1,48 +1,50 @@
-key.groups.groupMenu=Open Group Menu
+key.oxygen_groups.groupMenu=Open Group Menu
 
-groups.gui.interaction.inviteToGroup=Invite to Group
+oxygen_groups.gui.interaction.inviteToGroup=Invite to Group
 
-contextaction.inviteToGroup=Invite to Group
+oxygen_groups.context.inviteToGroup=Invite to Group
 
-groups.request.groupInvite=%s invited you to group.
-groups.request.readinessCheck=Group readiness check. Are you ready?
-groups.request.kickPlayer=Kick player %s from group?
+oxygen_groups.request.groupInvite=%s invited you to group.
+oxygen_groups.request.readinessCheck=Group readiness check. Are you ready?
+oxygen_groups.request.kickPlayer=Kick player %s from group?
 
-groups.gui.inviteButton=Invite
-groups.gui.leaveButton=Leave
-groups.gui.checkButton=Check
+oxygen_groups.gui.inviteButton=Invite
+oxygen_groups.gui.leaveButton=Leave
+oxygen_groups.gui.checkButton=Check
 
-groups.gui.groupMenu=Group
+oxygen_groups.gui.groupMenu=Group
 
-groups.gui.group.setting.acceptInvitations=Auto Accept Invitations
-groups.gui.group.setting.hideOverlay=Hide Group Overlay
+oxygen_groups.gui.group.setting.acceptInvitations=Auto Accept Invitations
+oxygen_groups.gui.group.setting.hideOverlay=Hide Group Overlay
 
-groups.gui.action.kick=Kick
-groups.gui.action.promoteToLeader=Set Leader
+oxygen_groups.gui.action.kick=Kick
+oxygen_groups.gui.action.promoteToLeader=Set Leader
 
-groups.gui.autoAccept=Accept Invitations
-groups.gui.invitePlayerCallback=Invite Player
-groups.gui.invitePlayerCallback.request=Invite player to group.
-groups.gui.leaveGroupCallback=Leave Group
-groups.gui.leaveGroupCallback.request=Are you sure?
-groups.gui.readinessCheckCallback=Readiness Check
-groups.gui.readinessCheckCallback.request=Start readiness check?
-groups.gui.promoteToLeaderCallback=Change Leader
-groups.gui.promoteToLeaderCallback.request=Player %s will be promoted to group leader.
-groups.gui.kickPlayerCallback=Kick Player
-groups.gui.kickPlayerCallback.request=Start voting to kick player %s?
+oxygen_groups.gui.autoAccept=Accept Invitations
+oxygen_groups.gui.invitePlayerCallback=Invite Player
+oxygen_groups.gui.invitePlayerCallback.request=Invite player to group.
+oxygen_groups.gui.leaveGroupCallback=Leave Group
+oxygen_groups.gui.leaveGroupCallback.request=Are you sure?
+oxygen_groups.gui.readinessCheckCallback=Readiness Check
+oxygen_groups.gui.readinessCheckCallback.request=Start readiness check?
+oxygen_groups.gui.promoteToLeaderCallback=Change Leader
+oxygen_groups.gui.promoteToLeaderCallback.request=Player %s will be promoted to group leader.
+oxygen_groups.gui.kickPlayerCallback=Kick Player
+oxygen_groups.gui.kickPlayerCallback.request=Start voting to kick player %s?
 
-groups.message.groupRequest.sender.accepted=Your group request accepted.
-groups.message.groupRequest.target.accepted=You accepted group request.
-groups.message.groupRequest.sender.rejected=Your group request rejected.
-groups.message.groupRequest.target.rejected=You rejected group request.
-groups.message.readinessCheck.started=Group readiness check started.
-groups.message.readinessCheck.ready=Group ready.
-groups.message.readinessCheck.notReady=Group not ready.
-groups.message.playerKickVoting.started=Started voting to kick player %s from group.
-groups.message.playerKickVoting.kicked=Player %s kicked.
-groups.message.playerKickVoting.notKicked=Player %s not kicked.
+oxygen_groups.message.groupRequest.sender.accepted=Your group request accepted.
+oxygen_groups.message.groupRequest.target.accepted=You accepted group request.
+oxygen_groups.message.groupRequest.sender.rejected=Your group request rejected.
+oxygen_groups.message.groupRequest.target.rejected=You rejected group request.
+oxygen_groups.message.readinessCheck.started=Group readiness check started.
+oxygen_groups.message.readinessCheck.ready=Group ready.
+oxygen_groups.message.readinessCheck.notReady=Group not ready.
+oxygen_groups.message.playerKickVoting.started=Started voting to kick player %s from group.
+oxygen_groups.message.playerKickVoting.kicked=Player %s kicked.
+oxygen_groups.message.playerKickVoting.notKicked=Player %s not kicked.
 
-groups.groupMode.squad=Squad
-groups.groupMode.raid=Raid
-groups.groupMode.party=Party
+oxygen_groups.groupMode.squad=Squad
+oxygen_groups.groupMode.raid=Raid
+oxygen_groups.groupMode.party=Party
+
+oxygen_groups.command.dataReset=<oxygen: groups> client data reset.

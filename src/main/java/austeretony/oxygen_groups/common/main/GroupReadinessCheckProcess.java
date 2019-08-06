@@ -18,6 +18,9 @@ public class GroupReadinessCheckProcess extends AbstractTemporaryProcess {
     }
 
     @Override
+    public void process() {}
+
+    @Override
     public void expired() {
         GroupsManagerServer.instance().stopReadinessCheck(this.groupId);
     }
