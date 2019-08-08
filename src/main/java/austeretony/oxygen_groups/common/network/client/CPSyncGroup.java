@@ -23,6 +23,6 @@ public class CPSyncGroup extends ProxyPacket {
 
     @Override
     public void read(PacketBuffer buffer, INetHandler netHandler) {
-        GroupsManagerClient.instance().readGroup(Group.read(buffer));
+        GroupsManagerClient.instance().readGroupDelayed(Group.read(buffer));
     }
 }

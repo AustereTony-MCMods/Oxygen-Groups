@@ -36,7 +36,7 @@ public class GroupsManagerClient {
         return instance;
     }
 
-    public void readGroupOnLoad(Group group) {
+    public void readGroupDelayed(Group group) {
         OxygenHelperClient.addTemporaryProcess(new GroupLoadingProcess(group));
     }
 

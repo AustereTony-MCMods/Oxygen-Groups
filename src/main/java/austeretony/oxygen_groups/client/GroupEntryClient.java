@@ -15,11 +15,6 @@ public class GroupEntryClient implements Comparable<GroupEntryClient> {
         this.username = username;
     }
 
-    @Override
-    public int compareTo(GroupEntryClient other) {
-        return this.username.compareTo(other.username);
-    }
-
     public float getHealth() {
         return this.currHealth;
     }
@@ -34,5 +29,10 @@ public class GroupEntryClient implements Comparable<GroupEntryClient> {
 
     public void setMaxHealth(float value) {
         this.maxHealth = value;
+    }
+
+    @Override
+    public int compareTo(GroupEntryClient other) {
+        return this.username.compareTo(other.username);
     }
 }

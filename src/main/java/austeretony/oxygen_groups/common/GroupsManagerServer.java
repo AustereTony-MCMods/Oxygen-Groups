@@ -39,7 +39,7 @@ public class GroupsManagerServer implements IPersistentData {
 
     private final Map<Long, Group> groups = new ConcurrentHashMap<Long, Group>();
 
-    private final Map<UUID, Long> groupAccess = new ConcurrentHashMap<UUID, Long>();
+    private final Map<UUID, Long> access = new ConcurrentHashMap<UUID, Long>();
 
     public static void create() {
         if (instance == null) 
@@ -59,11 +59,11 @@ public class GroupsManagerServer implements IPersistentData {
     }
 
     public Group getGroup(UUID playerUUID) {
-        return this.groups.get(this.groupAccess.get(playerUUID));
+        return this.groups.get(this.access.get(playerUUID));
     }
 
     public boolean haveGroup(UUID playerUUID) {
-        return this.groupAccess.containsKey(playerUUID);
+        return this.access.containsKey(playerUUID);
     }
 
     public void inviteToGroup(EntityPlayerMP playerMP, int targetIndex) {
@@ -100,8 +100,8 @@ public class GroupsManagerServer implements IPersistentData {
         group.addPlayer(leaderUUID);
         group.addPlayer(invitedUUID);
         this.groups.put(group.getId(), group);
-        this.groupAccess.put(leaderUUID, group.getId());
-        this.groupAccess.put(invitedUUID, group.getId());
+        this.access.put(leaderUUID, group.getId());
+        this.access.put(invitedUUID, group.getId());
 
         OxygenHelperServer.addObservedPlayer(leaderUUID, invitedUUID, false);
         OxygenHelperServer.addObservedPlayer(invitedUUID, leaderUUID, true);
@@ -121,7 +121,7 @@ public class GroupsManagerServer implements IPersistentData {
         OxygenHelperServer.saveObservedPlayersData();
 
         group.addPlayer(invitedUUID);
-        this.groupAccess.put(invitedUUID, group.getId());
+        this.access.put(invitedUUID, group.getId());
 
         OxygenHelperServer.syncObservedPlayersData((EntityPlayerMP) player);       
         GroupsMain.network().sendTo(new CPSyncGroup(group), (EntityPlayerMP) player);
@@ -150,7 +150,7 @@ public class GroupsManagerServer implements IPersistentData {
             }
 
             group.removePlayer(playerUUID);
-            this.groupAccess.remove(playerUUID);
+            this.access.remove(playerUUID);
 
             for (UUID uuid : group.getPlayers()) {
                 OxygenHelperServer.removeObservedPlayer(playerUUID, uuid, false);
@@ -171,7 +171,7 @@ public class GroupsManagerServer implements IPersistentData {
 
     public void disbandGroup(Group group) {
         for (UUID playerUUID : group.getPlayers()) {
-            this.groupAccess.remove(playerUUID);
+            this.access.remove(playerUUID);
 
             for (UUID uuid : group.getPlayers())
                 OxygenHelperServer.removeObservedPlayer(playerUUID, uuid, false);
@@ -366,12 +366,12 @@ public class GroupsManagerServer implements IPersistentData {
             group = Group.read(bis);
             this.groups.put(group.getId(), group);
             for (UUID playerUUID : group.getPlayers())
-                this.groupAccess.put(playerUUID, group.getId());
+                this.access.put(playerUUID, group.getId());
         }
     }
 
     public void reset() {
         this.groups.clear();
-        this.groupAccess.clear();
+        this.access.clear();
     }
 }

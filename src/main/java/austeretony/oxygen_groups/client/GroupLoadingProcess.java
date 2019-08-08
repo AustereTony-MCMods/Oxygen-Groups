@@ -13,7 +13,7 @@ public class GroupLoadingProcess extends AbstractTemporaryProcess {
 
     @Override
     public int getExpireTime() {
-        return 5;//five seconds
+        return 3;//three seconds
     }
 
     @Override
