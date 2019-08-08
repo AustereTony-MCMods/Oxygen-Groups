@@ -1,3 +1,7 @@
+0.8.1b [2019-08-08]
++Fixed group initialization for invited player. If some group members are offline, 
+group will be synchronized properly with new member.
+
 0.8.0b
 +Performance improvements.
 
