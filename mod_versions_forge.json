@@ -1,7 +1,7 @@
 {
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/oxygen-groups",
   "1.12.2": {
-    "0.8.1": "Fixed group synchronization."
+    "0.8.1": "Minor improvements. See change log."
   },
   "promos": {
     "1.12.2-latest": "0.8.1",
