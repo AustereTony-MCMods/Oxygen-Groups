@@ -1,4 +1,4 @@
-package austeretony.oxygen_groups.client.gui.group.context;
+package austeretony.oxygen_groups.client.gui.context;
 
 import java.util.UUID;
 
@@ -8,30 +8,24 @@ import austeretony.oxygen_core.client.api.OxygenHelperClient;
 import austeretony.oxygen_core.client.gui.IndexedGUIButton;
 import austeretony.oxygen_core.client.gui.elements.OxygenGUIContextMenuElement.ContextMenuAction;
 import austeretony.oxygen_groups.client.GroupsManagerClient;
-import austeretony.oxygen_groups.client.gui.group.GroupGUISection;
 
-public class KickPlayerContextAction implements ContextMenuAction {
-
-    public final GroupGUISection section;
-
-    public KickPlayerContextAction(GroupGUISection section) {
-        this.section = section; 
-    }
+public class InviteToGroupContextAction implements ContextMenuAction {
 
     @Override
     public String getName(GUIBaseElement currElement) {
-        return ClientReference.localize("oxygen_groups.gui.action.kick");
+        return ClientReference.localize("oxygen_groups.context.inviteToGroup");
     }
 
     @Override
     public boolean isValid(GUIBaseElement currElement) {
         UUID playerUUID = ((IndexedGUIButton<UUID>) currElement).index;   
-        return !playerUUID.equals(OxygenHelperClient.getPlayerUUID())
-                && GroupsManagerClient.instance().getGroupDataManager().getGroupData().getSize() > 2;
+        return OxygenHelperClient.isPlayerAvailable(playerUUID)
+                && (!GroupsManagerClient.instance().getGroupDataManager().getGroupData().isActive() || GroupsManagerClient.instance().getGroupDataManager().getGroupData().isClientLeader());
     }
 
     @Override
     public void execute(GUIBaseElement currElement) {
-        this.section.openKickPlayerCallback();
+        UUID playerUUID = ((IndexedGUIButton<UUID>) currElement).index;   
+        GroupsManagerClient.instance().getGroupDataManager().inviteToGroupSynced(OxygenHelperClient.getPlayerIndex(playerUUID));
     }
 }

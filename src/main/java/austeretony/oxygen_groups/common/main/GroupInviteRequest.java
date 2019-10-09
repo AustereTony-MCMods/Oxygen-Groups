@@ -2,13 +2,14 @@ package austeretony.oxygen_groups.common.main;
 
 import java.util.UUID;
 
-import austeretony.oxygen.common.api.OxygenHelperServer;
-import austeretony.oxygen.common.api.notification.AbstractNotification;
-import austeretony.oxygen.common.core.api.CommonReference;
-import austeretony.oxygen.common.notification.EnumNotification;
-import austeretony.oxygen_groups.common.GroupsManagerServer;
+import austeretony.oxygen_core.common.api.CommonReference;
+import austeretony.oxygen_core.common.api.notification.AbstractNotification;
+import austeretony.oxygen_core.common.notification.EnumNotification;
+import austeretony.oxygen_core.server.api.OxygenHelperServer;
 import austeretony.oxygen_groups.common.config.GroupsConfig;
+import austeretony.oxygen_groups.server.GroupsManagerServer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 
 public class GroupInviteRequest extends AbstractNotification {
 
@@ -45,32 +46,29 @@ public class GroupInviteRequest extends AbstractNotification {
     }
 
     @Override
-    public int getExpireTime() {
-        return GroupsConfig.GROUP_INVITE_REQUEST_EXPIRE_TIME.getIntValue();
+    public int getExpireTimeSeconds() {
+        return GroupsConfig.GROUP_INVITE_REQUEST_EXPIRE_TIME_SECONDS.getIntValue();
     }
 
     @Override
+    public void process() {}
+
+    @Override
     public void accepted(EntityPlayer player) {
-        GroupsManagerServer.instance().processAcceptedGroupRequest(player, this.senderUUID);
-
-        if (OxygenHelperServer.isOnline(this.senderUUID))
-            OxygenHelperServer.sendMessage(CommonReference.playerByUUID(this.senderUUID), GroupsMain.GROUPS_MOD_INDEX, EnumGroupsChatMessage.GROUP_REQUEST_ACCEPTED_SENDER.ordinal());
-        OxygenHelperServer.sendMessage(player, GroupsMain.GROUPS_MOD_INDEX, EnumGroupsChatMessage.GROUP_REQUEST_ACCEPTED_TARGET.ordinal());
-
-        OxygenHelperServer.setRequesting(this.senderUUID, false);
+        if (OxygenHelperServer.isPlayerOnline(this.senderUUID)) {
+            GroupsManagerServer.instance().getGroupsDataManager().processGroupCreation(player, this.senderUUID);
+            OxygenHelperServer.sendStatusMessage(CommonReference.playerByUUID(this.senderUUID), GroupsMain.GROUPS_MOD_INDEX, EnumGroupsStatusMessage.GROUP_REQUEST_ACCEPTED_SENDER.ordinal());
+        }
+        OxygenHelperServer.sendStatusMessage((EntityPlayerMP) player, GroupsMain.GROUPS_MOD_INDEX, EnumGroupsStatusMessage.GROUP_REQUEST_ACCEPTED_TARGET.ordinal());
     }
 
     @Override
     public void rejected(EntityPlayer player) {
-        if (OxygenHelperServer.isOnline(this.senderUUID))
-            OxygenHelperServer.sendMessage(CommonReference.playerByUUID(this.senderUUID), GroupsMain.GROUPS_MOD_INDEX, EnumGroupsChatMessage.GROUP_REQUEST_REJECTED_SENDER.ordinal());
-        OxygenHelperServer.sendMessage(player, GroupsMain.GROUPS_MOD_INDEX, EnumGroupsChatMessage.GROUP_REQUEST_REJECTED_TARGET.ordinal());
-
-        OxygenHelperServer.setRequesting(this.senderUUID, false);
+        if (OxygenHelperServer.isPlayerOnline(this.senderUUID))
+            OxygenHelperServer.sendStatusMessage(CommonReference.playerByUUID(this.senderUUID), GroupsMain.GROUPS_MOD_INDEX, EnumGroupsStatusMessage.GROUP_REQUEST_REJECTED_SENDER.ordinal());
+        OxygenHelperServer.sendStatusMessage((EntityPlayerMP) player, GroupsMain.GROUPS_MOD_INDEX, EnumGroupsStatusMessage.GROUP_REQUEST_REJECTED_TARGET.ordinal());
     }
 
     @Override
-    public void expired() {
-        OxygenHelperServer.setRequesting(this.senderUUID, false);
-    }
+    public void expired() {}
 }

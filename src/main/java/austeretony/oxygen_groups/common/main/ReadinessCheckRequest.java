@@ -1,9 +1,9 @@
 package austeretony.oxygen_groups.common.main;
 
-import austeretony.oxygen.common.api.notification.AbstractNotification;
-import austeretony.oxygen.common.notification.EnumNotification;
-import austeretony.oxygen_groups.common.GroupsManagerServer;
+import austeretony.oxygen_core.common.api.notification.AbstractNotification;
+import austeretony.oxygen_core.common.notification.EnumNotification;
 import austeretony.oxygen_groups.common.config.GroupsConfig;
+import austeretony.oxygen_groups.server.GroupsManagerServer;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class ReadinessCheckRequest extends AbstractNotification {
@@ -35,13 +35,16 @@ public class ReadinessCheckRequest extends AbstractNotification {
     }
 
     @Override
-    public int getExpireTime() {
-        return GroupsConfig.READINESS_CHECK_REQUEST_EXPIRE_TIME.getIntValue();
+    public int getExpireTimeSeconds() {
+        return GroupsConfig.READINESS_CHECK_REQUEST_EXPIRE_TIME_SECONDS.getIntValue();
     }
 
     @Override
+    public void process() {}
+
+    @Override
     public void accepted(EntityPlayer player) {
-        GroupsManagerServer.instance().processVoteFor(player);
+        GroupsManagerServer.instance().getGroupsDataManager().processGroupVote(player);
     }
 
     @Override

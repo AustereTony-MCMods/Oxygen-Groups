@@ -2,6 +2,7 @@ package austeretony.oxygen_groups.common.network.server;
 
 import austeretony.oxygen_core.common.api.CommonReference;
 import austeretony.oxygen_core.common.network.Packet;
+import austeretony.oxygen_core.server.api.OxygenHelperServer;
 import austeretony.oxygen_core.server.api.RequestsFilterHelper;
 import austeretony.oxygen_groups.common.main.GroupsMain;
 import austeretony.oxygen_groups.server.GroupsManagerServer;
@@ -9,27 +10,17 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.INetHandler;
 
-public class SPPromoteToLeader extends Packet {
+public class SPLeaveGroup extends Packet {
 
-    private int index;
-
-    public SPPromoteToLeader() {}
-
-    public SPPromoteToLeader(int index) {
-        this.index = index;
-    }
+    public SPLeaveGroup() {}
 
     @Override
-    public void write(ByteBuf buffer, INetHandler netHandler) {
-        buffer.writeInt(this.index);
-    }
+    public void write(ByteBuf buffer, INetHandler netHandler) {}
 
     @Override
     public void read(ByteBuf buffer, INetHandler netHandler) {
         final EntityPlayerMP playerMP = getEntityPlayerMP(netHandler);
-        if (RequestsFilterHelper.getLock(CommonReference.getPersistentUUID(playerMP), GroupsMain.PROMOTE_TO_LEADER_REQUEST_ID)) {
-            final int index = buffer.readInt();
-            GroupsManagerServer.instance().getGroupsDataManager().promoteToLeader(playerMP, index);
-        }
+        if (RequestsFilterHelper.getLock(CommonReference.getPersistentUUID(playerMP), GroupsMain.LEAVE_GROUP_REQUEST_ID))
+            OxygenHelperServer.addRoutineTask(()->GroupsManagerServer.instance().getGroupsDataManager().leaveGroup(CommonReference.getPersistentUUID(playerMP)));
     }
 }

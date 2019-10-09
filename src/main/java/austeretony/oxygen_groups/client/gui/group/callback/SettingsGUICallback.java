@@ -1,15 +1,15 @@
 package austeretony.oxygen_groups.client.gui.group.callback;
 
-import austeretony.alternateui.screen.button.GUIButton;
-import austeretony.alternateui.screen.button.GUICheckBoxButton;
 import austeretony.alternateui.screen.callback.AbstractGUICallback;
 import austeretony.alternateui.screen.core.AbstractGUISection;
 import austeretony.alternateui.screen.core.GUIBaseElement;
-import austeretony.alternateui.screen.text.GUITextLabel;
-import austeretony.oxygen.client.api.OxygenHelperClient;
-import austeretony.oxygen.client.core.api.ClientReference;
-import austeretony.oxygen.client.gui.settings.GUISettings;
-import austeretony.oxygen.common.main.OxygenSoundEffects;
+import austeretony.oxygen_core.client.api.ClientReference;
+import austeretony.oxygen_core.client.api.OxygenHelperClient;
+import austeretony.oxygen_core.client.gui.elements.OxygenCallbackGUIFiller;
+import austeretony.oxygen_core.client.gui.elements.OxygenCheckBoxGUIButton;
+import austeretony.oxygen_core.client.gui.elements.OxygenGUIButton;
+import austeretony.oxygen_core.client.gui.elements.OxygenGUIText;
+import austeretony.oxygen_core.client.gui.settings.GUISettings;
 import austeretony.oxygen_groups.client.gui.group.GroupGUISection;
 import austeretony.oxygen_groups.client.gui.group.GroupMenuGUIScreen;
 import austeretony.oxygen_groups.common.main.GroupsMain;
@@ -20,9 +20,9 @@ public class SettingsGUICallback extends AbstractGUICallback {
 
     private final GroupGUISection section;
 
-    private GUICheckBoxButton autoAcceptButton, hideOverlayButton;
+    private OxygenCheckBoxGUIButton autoAcceptButton, hideOverlayButton;
 
-    private GUIButton closeButton;
+    private OxygenGUIButton closeButton;
 
     public SettingsGUICallback(GroupMenuGUIScreen screen, GroupGUISection section, int width, int height) {
         super(screen, section, width, height);
@@ -32,18 +32,16 @@ public class SettingsGUICallback extends AbstractGUICallback {
 
     @Override
     public void init() {
-        this.addElement(new SettingsCallbackGUIFiller(0, 0, this.getWidth(), this.getHeight()));
-        this.addElement(new GUITextLabel(2, 2).setDisplayText(ClientReference.localize("oxygen.gui.callback.settings"), true, GUISettings.instance().getTitleScale()));
+        this.addElement(new OxygenCallbackGUIFiller(0, 0, this.getWidth(), this.getHeight()));
+        this.addElement(new OxygenGUIText(4, 5, ClientReference.localize("oxygen.gui.callback.settings"), GUISettings.get().getTextScale(), GUISettings.get().getEnabledTextColor()));
 
-        this.addElement(this.hideOverlayButton = new GUICheckBoxButton(2, 16, 6).setSound(OxygenSoundEffects.BUTTON_CLICK.soundEvent)
-                .enableDynamicBackground(GUISettings.instance().getEnabledButtonColor(), GUISettings.instance().getDisabledButtonColor(), GUISettings.instance().getHoveredButtonColor()));
-        this.addElement(new GUITextLabel(10, 15).setDisplayText(ClientReference.localize("oxygen_groups.gui.group.setting.hideOverlay"), false, GUISettings.instance().getSubTextScale()));
+        this.addElement(this.autoAcceptButton = new OxygenCheckBoxGUIButton(6, 18));
+        this.addElement(new OxygenGUIText(16, 19, ClientReference.localize("oxygen_groups.gui.group.setting.acceptInvitations"), GUISettings.get().getSubTextScale(), GUISettings.get().getEnabledTextColorDark()));
 
-        this.addElement(this.autoAcceptButton = new GUICheckBoxButton(2, 26, 6).setSound(OxygenSoundEffects.BUTTON_CLICK.soundEvent)
-                .enableDynamicBackground(GUISettings.instance().getEnabledButtonColor(), GUISettings.instance().getDisabledButtonColor(), GUISettings.instance().getHoveredButtonColor()));
-        this.addElement(new GUITextLabel(10, 25).setDisplayText(ClientReference.localize("oxygen_groups.gui.group.setting.acceptInvitations"), false, GUISettings.instance().getSubTextScale()));
+        this.addElement(this.hideOverlayButton = new OxygenCheckBoxGUIButton(6, 28));
+        this.addElement(new OxygenGUIText(16, 29, ClientReference.localize("oxygen_groups.gui.group.setting.hideOverlay"), GUISettings.get().getSubTextScale(), GUISettings.get().getEnabledTextColorDark()));
 
-        this.addElement(this.closeButton = new GUIButton(this.getWidth() - 42, this.getHeight() - 12, 40, 10).setSound(OxygenSoundEffects.BUTTON_CLICK.soundEvent).enableDynamicBackground().setDisplayText(ClientReference.localize("oxygen.gui.closeButton"), true, GUISettings.instance().getButtonTextScale()));
+        this.addElement(this.closeButton = new OxygenGUIButton(this.getWidth() - 55, this.getHeight() - 12, 40, 10, ClientReference.localize("oxygen.gui.closeButton"))); 
     }
 
     @Override
@@ -57,19 +55,10 @@ public class SettingsGUICallback extends AbstractGUICallback {
         if (mouseButton == 0) {
             if (element == this.closeButton)
                 this.close();
-            else if (element == this.autoAcceptButton) {
-                if (this.autoAcceptButton.isToggled())
-                    OxygenHelperClient.setClientSetting(GroupsMain.AUTO_ACCEPT_GROUP_INVITE_SETTING_ID, true);
-                else
-                    OxygenHelperClient.setClientSetting(GroupsMain.AUTO_ACCEPT_GROUP_INVITE_SETTING_ID, false);
-                OxygenHelperClient.saveClientSettings();
-            } else if (element == this.hideOverlayButton) {
-                if (this.hideOverlayButton.isToggled())
-                    OxygenHelperClient.setClientSetting(GroupsMain.HIDE_GROUP_OVERLAY_SETTING_ID, true);
-                else
-                    OxygenHelperClient.setClientSetting(GroupsMain.HIDE_GROUP_OVERLAY_SETTING_ID, false);
-                OxygenHelperClient.saveClientSettings();
-            }
+            else if (element == this.autoAcceptButton)
+                OxygenHelperClient.setClientSetting(GroupsMain.AUTO_ACCEPT_GROUP_INVITE_SETTING_ID, this.autoAcceptButton.isToggled());
+            else if (element == this.hideOverlayButton)
+                OxygenHelperClient.setClientSetting(GroupsMain.HIDE_GROUP_OVERLAY_SETTING_ID, this.hideOverlayButton.isToggled());
         }
     }
 }

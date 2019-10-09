@@ -2,20 +2,20 @@ package austeretony.oxygen_groups.common.network.client;
 
 import java.util.UUID;
 
+import austeretony.oxygen_core.client.OxygenManagerClient;
 import austeretony.oxygen_core.client.api.OxygenHelperClient;
 import austeretony.oxygen_core.common.network.Packet;
 import austeretony.oxygen_core.common.util.ByteBufUtils;
-import austeretony.oxygen_groups.client.GroupsManagerClient;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.INetHandler;
 
-public class CPRemovePlayerFromGroup extends Packet {
+public class CPRemoveSharedData extends Packet {
 
     private UUID playerUUID;
 
-    public CPRemovePlayerFromGroup() {}
+    public CPRemoveSharedData() {}
 
-    public CPRemovePlayerFromGroup(UUID playerUUID) {
+    public CPRemoveSharedData(UUID playerUUID) {
         this.playerUUID = playerUUID;
     }
 
@@ -27,6 +27,6 @@ public class CPRemovePlayerFromGroup extends Packet {
     @Override
     public void read(ByteBuf buffer, INetHandler netHandler) {
         final UUID playerUUID = ByteBufUtils.readUUID(buffer);
-        OxygenHelperClient.addRoutineTask(()->GroupsManagerClient.instance().getGroupDataManager().removeFromGroup(playerUUID));
+        OxygenHelperClient.addRoutineTask(()->OxygenManagerClient.instance().getSharedDataManager().removeSharedData(playerUUID));
     }
 }

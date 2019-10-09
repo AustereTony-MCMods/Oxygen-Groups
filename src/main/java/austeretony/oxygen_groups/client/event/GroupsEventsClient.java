@@ -1,9 +1,9 @@
 package austeretony.oxygen_groups.client.event;
 
-import austeretony.oxygen.client.api.OxygenHelperClient;
-import austeretony.oxygen.client.api.event.OxygenChatMessageEvent;
-import austeretony.oxygen.client.api.event.OxygenClientInitEvent;
-import austeretony.oxygen.client.api.event.OxygenNotificationRecievedEvent;
+import austeretony.oxygen_core.client.api.OxygenHelperClient;
+import austeretony.oxygen_core.client.api.event.OxygenChatMessageEvent;
+import austeretony.oxygen_core.client.api.event.OxygenClientInitEvent;
+import austeretony.oxygen_core.client.api.event.OxygenNotificationRecievedEvent;
 import austeretony.oxygen_groups.client.GroupsManagerClient;
 import austeretony.oxygen_groups.common.main.EnumGroupsChatMessage;
 import austeretony.oxygen_groups.common.main.GroupsMain;
@@ -13,7 +13,7 @@ public class GroupsEventsClient {
 
     @SubscribeEvent     
     public void onClientInit(OxygenClientInitEvent event) {
-        GroupsManagerClient.instance().reset();
+        GroupsManagerClient.instance().init();
     }
 
     @SubscribeEvent

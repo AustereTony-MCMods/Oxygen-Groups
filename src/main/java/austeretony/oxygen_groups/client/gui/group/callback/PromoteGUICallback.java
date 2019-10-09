@@ -1,14 +1,13 @@
 package austeretony.oxygen_groups.client.gui.group.callback;
 
-import austeretony.alternateui.screen.button.GUIButton;
 import austeretony.alternateui.screen.callback.AbstractGUICallback;
 import austeretony.alternateui.screen.core.AbstractGUISection;
 import austeretony.alternateui.screen.core.GUIBaseElement;
-import austeretony.alternateui.screen.text.GUITextBoxLabel;
-import austeretony.alternateui.screen.text.GUITextLabel;
-import austeretony.oxygen.client.core.api.ClientReference;
-import austeretony.oxygen.client.gui.settings.GUISettings;
-import austeretony.oxygen.common.main.OxygenSoundEffects;
+import austeretony.oxygen_core.client.api.ClientReference;
+import austeretony.oxygen_core.client.gui.elements.OxygenCallbackGUIFiller;
+import austeretony.oxygen_core.client.gui.elements.OxygenGUIButton;
+import austeretony.oxygen_core.client.gui.elements.OxygenGUIText;
+import austeretony.oxygen_core.client.gui.settings.GUISettings;
 import austeretony.oxygen_groups.client.GroupsManagerClient;
 import austeretony.oxygen_groups.client.gui.group.GroupGUISection;
 import austeretony.oxygen_groups.client.gui.group.GroupMenuGUIScreen;
@@ -19,9 +18,7 @@ public class PromoteGUICallback extends AbstractGUICallback {
 
     private final GroupGUISection section;
 
-    private GUITextBoxLabel requestTextBoxLabel;
-
-    private GUIButton confirmButton, cancelButton;
+    private OxygenGUIButton confirmButton, cancelButton;
 
     public PromoteGUICallback(GroupMenuGUIScreen screen, GroupGUISection section, int width, int height) {
         super(screen, section, width, height);
@@ -31,17 +28,12 @@ public class PromoteGUICallback extends AbstractGUICallback {
 
     @Override
     public void init() {
-        this.addElement(new PromoteCallbackGUIFiller(0, 0, this.getWidth(), this.getHeight()));
-        this.addElement(new GUITextLabel(2, 2).setDisplayText(ClientReference.localize("oxygen_groups.gui.promoteToLeaderCallback"), true, GUISettings.instance().getTitleScale()));
-        this.addElement(this.requestTextBoxLabel = new GUITextBoxLabel(2, 16, 160, 20));        
+        this.addElement(new OxygenCallbackGUIFiller(0, 0, this.getWidth(), this.getHeight()));
+        this.addElement(new OxygenGUIText(4, 5, ClientReference.localize("oxygen_groups.gui.callback.promoteToLeader"), GUISettings.get().getTextScale(), GUISettings.get().getEnabledTextColor()));   
+        this.addElement(new OxygenGUIText(6, 18, ClientReference.localize("oxygen_groups.gui.callback.promoteToLeader.request"), GUISettings.get().getSubTextScale(), GUISettings.get().getEnabledTextColor()));  
 
-        this.addElement(this.confirmButton = new GUIButton(15, this.getHeight() - 12, 40, 10).setSound(OxygenSoundEffects.BUTTON_CLICK.soundEvent).enableDynamicBackground().setDisplayText(ClientReference.localize("oxygen.gui.confirmButton"), true, GUISettings.instance().getButtonTextScale()));
-        this.addElement(this.cancelButton = new GUIButton(this.getWidth() - 55, this.getHeight() - 12, 40, 10).setSound(OxygenSoundEffects.BUTTON_CLICK.soundEvent).enableDynamicBackground().setDisplayText(ClientReference.localize("oxygen.gui.cancelButton"), true, GUISettings.instance().getButtonTextScale()));
-    }
-
-    @Override
-    protected void onOpen() {
-        this.requestTextBoxLabel.setDisplayText(ClientReference.localize("oxygen_groups.gui.promoteToLeaderCallback.request", this.section.getCurrentEntry().getDisplayText()), false, GUISettings.instance().getTextScale());
+        this.addElement(this.confirmButton = new OxygenGUIButton(15, this.getHeight() - 12, 40, 10, ClientReference.localize("oxygen.gui.confirmButton")));
+        this.addElement(this.cancelButton = new OxygenGUIButton(this.getWidth() - 55, this.getHeight() - 12, 40, 10, ClientReference.localize("oxygen.gui.cancelButton")));
     }
 
     @Override
@@ -50,9 +42,9 @@ public class PromoteGUICallback extends AbstractGUICallback {
             if (element == this.cancelButton)
                 this.close();
             else if (element == this.confirmButton) {
-                GroupsManagerClient.instance().promoteToLeaderSynced(this.section.getCurrentEntry().index);
-                this.section.sortPlayers(0);
-                this.close();            
+                GroupsManagerClient.instance().getGroupDataManager().promoteToLeaderSynced(this.section.getCurrentEntry().index);
+                this.close();     
+                this.screen.close();
             }
         }
     }

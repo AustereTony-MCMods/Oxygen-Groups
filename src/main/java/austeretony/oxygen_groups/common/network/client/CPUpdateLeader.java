@@ -1,11 +1,12 @@
 package austeretony.oxygen_groups.common.network.client;
 
-import austeretony.oxygen.common.network.ProxyPacket;
+import austeretony.oxygen_core.client.api.OxygenHelperClient;
+import austeretony.oxygen_core.common.network.Packet;
 import austeretony.oxygen_groups.client.GroupsManagerClient;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.network.INetHandler;
-import net.minecraft.network.PacketBuffer;
 
-public class CPUpdateLeader extends ProxyPacket {
+public class CPUpdateLeader extends Packet {
 
     private int index;
 
@@ -16,12 +17,13 @@ public class CPUpdateLeader extends ProxyPacket {
     }
 
     @Override
-    public void write(PacketBuffer buffer, INetHandler netHandler) {
+    public void write(ByteBuf buffer, INetHandler netHandler) {
         buffer.writeInt(this.index);
     }
 
     @Override
-    public void read(PacketBuffer buffer, INetHandler netHandler) {
-        GroupsManagerClient.instance().updateLeader(buffer.readInt());
+    public void read(ByteBuf buffer, INetHandler netHandler) {
+        final int index = buffer.readInt();
+        OxygenHelperClient.addRoutineTask(()->GroupsManagerClient.instance().getGroupDataManager().updateLeader(index));
     }
 }

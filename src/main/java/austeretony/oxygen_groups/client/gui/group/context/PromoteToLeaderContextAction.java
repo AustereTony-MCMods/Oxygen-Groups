@@ -1,13 +1,16 @@
 package austeretony.oxygen_groups.client.gui.group.context;
 
-import austeretony.alternateui.screen.contextmenu.AbstractContextAction;
+import java.util.UUID;
+
 import austeretony.alternateui.screen.core.GUIBaseElement;
-import austeretony.oxygen.client.api.OxygenHelperClient;
-import austeretony.oxygen.client.core.api.ClientReference;
+import austeretony.oxygen_core.client.api.ClientReference;
+import austeretony.oxygen_core.client.api.OxygenHelperClient;
+import austeretony.oxygen_core.client.gui.IndexedGUIButton;
+import austeretony.oxygen_core.client.gui.elements.OxygenGUIContextMenuElement.ContextMenuAction;
 import austeretony.oxygen_groups.client.GroupsManagerClient;
 import austeretony.oxygen_groups.client.gui.group.GroupGUISection;
 
-public class PromoteToLeaderContextAction extends AbstractContextAction {
+public class PromoteToLeaderContextAction implements ContextMenuAction {
 
     public final GroupGUISection section;
 
@@ -16,19 +19,19 @@ public class PromoteToLeaderContextAction extends AbstractContextAction {
     }
 
     @Override
-    protected String getName(GUIBaseElement currElement) {
+    public String getName(GUIBaseElement currElement) {
         return ClientReference.localize("oxygen_groups.gui.action.promoteToLeader");
     }
 
     @Override
-    protected boolean isValid(GUIBaseElement currElement) {
-        return !this.section.getCurrentEntry().index.equals(OxygenHelperClient.getPlayerUUID()) 
-                && GroupsManagerClient.instance().getGroupData().isClientLeader() 
-                && (OxygenHelperClient.isOnline(this.section.getCurrentEntry().index) && !OxygenHelperClient.isOfflineStatus(this.section.getCurrentEntry().index));
+    public boolean isValid(GUIBaseElement currElement) {
+        UUID playerUUID = ((IndexedGUIButton<UUID>) currElement).index;   
+        return OxygenHelperClient.isPlayerAvailable(playerUUID)
+                && GroupsManagerClient.instance().getGroupDataManager().getGroupData().isClientLeader();
     }
 
     @Override
-    protected void execute(GUIBaseElement currElement) {
+    public void execute(GUIBaseElement currElement) {
         this.section.openPromoteToLeaderCallback();
     }
 }

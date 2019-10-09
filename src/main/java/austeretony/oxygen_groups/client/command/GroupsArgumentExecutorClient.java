@@ -2,10 +2,10 @@ package austeretony.oxygen_groups.client.command;
 
 import java.util.Set;
 
-import austeretony.oxygen.client.core.api.ClientReference;
-import austeretony.oxygen.common.api.command.AbstractArgumentExecutor;
-import austeretony.oxygen.common.api.command.ArgumentParameter;
-import austeretony.oxygen.common.command.IArgumentParameter;
+import austeretony.oxygen_core.client.api.ClientReference;
+import austeretony.oxygen_core.common.api.command.AbstractArgumentExecutor;
+import austeretony.oxygen_core.common.api.command.ArgumentParameterImpl;
+import austeretony.oxygen_core.common.command.ArgumentParameter;
 import austeretony.oxygen_groups.client.GroupsManagerClient;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -20,17 +20,16 @@ public class GroupsArgumentExecutorClient extends AbstractArgumentExecutor {
     }
 
     @Override
-    public void getParams(Set<IArgumentParameter> params) {        
-        params.add(new ArgumentParameter(ACTION_RESET_DATA));
+    public void getParams(Set<ArgumentParameter> params) {        
+        params.add(new ArgumentParameterImpl(ACTION_RESET_DATA));
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, Set<IArgumentParameter> params) throws CommandException {
-        for (IArgumentParameter param : params) {
+    public void execute(MinecraftServer server, ICommandSender sender, Set<ArgumentParameter> params) throws CommandException {
+        for (ArgumentParameter param : params) {
             if (param.getBaseName().equals(ACTION_RESET_DATA)) {
-                GroupsManagerClient.instance().reset();
-                GroupsManagerClient.instance().downloadGroupDataSynced();
-                ClientReference.showMessage("oxygen_groups.command.dataReset");
+                GroupsManagerClient.instance().init();
+                ClientReference.showChatMessage("oxygen_groups.command.dataReset");
             }
         }
     }

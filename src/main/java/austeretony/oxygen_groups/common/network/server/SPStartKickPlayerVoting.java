@@ -2,13 +2,17 @@ package austeretony.oxygen_groups.common.network.server;
 
 import java.util.UUID;
 
-import austeretony.oxygen.common.network.ProxyPacket;
-import austeretony.oxygen.util.PacketBufferUtils;
-import austeretony.oxygen_groups.common.GroupsManagerServer;
+import austeretony.oxygen_core.common.api.CommonReference;
+import austeretony.oxygen_core.common.network.Packet;
+import austeretony.oxygen_core.common.util.ByteBufUtils;
+import austeretony.oxygen_core.server.api.RequestsFilterHelper;
+import austeretony.oxygen_groups.common.main.GroupsMain;
+import austeretony.oxygen_groups.server.GroupsManagerServer;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.INetHandler;
-import net.minecraft.network.PacketBuffer;
 
-public class SPStartKickPlayerVoting extends ProxyPacket {
+public class SPStartKickPlayerVoting extends Packet {
 
     private UUID playerUUID;
 
@@ -19,12 +23,16 @@ public class SPStartKickPlayerVoting extends ProxyPacket {
     }
 
     @Override
-    public void write(PacketBuffer buffer, INetHandler netHandler) {
-        PacketBufferUtils.writeUUID(this.playerUUID, buffer);
+    public void write(ByteBuf buffer, INetHandler netHandler) {
+        ByteBufUtils.writeUUID(this.playerUUID, buffer);
     }
 
     @Override
-    public void read(PacketBuffer buffer, INetHandler netHandler) {
-        GroupsManagerServer.instance().startKickPlayerVoting(getEntityPlayerMP(netHandler), PacketBufferUtils.readUUID(buffer));
+    public void read(ByteBuf buffer, INetHandler netHandler) {
+        final EntityPlayerMP playerMP = getEntityPlayerMP(netHandler);
+        if (RequestsFilterHelper.getLock(CommonReference.getPersistentUUID(playerMP), GroupsMain.START_KICK_PLAYER_VOTING_REQUEST_ID)) {
+            final UUID playerUUID = ByteBufUtils.readUUID(buffer);
+            GroupsManagerServer.instance().getGroupsDataManager().startKickPlayerVoting(playerMP, playerUUID);
+        }
     }
 }

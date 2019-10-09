@@ -2,7 +2,7 @@ package austeretony.oxygen_groups.client.gui.overlay;
 
 import java.util.UUID;
 
-import austeretony.oxygen.client.core.api.ClientReference;
+import austeretony.oxygen_core.client.api.ClientReference;
 import austeretony.oxygen_groups.client.GroupsManagerClient;
 import austeretony.oxygen_groups.client.gui.GroupsGUITextures;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -23,7 +23,9 @@ public class GroupMarkRenderer {
     }
 
     private void drawGroupMark(EntityPlayer target, RenderLivingBase render, double x, double y, double z) { 
-        if (!GroupsManagerClient.instance().haveGroup() || target == render.getRenderManager().renderViewEntity || render.getRenderManager().options.hideGUI)
+        if (!GroupsManagerClient.instance().getGroupDataManager().getGroupData().isActive() 
+                || target == render.getRenderManager().renderViewEntity 
+                || render.getRenderManager().options.hideGUI)
             return;
         double 
         distance = target.getDistanceSq(render.getRenderManager().renderViewEntity),
@@ -31,9 +33,9 @@ public class GroupMarkRenderer {
         UUID targetUUID = ClientReference.getPersistentUUID(target);
 
         if (distance < viewDistance * viewDistance 
-                && GroupsManagerClient.instance().getGroupData().getPlayersUUIDs().contains(targetUUID)) {
+                && GroupsManagerClient.instance().getGroupDataManager().getGroupData().getPlayersUUIDs().contains(targetUUID)) {
 
-            boolean isLeader = GroupsManagerClient.instance().getGroupData().isLeader(targetUUID);
+            boolean isLeader = GroupsManagerClient.instance().getGroupDataManager().getGroupData().isLeader(targetUUID);
             GlStateManager.pushMatrix();
             GlStateManager.translate(x, y, z);
             GlStateManager.rotate(180.0F, 1.0F, 0.0F, 0.0F);

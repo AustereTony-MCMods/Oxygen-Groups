@@ -2,23 +2,27 @@ package austeretony.oxygen_groups.common.config;
 
 import java.util.List;
 
-import austeretony.oxygen.common.api.config.AbstractConfigHolder;
-import austeretony.oxygen.common.api.config.ConfigValue;
-import austeretony.oxygen.common.core.api.CommonReference;
+import austeretony.oxygen_core.common.EnumValueType;
+import austeretony.oxygen_core.common.api.CommonReference;
+import austeretony.oxygen_core.common.api.config.AbstractConfigHolder;
+import austeretony.oxygen_core.common.api.config.ConfigValueImpl;
+import austeretony.oxygen_core.common.config.ConfigValue;
 import austeretony.oxygen_groups.common.main.GroupsMain;
 
 public class GroupsConfig extends AbstractConfigHolder {
 
     public static final ConfigValue
-    GROUP_INVITE_REQUEST_EXPIRE_TIME = new ConfigValue(ConfigValue.EnumValueType.INT, "main", "group_invite_request_expire_time_seconds"),
-    READINESS_CHECK_REQUEST_EXPIRE_TIME = new ConfigValue(ConfigValue.EnumValueType.INT, "main", "readiness_check_request_expire_time_seconds"),
-    VOTE_KICK_REQUEST_EXPIRE_TIME = new ConfigValue(ConfigValue.EnumValueType.INT, "main", "vote_kick_request_expire_time_seconds"),
-    PLAYERS_PER_SQUAD = new ConfigValue(ConfigValue.EnumValueType.INT, "main", "max_players_per_squad"),
-    PLAYERS_PER_RAID = new ConfigValue(ConfigValue.EnumValueType.INT, "main", "max_players_per_raid"),
-    PLAYERS_PER_PARTY = new ConfigValue(ConfigValue.EnumValueType.INT, "main", "max_players_per_party");
+    GROUPS_SAVE_DELAY_MINUTES = new ConfigValueImpl(EnumValueType.INT, "setup", "groups_save_delay_minutes"),
+
+    GROUP_INVITE_REQUEST_EXPIRE_TIME_SECONDS = new ConfigValueImpl(EnumValueType.INT, "main", "group_invite_request_expire_time_seconds"),
+    READINESS_CHECK_REQUEST_EXPIRE_TIME_SECONDS = new ConfigValueImpl(EnumValueType.INT, "main", "readiness_check_request_expire_time_seconds"),
+    VOTE_KICK_REQUEST_EXPIRE_TIME_SECONDS = new ConfigValueImpl(EnumValueType.INT, "main", "vote_kick_request_expire_time_seconds"),
+    PLAYERS_PER_SQUAD = new ConfigValueImpl(EnumValueType.INT, "main", "max_players_per_squad"),
+    PLAYERS_PER_RAID = new ConfigValueImpl(EnumValueType.INT, "main", "max_players_per_raid"),
+    PLAYERS_PER_PARTY = new ConfigValueImpl(EnumValueType.INT, "main", "max_players_per_party");
 
     @Override
-    public String getModId() {
+    public String getDomain() {
         return GroupsMain.MODID;
     }
 
@@ -39,9 +43,11 @@ public class GroupsConfig extends AbstractConfigHolder {
 
     @Override
     public void getValues(List<ConfigValue> values) {
-        values.add(GROUP_INVITE_REQUEST_EXPIRE_TIME);
-        values.add(READINESS_CHECK_REQUEST_EXPIRE_TIME);
-        values.add(VOTE_KICK_REQUEST_EXPIRE_TIME);
+        values.add(GROUPS_SAVE_DELAY_MINUTES);
+
+        values.add(GROUP_INVITE_REQUEST_EXPIRE_TIME_SECONDS);
+        values.add(READINESS_CHECK_REQUEST_EXPIRE_TIME_SECONDS);
+        values.add(VOTE_KICK_REQUEST_EXPIRE_TIME_SECONDS);
         values.add(PLAYERS_PER_SQUAD);
         values.add(PLAYERS_PER_RAID);
         values.add(PLAYERS_PER_PARTY);

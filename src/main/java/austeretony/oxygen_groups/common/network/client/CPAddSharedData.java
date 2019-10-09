@@ -1,19 +1,19 @@
 package austeretony.oxygen_groups.common.network.client;
 
+import austeretony.oxygen_core.client.OxygenManagerClient;
 import austeretony.oxygen_core.client.api.OxygenHelperClient;
 import austeretony.oxygen_core.common.PlayerSharedData;
 import austeretony.oxygen_core.common.network.Packet;
-import austeretony.oxygen_groups.client.GroupsManagerClient;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.INetHandler;
 
-public class CPAddPlayerToGroup extends Packet {
+public class CPAddSharedData extends Packet {
 
     private PlayerSharedData sharedData;
 
-    public CPAddPlayerToGroup() {}
+    public CPAddSharedData() {}
 
-    public CPAddPlayerToGroup(PlayerSharedData sharedData) {
+    public CPAddSharedData(PlayerSharedData sharedData) {
         this.sharedData = sharedData;
     }
 
@@ -25,6 +25,6 @@ public class CPAddPlayerToGroup extends Packet {
     @Override
     public void read(ByteBuf buffer, INetHandler netHandler) {
         final PlayerSharedData sharedData = PlayerSharedData.read(buffer);
-        OxygenHelperClient.addRoutineTask(()->GroupsManagerClient.instance().getGroupDataManager().addToGroup(sharedData));
+        OxygenHelperClient.addRoutineTask(()->OxygenManagerClient.instance().getSharedDataManager().addSharedData(sharedData));
     }
 }

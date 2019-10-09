@@ -12,7 +12,7 @@ oxygen_groups.gui.inviteButton=Пригласить
 oxygen_groups.gui.leaveButton=Выйти
 oxygen_groups.gui.checkButton=Проверка
 
-oxygen_groups.gui.groupMenu=Группа
+oxygen_groups.gui.groupMenu.title=Группа
 
 oxygen_groups.gui.group.setting.acceptInvitations=Автоматически Принимать Приглашения
 oxygen_groups.gui.group.setting.hideOverlay=Скрыть Оверлэй Группы
@@ -21,21 +21,22 @@ oxygen_groups.gui.action.kick=Изгнать
 oxygen_groups.gui.action.promoteToLeader=Сделать Лидером
 
 oxygen_groups.gui.autoAccept=Принимать Приглашения
-oxygen_groups.gui.invitePlayerCallback=Пригласить Игрока
-oxygen_groups.gui.invitePlayerCallback.request=Пригласить игрока в группу.
-oxygen_groups.gui.leaveGroupCallback=Покинуть Группу
-oxygen_groups.gui.leaveGroupCallback.request=Вы уверены?
-oxygen_groups.gui.readinessCheckCallback=Проверка Готовности
-oxygen_groups.gui.readinessCheckCallback.request=Начать проверку готовности?
-oxygen_groups.gui.promoteToLeaderCallback=Смена Лидера
-oxygen_groups.gui.promoteToLeaderCallback.request=Игрок %s будет назначен лидером группы.
-oxygen_groups.gui.kickPlayerCallback=Изгнание Игрока
-oxygen_groups.gui.kickPlayerCallback.request=Начать голосование за изгнание игрока %s?
+oxygen_groups.gui.callback.invitePlayer=Пригласить Игрока
+oxygen_groups.gui.callback.invitePlayer.request=Пригласить игрока в группу.
+oxygen_groups.gui.callback.leaveGroup=Покинуть Группу
+oxygen_groups.gui.callback.leaveGroup.request=Вы уверены?
+oxygen_groups.gui.callback.readinessCheck=Проверка Готовности
+oxygen_groups.gui.callback.readinessCheck.request=Начать проверку готовности?
+oxygen_groups.gui.callback.promoteToLeader=Смена Лидера
+oxygen_groups.gui.callback.promoteToLeader.request=Игрок будет назначен лидером группы.
+oxygen_groups.gui.callback.kickPlayer=Изгнание Игрока
+oxygen_groups.gui.callback.kickPlayer.request=Начать голосование за изгнание?
 
-oxygen_groups.message.groupRequest.sender.accepted=Ваше приглашение в группу принято.
-oxygen_groups.message.groupRequest.target.accepted=Вы приняли приглашение в группу.
-oxygen_groups.message.groupRequest.sender.rejected=Ваше приглашение в группу отклонено.
-oxygen_groups.message.groupRequest.target.rejected=Вы отклонили приглошение в группу.
+oxygen_groups.status.acceptedSender=Ваше приглашение в группу принято
+oxygen_groups.status.acceptedTarget=Вы приняли приглашение в группу
+oxygen_groups.status.rejectedSender=Ваше приглашение в группу отклонено
+oxygen_groups.status.rejectedTarget=Вы отклонили приглошение в группу
+
 oxygen_groups.message.readinessCheck.started=Начата проверка готовности группы.
 oxygen_groups.message.readinessCheck.ready=Группа готова.
 oxygen_groups.message.readinessCheck.notReady=Группа не готова.

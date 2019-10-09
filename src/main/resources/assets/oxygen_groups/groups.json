@@ -1,4 +1,7 @@
 {
+  "setup": {
+    "groups_save_delay_minutes": 2
+  },
   "main": {
     "group_invite_request_expire_time_seconds": 20,
     "readiness_check_request_expire_time_seconds": 15,    

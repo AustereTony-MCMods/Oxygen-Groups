@@ -6,27 +6,29 @@ import java.io.IOException;
 import java.util.Set;
 import java.util.UUID;
 
-import austeretony.oxygen.client.core.api.ClientReference;
-import austeretony.oxygen.common.api.OxygenHelperServer;
-import austeretony.oxygen.util.OxygenUtils;
-import austeretony.oxygen.util.PacketBufferUtils;
-import austeretony.oxygen.util.StreamUtils;
+import austeretony.oxygen_core.client.api.ClientReference;
+import austeretony.oxygen_core.common.persistent.PersistentEntry;
+import austeretony.oxygen_core.common.sync.SynchronizedData;
+import austeretony.oxygen_core.common.util.ByteBufUtils;
+import austeretony.oxygen_core.common.util.StreamUtils;
+import austeretony.oxygen_core.server.api.OxygenHelperServer;
 import austeretony.oxygen_groups.common.config.GroupsConfig;
+import io.netty.buffer.ByteBuf;
 import io.netty.util.internal.ConcurrentSet;
-import net.minecraft.network.PacketBuffer;
 
-public class Group {
+public class Group implements PersistentEntry, SynchronizedData {
 
     private long groupId;
 
     private UUID groupLeader;
 
-    private final Set<UUID> players = new ConcurrentSet<UUID>();
+    private final Set<UUID> players = new ConcurrentSet<>();
+
+    private volatile boolean vote;
 
     private volatile int voteCounter;
 
-    private volatile boolean voting;
-
+    @Override
     public long getId() {
         return this.groupId;
     }
@@ -34,10 +36,6 @@ public class Group {
     public void setId(long id) {
         this.groupId = id;
     }
-
-    public void createId() {
-        this.groupId = OxygenUtils.createDataStampedId();
-    }   
 
     public UUID getLeader() {
         return this.groupLeader;
@@ -52,9 +50,9 @@ public class Group {
     }
 
     public UUID getRandomOnlinePlayer() {
-        for (UUID uuid : this.players)
-            if (OxygenHelperServer.isOnline(uuid) && !uuid.equals(this.groupLeader))
-                return uuid;
+        for (UUID playerUUID : this.players)
+            if (OxygenHelperServer.isPlayerOnline(playerUUID) && !playerUUID.equals(this.groupLeader))
+                return playerUUID;
         return null;
     }
 
@@ -83,19 +81,19 @@ public class Group {
     }
 
     public boolean isVoting() {
-        return this.voting;
+        return this.vote;
     }
 
     public void startVote() {
-        this.voting = true;
+        this.vote = true;
         this.voteCounter = 0;
     }
 
     public void stopVote() {
-        this.voting = false;
+        this.vote = false;
     }
 
-    public void voteFor() {
+    public void vote() {
         this.voteCounter++;
     }
 
@@ -103,6 +101,7 @@ public class Group {
         return this.voteCounter > this.getSize() / 2;
     }
 
+    @Override
     public void write(BufferedOutputStream bos) throws IOException {
         StreamUtils.write(this.groupId, bos);
         StreamUtils.write(this.groupLeader, bos);
@@ -111,34 +110,29 @@ public class Group {
             StreamUtils.write(playerUUID, bos);
     }
 
-    public static Group read(BufferedInputStream bis) throws IOException {
-        Group group = new Group();
-        group.groupId = StreamUtils.readLong(bis);
-        group.groupLeader = StreamUtils.readUUID(bis);
+    @Override
+    public void read(BufferedInputStream bis) throws IOException {
+        this.groupId = StreamUtils.readLong(bis);
+        this.groupLeader = StreamUtils.readUUID(bis);
         int amount = StreamUtils.readByte(bis);
         for (int i = 0; i < amount; i++)
-            group.addPlayer(StreamUtils.readUUID(bis));
-        return group;
+            this.addPlayer(StreamUtils.readUUID(bis));
     }
 
-    public void write(PacketBuffer buffer) {
-        PacketBufferUtils.writeUUID(this.groupLeader, buffer);
+    @Override
+    public void write(ByteBuf buffer) {
+        ByteBufUtils.writeUUID(this.groupLeader, buffer);
         buffer.writeByte(this.players.size());
         for (UUID playerUUID : this.players)
-            PacketBufferUtils.writeUUID(playerUUID, buffer);
+            ByteBufUtils.writeUUID(playerUUID, buffer);
     }
 
-    public static Group read(PacketBuffer buffer) {
-        Group group = new Group();
-        group.groupLeader = PacketBufferUtils.readUUID(buffer);
+    @Override
+    public void read(ByteBuf buffer) {
+        this.groupLeader = ByteBufUtils.readUUID(buffer);
         int amount = buffer.readByte();
         for (int i = 0; i < amount; i++)
-            group.players.add(PacketBufferUtils.readUUID(buffer));
-        return group;
-    }
-
-    private void resetData() {
-        this.players.clear();
+            this.players.add(ByteBufUtils.readUUID(buffer));
     }
 
     public enum EnumGroupMode {

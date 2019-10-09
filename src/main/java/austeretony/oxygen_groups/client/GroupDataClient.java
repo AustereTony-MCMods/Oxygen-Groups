@@ -6,7 +6,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import austeretony.oxygen.client.api.OxygenHelperClient;
+import austeretony.oxygen_core.client.api.OxygenHelperClient;
 import austeretony.oxygen_groups.common.config.GroupsConfig;
 import austeretony.oxygen_groups.common.main.Group;
 
@@ -14,7 +14,17 @@ public class GroupDataClient {
 
     private UUID leaderUUID;
 
-    private Map<UUID, GroupEntryClient> playersData = new ConcurrentHashMap<UUID, GroupEntryClient>();
+    private Map<UUID, GroupEntryClient> playersData = new ConcurrentHashMap<>();
+
+    private volatile boolean active;
+
+    public boolean isActive() {
+        return this.active;
+    }
+
+    public void setActive(boolean flag) {
+        this.active = flag;
+    }
 
     public GroupEntryClient getLeaderData() {
         return this.playersData.get(this.leaderUUID);
@@ -46,6 +56,21 @@ public class GroupDataClient {
 
     public GroupEntryClient getPlayerData(UUID playerUUID) {
         return this.playersData.get(playerUUID);
+    }
+
+    public void updateGroupData(int[] indexes, float[] currHealth, float[] maxHealth) {
+        UUID playerUUID;
+        GroupEntryClient data;
+        for (int i = 0; i < indexes.length; i++) {
+            if (OxygenHelperClient.isPlayerOnline(indexes[i])) {
+                playerUUID = OxygenHelperClient.getPlayerSharedData(indexes[i]).getPlayerUUID();
+                if (this.exist(playerUUID)) {
+                    data = this.getPlayerData(playerUUID);
+                    data.setHealth(currHealth[i]);
+                    data.setMaxHealth(maxHealth[i]);
+                }
+            }
+        }
     }
 
     public int getSize() {

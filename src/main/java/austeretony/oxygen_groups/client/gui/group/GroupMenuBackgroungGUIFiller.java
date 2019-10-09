@@ -1,22 +1,22 @@
 package austeretony.oxygen_groups.client.gui.group;
 
-import austeretony.oxygen.client.gui.BackgroundGUIFiller;
-import austeretony.oxygen.client.gui.settings.GUISettings;
+import austeretony.oxygen_core.client.gui.elements.BackgroundGUIFiller;
+import austeretony.oxygen_core.client.gui.elements.CustomRectUtils;
 
 public class GroupMenuBackgroungGUIFiller extends BackgroundGUIFiller {
 
     public GroupMenuBackgroungGUIFiller(int xPosition, int yPosition, int width, int height) {             
-        super(xPosition, yPosition, width, height, GroupMenuGUIScreen.GROUP_MENU_BACKGROUND);
+        super(xPosition, yPosition, width, height);
     }
 
     @Override
-    public void drawDefaultBackground() {
-        drawRect(- 1, - 1, this.getWidth() + 1, this.getHeight() + 1, GUISettings.instance().getBaseGUIBackgroundColor());//main background
-        drawRect(0, 0, this.getWidth(), 13, GUISettings.instance().getAdditionalGUIBackgroundColor());//title background
-        drawRect(0, 14, this.getWidth(), 23, GUISettings.instance().getAdditionalGUIBackgroundColor());//status background
-        drawRect(0, 24, this.getWidth(), 34, GUISettings.instance().getAdditionalGUIBackgroundColor());//sorters background
-        drawRect(0, 35, this.getWidth() - 3, this.getHeight() - 14, GUISettings.instance().getPanelGUIBackgroundColor());//panel background
-        drawRect(this.getWidth() - 2, 35, this.getWidth(), this.getHeight() - 14, GUISettings.instance().getAdditionalGUIBackgroundColor());//slider background
-        drawRect(0, this.getHeight() - 13, this.getWidth(), this.getHeight(), GUISettings.instance().getAdditionalGUIBackgroundColor());//add button background
+    public void drawBackground() {
+        //main background  
+        drawRect(0, 0, this.getWidth(), this.getHeight(), this.getEnabledBackgroundColor());      
+
+        //title underline
+        CustomRectUtils.drawRect(4.0D, 14.0D, this.getWidth() - 4.0D, 14.4D, this.getDisabledBackgroundColor());
+
+        CustomRectUtils.drawRect(4.0D, 165.0D, this.getWidth() - 4.0D, 165.4D, this.getDisabledBackgroundColor());
     }
 }

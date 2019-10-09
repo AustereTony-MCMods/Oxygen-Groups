@@ -12,7 +12,7 @@ oxygen_groups.gui.inviteButton=Invite
 oxygen_groups.gui.leaveButton=Leave
 oxygen_groups.gui.checkButton=Check
 
-oxygen_groups.gui.groupMenu=Group
+oxygen_groups.gui.groupMenu.title=Group
 
 oxygen_groups.gui.group.setting.acceptInvitations=Auto Accept Invitations
 oxygen_groups.gui.group.setting.hideOverlay=Hide Group Overlay
@@ -21,21 +21,22 @@ oxygen_groups.gui.action.kick=Kick
 oxygen_groups.gui.action.promoteToLeader=Set Leader
 
 oxygen_groups.gui.autoAccept=Accept Invitations
-oxygen_groups.gui.invitePlayerCallback=Invite Player
-oxygen_groups.gui.invitePlayerCallback.request=Invite player to group.
-oxygen_groups.gui.leaveGroupCallback=Leave Group
-oxygen_groups.gui.leaveGroupCallback.request=Are you sure?
-oxygen_groups.gui.readinessCheckCallback=Readiness Check
-oxygen_groups.gui.readinessCheckCallback.request=Start readiness check?
-oxygen_groups.gui.promoteToLeaderCallback=Change Leader
-oxygen_groups.gui.promoteToLeaderCallback.request=Player %s will be promoted to group leader.
-oxygen_groups.gui.kickPlayerCallback=Kick Player
-oxygen_groups.gui.kickPlayerCallback.request=Start voting to kick player %s?
+oxygen_groups.gui.callback.invitePlayer=Invite Player
+oxygen_groups.gui.callback.invitePlayer.request=Invite player to group.
+oxygen_groups.gui.callback.leaveGroup=Leave Group
+oxygen_groups.gui.callback.leaveGroup.request=Are you sure?
+oxygen_groups.gui.callback.readinessCheck=Readiness Check
+oxygen_groups.gui.callback.readinessCheck.request=Start readiness check?
+oxygen_groups.gui.callback.promoteToLeader=Change Leader
+oxygen_groups.gui.callback.promoteToLeader.request=Player will be promoted to leader.
+oxygen_groups.gui.callback.kickPlayer=Kick Player
+oxygen_groups.gui.callback.kickPlayer.request=Start voting to kick player?
 
-oxygen_groups.message.groupRequest.sender.accepted=Your group request accepted.
-oxygen_groups.message.groupRequest.target.accepted=You accepted group request.
-oxygen_groups.message.groupRequest.sender.rejected=Your group request rejected.
-oxygen_groups.message.groupRequest.target.rejected=You rejected group request.
+oxygen_groups.status.acceptedSender=Your group request accepted
+oxygen_groups.status.acceptedTarget=You accepted group request
+oxygen_groups.status.rejectedSender=Your group request rejected
+oxygen_groups.status.rejectedTarget=You rejected group request
+
 oxygen_groups.message.readinessCheck.started=Group readiness check started.
 oxygen_groups.message.readinessCheck.ready=Group ready.
 oxygen_groups.message.readinessCheck.notReady=Group not ready.

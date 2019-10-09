@@ -1,30 +1,36 @@
 package austeretony.oxygen_groups.common.network.server;
 
-import java.util.UUID;
-
-import austeretony.oxygen.common.network.ProxyPacket;
-import austeretony.oxygen.util.PacketBufferUtils;
-import austeretony.oxygen_groups.common.GroupsManagerServer;
+import austeretony.oxygen_core.common.api.CommonReference;
+import austeretony.oxygen_core.common.network.Packet;
+import austeretony.oxygen_core.server.api.OxygenHelperServer;
+import austeretony.oxygen_core.server.api.RequestsFilterHelper;
+import austeretony.oxygen_groups.common.main.GroupsMain;
+import austeretony.oxygen_groups.server.GroupsManagerServer;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.INetHandler;
-import net.minecraft.network.PacketBuffer;
 
-public class SPInviteToGroup extends ProxyPacket {
+public class SPInviteToGroup extends Packet {
 
-    private int targetIndex;
+    private int index;
 
     public SPInviteToGroup() {}
 
-    public SPInviteToGroup(int targetIndex) {
-        this.targetIndex = targetIndex;
+    public SPInviteToGroup(int index) {
+        this.index = index;
     }
 
     @Override
-    public void write(PacketBuffer buffer, INetHandler netHandler) {
-        buffer.writeInt(this.targetIndex);
+    public void write(ByteBuf buffer, INetHandler netHandler) {
+        buffer.writeInt(this.index);
     }
 
     @Override
-    public void read(PacketBuffer buffer, INetHandler netHandler) {
-        GroupsManagerServer.instance().inviteToGroup(getEntityPlayerMP(netHandler), buffer.readInt());
+    public void read(ByteBuf buffer, INetHandler netHandler) {
+        final EntityPlayerMP playerMP = getEntityPlayerMP(netHandler);
+        if (RequestsFilterHelper.getLock(CommonReference.getPersistentUUID(playerMP), GroupsMain.INVITE_TO_GROUP_REQUEST_ID)) {
+            final int index = buffer.readInt();
+            OxygenHelperServer.addRoutineTask(()->GroupsManagerServer.instance().getGroupsDataManager().inviteToGroup(playerMP, index));
+        }
     }
 }

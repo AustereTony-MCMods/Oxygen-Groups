@@ -2,9 +2,9 @@ package austeretony.oxygen_groups.common.command;
 
 import java.util.UUID;
 
-import austeretony.oxygen.common.api.OxygenHelperServer;
-import austeretony.oxygen.common.core.api.CommonReference;
-import austeretony.oxygen_groups.common.GroupsManagerServer;
+import austeretony.oxygen_core.common.api.CommonReference;
+import austeretony.oxygen_core.server.api.OxygenHelperServer;
+import austeretony.oxygen_groups.server.GroupsManagerServer;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -38,7 +38,7 @@ public class CommandGroupMessage extends CommandBase {
             throw new WrongUsageException(this.getUsage(sender));   
         EntityPlayerMP playerMP = getCommandSenderAsPlayer(sender);
         UUID playerUUID = CommonReference.getPersistentUUID(playerMP);
-        if (GroupsManagerServer.instance().haveGroup(playerUUID)) {
+        if (GroupsManagerServer.instance().getGroupsDataContainer().haveGroup(playerUUID)) {
             StringBuilder builder = new StringBuilder()
                     .append("<")
                     .append(CommonReference.getName(playerMP))
@@ -47,8 +47,8 @@ public class CommandGroupMessage extends CommandBase {
                 builder.append(s).append(" ");
             ITextComponent msg = new TextComponentString(builder.toString());
             msg.getStyle().setColor(TextFormatting.YELLOW);
-            for (UUID uuid : GroupsManagerServer.instance().getGroup(playerUUID).getPlayers())
-                if (OxygenHelperServer.isOnline(uuid))
+            for (UUID uuid : GroupsManagerServer.instance().getGroupsDataContainer().getGroup(playerUUID).getPlayers())
+                if (OxygenHelperServer.isPlayerOnline(uuid))
                     CommonReference.playerByUUID(uuid).sendMessage(msg);
         } else
             throw new WrongUsageException(this.getUsage(sender));   
