@@ -24,10 +24,8 @@ import austeretony.oxygen_groups.client.input.GroupsKeyHandler;
 import austeretony.oxygen_groups.common.command.CommandGroupMessage;
 import austeretony.oxygen_groups.common.config.GroupsConfig;
 import austeretony.oxygen_groups.common.network.client.CPAddPlayerToGroup;
-import austeretony.oxygen_groups.common.network.client.CPAddSharedData;
 import austeretony.oxygen_groups.common.network.client.CPLeaveGroup;
 import austeretony.oxygen_groups.common.network.client.CPRemovePlayerFromGroup;
-import austeretony.oxygen_groups.common.network.client.CPRemoveSharedData;
 import austeretony.oxygen_groups.common.network.client.CPSyncGroup;
 import austeretony.oxygen_groups.common.network.client.CPSyncGroupData;
 import austeretony.oxygen_groups.common.network.client.CPUpdateLeader;
@@ -49,7 +47,7 @@ import net.minecraftforge.fml.relauncher.Side;
         modid = GroupsMain.MODID, 
         name = GroupsMain.NAME, 
         version = GroupsMain.VERSION,
-        dependencies = "required-after:oxygen_core@[0.9.2,);",
+        dependencies = "required-after:oxygen_core@[0.9.3,);",
         certificateFingerprint = "@FINGERPRINT@",
         updateJSON = GroupsMain.VERSIONS_FORGE_URL)
 public class GroupsMain {
@@ -57,7 +55,7 @@ public class GroupsMain {
     public static final String 
     MODID = "oxygen_groups", 
     NAME = "Oxygen: Groups", 
-    VERSION = "0.9.0", 
+    VERSION = "0.9.1", 
     VERSION_CUSTOM = VERSION + ":beta:0",
     GAME_VERSION = "1.12.2",
     VERSIONS_FORGE_URL = "https://raw.githubusercontent.com/AustereTony-MCMods/Oxygen-Groups/info/mod_versions_forge.json";
@@ -130,15 +128,12 @@ public class GroupsMain {
         OxygenMain.network().registerPacket(CPAddPlayerToGroup.class);
         OxygenMain.network().registerPacket(CPRemovePlayerFromGroup.class);
         OxygenMain.network().registerPacket(CPUpdateLeader.class);
-        OxygenMain.network().registerPacket(CPAddSharedData.class);
-        OxygenMain.network().registerPacket(CPRemoveSharedData.class);
+        OxygenMain.network().registerPacket(CPSyncGroupData.class);
 
         OxygenMain.network().registerPacket(SPInviteToGroup.class);
         OxygenMain.network().registerPacket(SPLeaveGroup.class);
         OxygenMain.network().registerPacket(SPStartReadinessCheck.class);
         OxygenMain.network().registerPacket(SPStartKickPlayerVoting.class);
         OxygenMain.network().registerPacket(SPPromoteToLeader.class);
-
-        OxygenMain.network().registerPacket(CPSyncGroupData.class);
     }
 }

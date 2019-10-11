@@ -18,10 +18,8 @@ import austeretony.oxygen_groups.common.main.GroupsMain;
 import austeretony.oxygen_groups.common.main.KickPlayerRequest;
 import austeretony.oxygen_groups.common.main.ReadinessCheckRequest;
 import austeretony.oxygen_groups.common.network.client.CPAddPlayerToGroup;
-import austeretony.oxygen_groups.common.network.client.CPAddSharedData;
 import austeretony.oxygen_groups.common.network.client.CPLeaveGroup;
 import austeretony.oxygen_groups.common.network.client.CPRemovePlayerFromGroup;
-import austeretony.oxygen_groups.common.network.client.CPRemoveSharedData;
 import austeretony.oxygen_groups.common.network.client.CPSyncGroup;
 import austeretony.oxygen_groups.common.network.client.CPSyncGroupData;
 import austeretony.oxygen_groups.common.network.client.CPUpdateLeader;
@@ -44,8 +42,9 @@ public class GroupsDataManager {
 
             for (UUID uuid : group.getPlayers())
                 if (OxygenHelperServer.isPlayerOnline(uuid))
-                    OxygenMain.network().sendTo(new CPAddSharedData(sharedData), CommonReference.playerByUUID(uuid));
+                    OxygenHelperServer.sendPlayerSharedData(sharedData, CommonReference.playerByUUID(uuid));
 
+            OxygenHelperServer.sendPlayerSharedData(sharedData, playerMP);
             OxygenMain.network().sendTo(new CPSyncGroup(group), playerMP);
         }
     }
@@ -57,7 +56,7 @@ public class GroupsDataManager {
 
             for (UUID uuid : group.getPlayers())
                 if (!uuid.equals(playerUUID) && OxygenHelperServer.isPlayerOnline(uuid))
-                    OxygenMain.network().sendTo(new CPRemoveSharedData(playerUUID), CommonReference.playerByUUID(uuid));
+                    OxygenHelperServer.removePlayerSharedData(playerUUID, CommonReference.playerByUUID(uuid));
         }
     }
 
@@ -69,7 +68,7 @@ public class GroupsDataManager {
 
             for (UUID uuid : group.getPlayers())
                 if (!uuid.equals(playerUUID) && OxygenHelperServer.isPlayerOnline(uuid))
-                    OxygenMain.network().sendTo(new CPAddSharedData(sharedData), CommonReference.playerByUUID(uuid));
+                    OxygenHelperServer.sendPlayerSharedData(sharedData, CommonReference.playerByUUID(uuid));
         }
     }
 
@@ -115,6 +114,7 @@ public class GroupsDataManager {
         OxygenHelperServer.addObservedPlayer(invitedUUID, leaderUUID);
 
         OxygenMain.network().sendTo(new CPSyncGroup(group), CommonReference.playerByUUID(leaderUUID));
+        OxygenHelperServer.sendPlayerSharedData(invitedUUID, (EntityPlayerMP) player);
         OxygenManagerServer.instance().getSharedDataManager().syncObservedPlayersData((EntityPlayerMP) player);
         OxygenMain.network().sendTo(new CPSyncGroup(group), (EntityPlayerMP) player);
     }   
@@ -131,6 +131,7 @@ public class GroupsDataManager {
         group.addPlayer(invitedUUID);
         this.manager.getGroupsDataContainer().addGroupAccess(group.getId(), invitedUUID);
 
+        OxygenHelperServer.sendPlayerSharedData(invitedUUID, (EntityPlayerMP) player);
         OxygenManagerServer.instance().getSharedDataManager().syncObservedPlayersData((EntityPlayerMP) player);
         OxygenMain.network().sendTo(new CPSyncGroup(group), (EntityPlayerMP) player);
 

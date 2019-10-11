@@ -35,7 +35,7 @@ public class GroupDataManagerClient {
                 this.groupData.addPlayerData(new GroupEntryClient(playerUUID, sharedData.getUsername()));
         }
         this.groupData.setActive(true);
-
+        
         OxygenHelperClient.syncSharedData(GroupsMain.GROUP_MENU_SCREEN_ID);
     }
 
