@@ -1,34 +1,81 @@
+0.10.0b [2020-01-17]
++ Improved menu design.
++ Added 1 second cooldown for sending packets - operations in the group menu.
++ Removed voting system (will be readded later). The leader of the group is now able to kick any player.
++ Added group chat channel. If you have a group, you can send messages to the group’s personal chat: /group <message>.
++ Updated configuration options:
+ Client
+ - "enable_group_menu_key" [boolean] - enable the "open group menu" key
+ 
+ Server
+ - "group_invite_request_expire_time_seconds" [int] - time of the invitation to the group in seconds
+ - "max_players_per_squad" [int] (synchronized) - the number of group members in the "squad" mode
+ - "max_players_per_raid" [int] (synchronized) - the number of group members in raid mode
+ - "max_players_per_party" [int] (synchronized) - the number of group members in the party mode
+ - "enable_group_chat" [boolean] (synchronized) - enable the group personal chat
+ 
++ Added chat commands:
+  Server [/oxygens]
+  - Request group data synchronization: /oxygens groups -sync-group
+ 
+  Client [/oxygenc]
+  - Open the group menu: /oxygenc groups
+  - Reset client data: /oxygenc groups -reset-data
+  
++ Added privileges:
+  - "group:allowGroupCreation" [id - 200, type - BOOLEAN] - the ability to create a group. By default, any player can create groups.
+  
++ Group initialization time increased to 5 seconds.
++ Improved group members overlay marks.
++ Added display of absorption, armor and active effects for members in the group’s overlay.
++ Added client settings:
+ Common
+ - the ability to open the group menu through the general menu (Oxygen Menu)
+ - hide group overlay
+ - hide the display of active effects in the overlay for group members
+ 
+ Interface
+ - menu alignment
+ - horizontal offset of the group overlay
+ - vertical offset of the group overlay
+ - background color of the health bar
+ - color of offline bar
+ - color of the health bar
+ - color of the absorption bar
+ - color of the armor bar
+ - health status text format
+
 0.9.1b [2019-10-11]
-+Fixed a bug when synchronizing group data with a new member.
-+Fixed sorting of players in lists.
++ Fixed a bug when synchronizing group data with a new member.
++ Fixed sorting of players in lists.
 
 0.9.0b [2019-10-09]
-+Compatibility with Oxygen Core 0.9.
++ Compatibility with Oxygen Core 0.9.
 
 0.8.2b [2019-08-12]
-+Group overlay displayed while in GUI.
-+Added Oxygen Menu support.
++ Group overlay displayed while in GUI.
++ Added Oxygen Menu support.
 
 0.8.1b [2019-08-08]
-+Fixed group initialization for invited player. If some group members are offline, 
++ Fixed group initialization for invited player. If some group members are offline, 
 group will be synchronized properly with new member.
 
 0.8.0b
-+Performance improvements.
++ Performance improvements.
 
 0.1.4b
-+Last activity time tooltip for offline players now shows correct time (displayed when you 
++ Last activity time tooltip for offline players now shows correct time (displayed when you 
 hover over the activity icon).
 
 0.1.3a
-+Compatibility with Oxygen Core 0.7.0a.
++ Compatibility with Oxygen Core 0.7.0a.
 
 0.1.2a
-+Fixed group synchronization on server connection (now loading in 5 seconds).
++ Fixed group synchronization on server connection (now loading in 5 seconds).
 
 0.1.1a
-+Added option to hide group overlay (checkbox button in group menu).
-+Added option to accept all incoming group invitations (checkbox button in friendlist menu).
++ Added option to hide group overlay (checkbox button in group menu).
++ Added option to accept all incoming group invitations (checkbox button in friendlist menu).
 
 0.1.0a
-+Initial release.
++ Initial release.
