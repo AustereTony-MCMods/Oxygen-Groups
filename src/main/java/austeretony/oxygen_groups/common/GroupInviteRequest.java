@@ -1,4 +1,4 @@
-package austeretony.oxygen_groups.common.main;
+package austeretony.oxygen_groups.common;
 
 import java.util.UUID;
 
@@ -7,6 +7,8 @@ import austeretony.oxygen_core.common.api.notification.AbstractNotification;
 import austeretony.oxygen_core.common.notification.EnumNotification;
 import austeretony.oxygen_core.server.api.OxygenHelperServer;
 import austeretony.oxygen_groups.common.config.GroupsConfig;
+import austeretony.oxygen_groups.common.main.EnumGroupsStatusMessage;
+import austeretony.oxygen_groups.common.main.GroupsMain;
 import austeretony.oxygen_groups.server.GroupsManagerServer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -47,7 +49,7 @@ public class GroupInviteRequest extends AbstractNotification {
 
     @Override
     public int getExpireTimeSeconds() {
-        return GroupsConfig.GROUP_INVITE_REQUEST_EXPIRE_TIME_SECONDS.getIntValue();
+        return GroupsConfig.GROUP_INVITE_REQUEST_EXPIRE_TIME_SECONDS.asInt();
     }
 
     @Override

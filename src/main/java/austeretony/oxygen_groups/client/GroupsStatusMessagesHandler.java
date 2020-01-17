@@ -1,6 +1,6 @@
 package austeretony.oxygen_groups.client;
 
-import austeretony.oxygen_core.common.status.ChatMessagesHandler;
+import austeretony.oxygen_core.common.chat.ChatMessagesHandler;
 import austeretony.oxygen_groups.common.main.EnumGroupsStatusMessage;
 import austeretony.oxygen_groups.common.main.GroupsMain;
 

@@ -1,9 +1,6 @@
 package austeretony.oxygen_groups.server;
 
-import java.util.concurrent.TimeUnit;
-
-import austeretony.oxygen_core.server.OxygenManagerServer;
-import austeretony.oxygen_core.server.OxygenPlayerData.EnumActivityStatus;
+import austeretony.oxygen_core.common.EnumActivityStatus;
 import austeretony.oxygen_core.server.api.OxygenHelperServer;
 import net.minecraft.entity.player.EntityPlayerMP;
 
@@ -11,24 +8,22 @@ public class GroupsManagerServer {
 
     private static GroupsManagerServer instance;
 
-    private final GroupsDataContainer dataContainer = new GroupsDataContainer();
+    private final GroupsDataContainerServer dataContainer = new GroupsDataContainerServer();
 
-    private final GroupsDataManager dataManager;
+    private final GroupsDataManagerServer dataManager;
 
     private GroupsManagerServer() {
-        this.dataManager = new GroupsDataManager(this);
-        OxygenHelperServer.registerPersistentData(this.dataContainer);
+        this.dataManager = new GroupsDataManagerServer(this);
     }
 
-    private void scheduleRepeatableProcesses() {
-        OxygenManagerServer.instance().getExecutionManager().getExecutors().getSchedulerExecutorService().scheduleAtFixedRate(
-                ()->this.dataManager.runGroupsSync(), 1L, 1L, TimeUnit.SECONDS);
+    private void registerPersistentData() {
+        OxygenHelperServer.registerPersistentData(this.dataContainer);
     }
 
     public static void create() {
         if (instance == null) {
             instance = new GroupsManagerServer();
-            instance.scheduleRepeatableProcesses();
+            instance.registerPersistentData();
         }
     }
 
@@ -36,11 +31,11 @@ public class GroupsManagerServer {
         return instance;
     }
 
-    public GroupsDataContainer getGroupsDataContainer() {
+    public GroupsDataContainerServer getGroupsDataContainer() {
         return this.dataContainer;
     }
 
-    public GroupsDataManager getGroupsDataManager() {
+    public GroupsDataManagerServer getGroupsDataManager() {
         return this.dataManager;
     }
 

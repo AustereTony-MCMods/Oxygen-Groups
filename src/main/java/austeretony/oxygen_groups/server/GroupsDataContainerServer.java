@@ -11,10 +11,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import austeretony.oxygen_core.common.persistent.AbstractPersistentData;
 import austeretony.oxygen_core.common.util.StreamUtils;
 import austeretony.oxygen_core.server.api.OxygenHelperServer;
-import austeretony.oxygen_groups.common.config.GroupsConfig;
-import austeretony.oxygen_groups.common.main.Group;
+import austeretony.oxygen_groups.common.Group;
 
-public class GroupsDataContainer extends AbstractPersistentData {
+public class GroupsDataContainerServer extends AbstractPersistentData {
 
     private final Map<Long, Group> groups = new ConcurrentHashMap<>();
 
@@ -22,10 +21,6 @@ public class GroupsDataContainer extends AbstractPersistentData {
 
     public Collection<Group> getGroups() {
         return this.groups.values();
-    }
-
-    public boolean groupExist(long groupId) {
-        return this.groups.containsKey(groupId);
     }
 
     public Group getGroup(long groupId) {
@@ -36,16 +31,16 @@ public class GroupsDataContainer extends AbstractPersistentData {
         return this.groups.get(this.access.get(playerUUID));
     }
 
-    public boolean haveGroup(UUID playerUUID) {
-        return this.access.containsKey(playerUUID);
-    }
-
     public void addGroup(Group group) {
         this.groups.put(group.getId(), group);
     }
 
     public void removeGroup(long groupId) {
         this.groups.remove(groupId);
+    }
+
+    public boolean haveGroup(UUID playerUUID) {
+        return this.access.containsKey(playerUUID);
     }
 
     public void addGroupAccess(long groupId, UUID playerUUID) {
@@ -74,11 +69,6 @@ public class GroupsDataContainer extends AbstractPersistentData {
     }
 
     @Override
-    public long getSaveDelayMinutes() {
-        return GroupsConfig.GROUPS_SAVE_DELAY_MINUTES.getIntValue();
-    }
-
-    @Override
     public void write(BufferedOutputStream bos) throws IOException {
         StreamUtils.write((short) this.groups.size(), bos);
         for (Group group : this.groups.values())
@@ -93,7 +83,7 @@ public class GroupsDataContainer extends AbstractPersistentData {
             group = new Group();
             group.read(bis);
             this.groups.put(group.getId(), group);
-            for (UUID playerUUID : group.getPlayers())
+            for (UUID playerUUID : group.getMembers())
                 this.access.put(playerUUID, group.getId());
         }
     }

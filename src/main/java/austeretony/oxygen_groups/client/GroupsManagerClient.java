@@ -1,5 +1,8 @@
 package austeretony.oxygen_groups.client;
 
+import austeretony.oxygen_core.common.api.CommonReference;
+import austeretony.oxygen_groups.client.input.GroupsKeyHandler;
+
 public class GroupsManagerClient {
 
     private static GroupsManagerClient instance;
@@ -8,11 +11,19 @@ public class GroupsManagerClient {
 
     private final GroupMenuManager menuManager = new GroupMenuManager();
 
-    private GroupsManagerClient() {}
+    private final GroupsKeyHandler keyHandler = new GroupsKeyHandler();
+
+    private GroupsManagerClient() {
+        CommonReference.registerEvent(this.keyHandler);
+    }
 
     public static void create() {
         if (instance == null) 
             instance = new GroupsManagerClient();
+    }
+
+    public static GroupsManagerClient instance() {
+        return instance;
     }
 
     public GroupDataManagerClient getGroupDataManager() {
@@ -23,11 +34,11 @@ public class GroupsManagerClient {
         return this.menuManager;
     }
 
-    public static GroupsManagerClient instance() {
-        return instance;
+    public GroupsKeyHandler getKeyHandler() {
+        return this.keyHandler;
     }
 
     public void init() {
-        this.dataManager.init();
+        this.dataManager.reset();
     }
 }

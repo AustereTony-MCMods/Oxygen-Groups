@@ -14,7 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class GroupMarkRenderer {
+public class GroupMembersMarkOverlay {
 
     @SubscribeEvent
     public void onRenderPlayer(RenderLivingEvent.Specials.Post event) {
@@ -33,7 +33,7 @@ public class GroupMarkRenderer {
         UUID targetUUID = ClientReference.getPersistentUUID(target);
 
         if (distance < viewDistance * viewDistance 
-                && GroupsManagerClient.instance().getGroupDataManager().getGroupData().getPlayersUUIDs().contains(targetUUID)) {
+                && GroupsManagerClient.instance().getGroupDataManager().getGroupData().isMember(targetUUID)) {
 
             boolean isLeader = GroupsManagerClient.instance().getGroupDataManager().getGroupData().isLeader(targetUUID);
             GlStateManager.pushMatrix();
@@ -49,10 +49,10 @@ public class GroupMarkRenderer {
             BufferBuilder bufferbuilder = tessellator.getBuffer();
             render.getRenderManager().renderEngine.bindTexture(isLeader ? GroupsGUITextures.LEADER_MARK : GroupsGUITextures.GROUP_MARK);
             bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);    
-            bufferbuilder.pos(- 3.0D, - 96.0D, 0.0D).tex(0.0D, 1.0D).endVertex();
-            bufferbuilder.pos(5.0D, - 96.0D, 0.0D).tex(1.0D, 1.0D).endVertex();
-            bufferbuilder.pos(5.0D, - 104.0D, 0.0D).tex(1.0D, 0.0D).endVertex();
-            bufferbuilder.pos(- 3.0D, - 104.0D, 0.0D).tex(0.0D, 0.0D).endVertex();    
+            bufferbuilder.pos(- 4.0D, - 96.0D, 0.0D).tex(0.0D, 1.0D).endVertex();
+            bufferbuilder.pos(4.0D, - 96.0D, 0.0D).tex(1.0D, 1.0D).endVertex();
+            bufferbuilder.pos(4.0D, - 104.0D, 0.0D).tex(1.0D, 0.0D).endVertex();
+            bufferbuilder.pos(- 4.0D, - 104.0D, 0.0D).tex(0.0D, 0.0D).endVertex();    
             tessellator.draw();
 
             GlStateManager.enableLighting();

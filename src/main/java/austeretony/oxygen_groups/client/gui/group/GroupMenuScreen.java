@@ -7,31 +7,48 @@ import austeretony.alternateui.screen.core.GUIWorkspace;
 import austeretony.alternateui.util.EnumGUIAlignment;
 import austeretony.oxygen_core.client.api.OxygenHelperClient;
 import austeretony.oxygen_core.client.gui.menu.OxygenMenuEntry;
+import austeretony.oxygen_groups.client.gui.menu.GroupMenuEntry;
+import austeretony.oxygen_groups.client.settings.gui.EnumGroupsGUISetting;
 import austeretony.oxygen_groups.common.main.GroupsMain;
 
-public class GroupMenuGUIScreen extends AbstractGUIScreen {
+public class GroupMenuScreen extends AbstractGUIScreen {
 
     public static final OxygenMenuEntry GROUP_MENU_ENTRY = new GroupMenuEntry();
 
-    protected GroupGUISection mainSection;
+    protected GroupSection groupSection;
 
-    public GroupMenuGUIScreen() {
+    public GroupMenuScreen() {
         OxygenHelperClient.syncSharedData(GroupsMain.GROUP_MENU_SCREEN_ID);
     }
 
     @Override
     protected GUIWorkspace initWorkspace() {
-        return new GUIWorkspace(this, 195, 179).setAlignment(EnumGUIAlignment.RIGHT, - 10, 0);
+        EnumGUIAlignment alignment = EnumGUIAlignment.CENTER;
+        switch (EnumGroupsGUISetting.GROUP_MENU_ALIGNMENT.get().asInt()) {
+        case - 1: 
+            alignment = EnumGUIAlignment.LEFT;
+            break;
+        case 0:
+            alignment = EnumGUIAlignment.CENTER;
+            break;
+        case 1:
+            alignment = EnumGUIAlignment.RIGHT;
+            break;    
+        default:
+            alignment = EnumGUIAlignment.CENTER;
+            break;
+        }
+        return new GUIWorkspace(this, 195, 178).setAlignment(alignment, 0, 0);
     }
 
     @Override
     protected void initSections() {
-        this.getWorkspace().initSection(this.mainSection = new GroupGUISection(this));        
+        this.getWorkspace().initSection(this.groupSection = new GroupSection(this));        
     }
 
     @Override
     protected AbstractGUISection getDefaultSection() {
-        return this.mainSection;
+        return this.groupSection;
     }
 
     @Override
@@ -43,6 +60,6 @@ public class GroupMenuGUIScreen extends AbstractGUIScreen {
     }
 
     public void sharedDataSynchronized() {
-        this.mainSection.sharedDataSynchronized();
+        this.groupSection.sharedDataSynchronized();
     }
 }

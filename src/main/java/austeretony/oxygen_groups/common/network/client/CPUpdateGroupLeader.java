@@ -6,13 +6,13 @@ import austeretony.oxygen_groups.client.GroupsManagerClient;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.INetHandler;
 
-public class CPUpdateLeader extends Packet {
+public class CPUpdateGroupLeader extends Packet {
 
     private int index;
 
-    public CPUpdateLeader() {}
+    public CPUpdateGroupLeader() {}
 
-    public CPUpdateLeader(int index) {
+    public CPUpdateGroupLeader(int index) {
         this.index = index;
     }
 

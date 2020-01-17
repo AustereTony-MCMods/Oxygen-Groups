@@ -27,6 +27,6 @@ public class CPRemovePlayerFromGroup extends Packet {
     @Override
     public void read(ByteBuf buffer, INetHandler netHandler) {
         final UUID playerUUID = ByteBufUtils.readUUID(buffer);
-        OxygenHelperClient.addRoutineTask(()->GroupsManagerClient.instance().getGroupDataManager().removeFromGroup(playerUUID));
+        OxygenHelperClient.addRoutineTask(()->GroupsManagerClient.instance().getGroupDataManager().removeGroupMember(playerUUID));
     }
 }

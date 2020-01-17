@@ -5,27 +5,27 @@ import java.util.UUID;
 import austeretony.alternateui.screen.core.GUIBaseElement;
 import austeretony.oxygen_core.client.api.ClientReference;
 import austeretony.oxygen_core.client.api.OxygenHelperClient;
-import austeretony.oxygen_core.client.gui.IndexedGUIButton;
-import austeretony.oxygen_core.client.gui.elements.OxygenGUIContextMenuElement.ContextMenuAction;
+import austeretony.oxygen_core.client.gui.elements.OxygenContextMenu.OxygenContextMenuAction;
+import austeretony.oxygen_core.client.gui.elements.OxygenIndexedPanelEntry;
 import austeretony.oxygen_groups.client.GroupsManagerClient;
 
-public class InviteToGroupContextAction implements ContextMenuAction {
+public class InviteToGroupContextAction implements OxygenContextMenuAction {
 
     @Override
-    public String getName(GUIBaseElement currElement) {
+    public String getLocalizedName(GUIBaseElement currElement) {
         return ClientReference.localize("oxygen_groups.context.inviteToGroup");
     }
 
     @Override
     public boolean isValid(GUIBaseElement currElement) {
-        UUID playerUUID = ((IndexedGUIButton<UUID>) currElement).index;   
+        UUID playerUUID = ((OxygenIndexedPanelEntry<UUID>) currElement).index;   
         return OxygenHelperClient.isPlayerAvailable(playerUUID)
-                && (!GroupsManagerClient.instance().getGroupDataManager().getGroupData().isActive() || GroupsManagerClient.instance().getGroupDataManager().getGroupData().isClientLeader());
+                && (!GroupsManagerClient.instance().getGroupDataManager().getGroupData().isActive() || GroupsManagerClient.instance().getGroupDataManager().getGroupData().isLeader(OxygenHelperClient.getPlayerUUID()));
     }
 
     @Override
     public void execute(GUIBaseElement currElement) {
-        UUID playerUUID = ((IndexedGUIButton<UUID>) currElement).index;   
+        UUID playerUUID = ((OxygenIndexedPanelEntry<UUID>) currElement).index;   
         GroupsManagerClient.instance().getGroupDataManager().inviteToGroupSynced(OxygenHelperClient.getPlayerIndex(playerUUID));
     }
 }

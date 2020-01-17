@@ -1,20 +1,17 @@
 package austeretony.oxygen_groups.client;
 
-import java.util.Collection;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
-import austeretony.oxygen_core.client.api.OxygenHelperClient;
+import austeretony.oxygen_groups.common.Group.EnumGroupMode;
 import austeretony.oxygen_groups.common.config.GroupsConfig;
-import austeretony.oxygen_groups.common.main.Group;
+import io.netty.util.internal.ConcurrentSet;
 
 public class GroupDataClient {
 
     private UUID leaderUUID;
 
-    private Map<UUID, GroupEntryClient> playersData = new ConcurrentHashMap<>();
+    private Set<UUID> members = new ConcurrentSet<>();
 
     private volatile boolean active;
 
@@ -26,8 +23,28 @@ public class GroupDataClient {
         this.active = flag;
     }
 
-    public GroupEntryClient getLeaderData() {
-        return this.playersData.get(this.leaderUUID);
+    public int getSize() {
+        return this.members.size();
+    }
+
+    public Set<UUID> getMembers() {
+        return this.members;
+    }
+
+    public void addMember(UUID playerUUID) {
+        this.members.add(playerUUID);
+    }
+
+    public void removeMember(UUID playerUUID) {
+        this.members.remove(playerUUID);
+    }
+
+    public boolean isMember(UUID playerUUID) {
+        return this.members.contains(playerUUID);
+    }
+
+    public UUID getLeaderUUID() {
+        return this.leaderUUID;
     }
 
     public void setLeader(UUID playerUUID) {
@@ -38,62 +55,15 @@ public class GroupDataClient {
         return this.leaderUUID.equals(playerUUID);
     }
 
-    public boolean isClientLeader() {
-        return this.leaderUUID.equals(OxygenHelperClient.getPlayerUUID());      
-    }
-
-    public Set<UUID> getPlayersUUIDs() {
-        return this.playersData.keySet();
-    }
-
-    public Collection<GroupEntryClient> getPlayersData() {
-        return this.playersData.values();
-    }
-
-    public boolean exist(UUID playerUUID) {
-        return this.playersData.containsKey(playerUUID);
-    }
-
-    public GroupEntryClient getPlayerData(UUID playerUUID) {
-        return this.playersData.get(playerUUID);
-    }
-
-    public void updateGroupData(int[] indexes, float[] currHealth, float[] maxHealth) {
-        UUID playerUUID;
-        GroupEntryClient data;
-        for (int i = 0; i < indexes.length; i++) {
-            if (OxygenHelperClient.isPlayerOnline(indexes[i])) {
-                playerUUID = OxygenHelperClient.getPlayerSharedData(indexes[i]).getPlayerUUID();
-                if (this.exist(playerUUID)) {
-                    data = this.getPlayerData(playerUUID);
-                    data.setHealth(currHealth[i]);
-                    data.setMaxHealth(maxHealth[i]);
-                }
-            }
-        }
-    }
-
-    public int getSize() {
-        return this.playersData.size();
-    }
-
-    public Group.EnumGroupMode getMode() {
-        if (this.getSize() > GroupsConfig.PLAYERS_PER_RAID.getIntValue())
-            return Group.EnumGroupMode.PARTY;
-        if (this.getSize() > GroupsConfig.PLAYERS_PER_SQUAD.getIntValue())
-            return Group.EnumGroupMode.RAID;
-        return Group.EnumGroupMode.SQUAD;
-    }
-
-    public void addPlayerData(GroupEntryClient data) {
-        this.playersData.put(data.playerUUID, data);
-    }
-
-    public void removePlayerData(UUID playerUUID) {
-        this.playersData.remove(playerUUID);
+    public EnumGroupMode getMode() {
+        if (this.getSize() > GroupsConfig.PLAYERS_PER_RAID.asInt())
+            return EnumGroupMode.PARTY;
+        if (this.getSize() > GroupsConfig.PLAYERS_PER_SQUAD.asInt())
+            return EnumGroupMode.RAID;
+        return EnumGroupMode.SQUAD;
     }
 
     public void clear() {
-        this.playersData.clear();
+        this.members.clear();
     }
 }

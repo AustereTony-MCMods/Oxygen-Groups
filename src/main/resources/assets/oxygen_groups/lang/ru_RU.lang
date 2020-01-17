@@ -1,5 +1,24 @@
 key.oxygen_groups.groupMenu=Открыть Меню Группы
 
+oxygen_groups.gui.settings.option.addGroupMenu=Меню Группы
+oxygen_groups.gui.settings.option.hideGroupOverlay=Скрыть Оверлэй Группы
+oxygen_groups.gui.settings.option.showActiveEffects=Показывать Активные Эффекты
+
+oxygen_groups.gui.settings.option.alignmentGroupMenu=Меню Группы
+oxygen_groups.gui.settings.option.groupOverlayOffsetX=Горизонтальное Смещение Оверлэя Группы
+oxygen_groups.gui.settings.option.groupOverlayOffsetY=Вертикальное Смещение Оверлэя Группы
+oxygen_groups.gui.settings.option.barColor=Индикаторы
+oxygen_groups.gui.settings.option.squadOverlayScaleFactor=Оверлэй Отряда
+oxygen_groups.gui.settings.option.raidOverlayScaleFactor=Оверлэй Рейда
+oxygen_groups.gui.settings.option.partyOverlayScaleFactor=Оверлэй Компании
+oxygen_groups.gui.settings.option.statusBarText=Текст Индикатора 
+
+oxygen_groups.gui.settings.tooltip.background=Фон
+oxygen_groups.gui.settings.tooltip.offline=Не в Сети
+oxygen_groups.gui.settings.tooltip.health=Здоровье
+oxygen_groups.gui.settings.tooltip.absorption=Поглощение
+oxygen_groups.gui.settings.tooltip.armor=Броня
+
 oxygen_groups.gui.interaction.inviteToGroup=Пригласить в Группу
 
 oxygen_groups.context.inviteToGroup=Пригласить в Группу
@@ -24,25 +43,21 @@ oxygen_groups.gui.autoAccept=Принимать Приглашения
 oxygen_groups.gui.callback.invitePlayer=Пригласить Игрока
 oxygen_groups.gui.callback.invitePlayer.request=Пригласить игрока в группу.
 oxygen_groups.gui.callback.leaveGroup=Покинуть Группу
-oxygen_groups.gui.callback.leaveGroup.request=Вы уверены?
-oxygen_groups.gui.callback.readinessCheck=Проверка Готовности
-oxygen_groups.gui.callback.readinessCheck.request=Начать проверку готовности?
+oxygen_groups.gui.callback.leaveGroup.request=Вы покините эту группу.
 oxygen_groups.gui.callback.promoteToLeader=Смена Лидера
 oxygen_groups.gui.callback.promoteToLeader.request=Игрок будет назначен лидером группы.
 oxygen_groups.gui.callback.kickPlayer=Изгнание Игрока
-oxygen_groups.gui.callback.kickPlayer.request=Начать голосование за изгнание?
+oxygen_groups.gui.callback.kickPlayer.request=Игрок будет изгнан из группы.
 
 oxygen_groups.status.acceptedSender=Ваше приглашение в группу принято
 oxygen_groups.status.acceptedTarget=Вы приняли приглашение в группу
 oxygen_groups.status.rejectedSender=Ваше приглашение в группу отклонено
 oxygen_groups.status.rejectedTarget=Вы отклонили приглошение в группу
-
-oxygen_groups.message.readinessCheck.started=Начата проверка готовности группы.
-oxygen_groups.message.readinessCheck.ready=Группа готова.
-oxygen_groups.message.readinessCheck.notReady=Группа не готова.
-oxygen_groups.message.playerKickVoting.started=Началось голосование за изгнание из группы игрока %s.
-oxygen_groups.message.playerKickVoting.kicked=Игрок %s изгнан.
-oxygen_groups.message.playerKickVoting.notKicked=Игрок %s не изгнан.
+oxygen_groups.status.joinedGroup=Вы присоединились к группе
+oxygen_groups.status.leftGroup=Вы покинули группу
+oxygen_groups.status.playerKicked=Игрок изгнан из группы
+oxygen_groups.status.newLeaderSet=Новый лидер назначен
+oxygen_groups.status.groupSynchronized=Группа синхронизирована
 
 oxygen_groups.groupMode.squad=Отряд
 oxygen_groups.groupMode.raid=Рейд

@@ -5,28 +5,29 @@ import java.util.UUID;
 import austeretony.alternateui.screen.core.GUIBaseElement;
 import austeretony.oxygen_core.client.api.ClientReference;
 import austeretony.oxygen_core.client.api.OxygenHelperClient;
-import austeretony.oxygen_core.client.gui.IndexedGUIButton;
-import austeretony.oxygen_core.client.gui.elements.OxygenGUIContextMenuElement.ContextMenuAction;
+import austeretony.oxygen_core.client.gui.elements.OxygenContextMenu.OxygenContextMenuAction;
+import austeretony.oxygen_core.client.gui.elements.OxygenIndexedPanelEntry;
 import austeretony.oxygen_groups.client.GroupsManagerClient;
-import austeretony.oxygen_groups.client.gui.group.GroupGUISection;
+import austeretony.oxygen_groups.client.gui.group.GroupSection;
 
-public class KickPlayerContextAction implements ContextMenuAction {
+public class KickPlayerContextAction implements OxygenContextMenuAction {
 
-    public final GroupGUISection section;
+    public final GroupSection section;
 
-    public KickPlayerContextAction(GroupGUISection section) {
+    public KickPlayerContextAction(GroupSection section) {
         this.section = section; 
     }
 
     @Override
-    public String getName(GUIBaseElement currElement) {
+    public String getLocalizedName(GUIBaseElement currElement) {
         return ClientReference.localize("oxygen_groups.gui.action.kick");
     }
 
     @Override
     public boolean isValid(GUIBaseElement currElement) {
-        UUID playerUUID = ((IndexedGUIButton<UUID>) currElement).index;   
+        UUID playerUUID = ((OxygenIndexedPanelEntry<UUID>) currElement).index;   
         return !playerUUID.equals(OxygenHelperClient.getPlayerUUID())
+                && GroupsManagerClient.instance().getGroupDataManager().getGroupData().isLeader(OxygenHelperClient.getPlayerUUID())
                 && GroupsManagerClient.instance().getGroupDataManager().getGroupData().getSize() > 2;
     }
 

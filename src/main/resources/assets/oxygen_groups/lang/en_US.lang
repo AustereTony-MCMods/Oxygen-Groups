@@ -1,5 +1,32 @@
 key.oxygen_groups.groupMenu=Open Group Menu
 
+oxygen_groups.gui.settings.module.groups=Groups
+
+oxygen_groups.gui.settings.option.addGroupMenu=Group Menu
+oxygen_groups.gui.settings.option.hideGroupOverlay=Hide Group Overlay
+oxygen_groups.gui.settings.option.showActiveEffects=Show Active Effects
+
+oxygen_groups.gui.settings.option.alignmentGroupMenu=Group Menu
+oxygen_groups.gui.settings.option.groupOverlayOffsetX=Horizontal Group Overlay Offet
+oxygen_groups.gui.settings.option.groupOverlayOffsetY=Vertical Group Overlay Offset
+oxygen_groups.gui.settings.option.barColor=Bar
+oxygen_groups.gui.settings.option.squadOverlayScaleFactor=Squad Overlay
+oxygen_groups.gui.settings.option.raidOverlayScaleFactor=Raid Overlay
+oxygen_groups.gui.settings.option.partyOverlayScaleFactor=Party Overlay
+oxygen_groups.gui.settings.option.statusBarText=Status Bar Text
+
+oxygen_groups.gui.settings.tooltip.background=Background
+oxygen_groups.gui.settings.tooltip.offline=Offline
+oxygen_groups.gui.settings.tooltip.health=Health
+oxygen_groups.gui.settings.tooltip.absorption=Absorption
+oxygen_groups.gui.settings.tooltip.armor=Armor
+
+oxygen_groups.gui.overlay.barText.none=None
+oxygen_groups.gui.overlay.barText.healthAndMaxHealth=Curr H./Max H.
+oxygen_groups.gui.overlay.barText.healthAndMaxHealthPlusAbsorption=Curr H./Max H.+Absorption
+oxygen_groups.gui.overlay.barText.healthPercent=Curr H.(%s)
+oxygen_groups.gui.overlay.barText.healthPercentPlusAbsorption=Curr H.(%s)+Absorption
+
 oxygen_groups.gui.interaction.inviteToGroup=Invite to Group
 
 oxygen_groups.context.inviteToGroup=Invite to Group
@@ -24,25 +51,21 @@ oxygen_groups.gui.autoAccept=Accept Invitations
 oxygen_groups.gui.callback.invitePlayer=Invite Player
 oxygen_groups.gui.callback.invitePlayer.request=Invite player to group.
 oxygen_groups.gui.callback.leaveGroup=Leave Group
-oxygen_groups.gui.callback.leaveGroup.request=Are you sure?
-oxygen_groups.gui.callback.readinessCheck=Readiness Check
-oxygen_groups.gui.callback.readinessCheck.request=Start readiness check?
+oxygen_groups.gui.callback.leaveGroup.request=You will leave this group.
 oxygen_groups.gui.callback.promoteToLeader=Change Leader
 oxygen_groups.gui.callback.promoteToLeader.request=Player will be promoted to leader.
 oxygen_groups.gui.callback.kickPlayer=Kick Player
-oxygen_groups.gui.callback.kickPlayer.request=Start voting to kick player?
+oxygen_groups.gui.callback.kickPlayer.request=Player will be kicked.
 
 oxygen_groups.status.acceptedSender=Your group request accepted
 oxygen_groups.status.acceptedTarget=You accepted group request
 oxygen_groups.status.rejectedSender=Your group request rejected
 oxygen_groups.status.rejectedTarget=You rejected group request
-
-oxygen_groups.message.readinessCheck.started=Group readiness check started.
-oxygen_groups.message.readinessCheck.ready=Group ready.
-oxygen_groups.message.readinessCheck.notReady=Group not ready.
-oxygen_groups.message.playerKickVoting.started=Started voting to kick player %s from group.
-oxygen_groups.message.playerKickVoting.kicked=Player %s kicked.
-oxygen_groups.message.playerKickVoting.notKicked=Player %s not kicked.
+oxygen_groups.status.joinedGroup=You joined the group
+oxygen_groups.status.leftGroup=You left the group
+oxygen_groups.status.playerKicked=Player kicked from group
+oxygen_groups.status.newLeaderSet=New leader appointed
+oxygen_groups.status.groupSynchronized=Group synchronized
 
 oxygen_groups.groupMode.squad=Squad
 oxygen_groups.groupMode.raid=Raid
