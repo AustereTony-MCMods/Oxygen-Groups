@@ -50,7 +50,7 @@ import net.minecraftforge.fml.relauncher.Side;
         modid = GroupsMain.MODID, 
         name = GroupsMain.NAME, 
         version = GroupsMain.VERSION,
-        dependencies = "required-after:oxygen_core@[0.10.0,);",
+        dependencies = "required-after:oxygen_core@[0.10.1,);",
         certificateFingerprint = "@FINGERPRINT@",
         updateJSON = GroupsMain.VERSIONS_FORGE_URL)
 public class GroupsMain {
@@ -58,7 +58,7 @@ public class GroupsMain {
     public static final String 
     MODID = "oxygen_groups", 
     NAME = "Oxygen: Groups", 
-    VERSION = "0.10.0", 
+    VERSION = "0.10.1", 
     VERSION_CUSTOM = VERSION + ":beta:0",
     GAME_VERSION = "1.12.2",
     VERSIONS_FORGE_URL = "https://raw.githubusercontent.com/AustereTony-MCMods/Oxygen-Groups/info/mod_versions_forge.json";
@@ -91,6 +91,12 @@ public class GroupsMain {
         NetworkRequestsRegistryServer.registerRequest(GROUP_MANAGEMENT_REQUEST_ID, 1000);
         OxygenHelperServer.registerChatChannel(new GroupChatChannel());
         CommandOxygenServer.registerArgument(new GroupsArgumentServer());
+        if (GroupsConfig.DISABLE_PVP_FOR_GROUP_MEMBERS.asBoolean())
+            OxygenHelperServer.registerRestrictedAttacksValidator((attackerUUID, attackedUUID)->{
+                if (GroupsManagerServer.instance().getGroupsDataContainer().haveGroup(attackerUUID))
+                    return !GroupsManagerServer.instance().getGroupsDataContainer().getGroup(attackerUUID).isMember(attackedUUID);
+                return false;
+            });
         EnumGroupsPrivilege.register();
         if (event.getSide() == Side.CLIENT) {
             GroupsManagerClient.create();       
