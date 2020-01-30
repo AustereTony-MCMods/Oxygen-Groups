@@ -1,7 +1,10 @@
+0.10.1b [2020-01-30]
++ Added the ability to disable PVP for group members.
+
 0.10.0b [2020-01-17]
 + Improved menu design.
 + Added 1 second cooldown for sending packets - operations in the group menu.
-+ Removed voting system (will be readded later). The leader of the group is now able to kick any player.
++ Removed voting system (will be readded later). The leader of the group is now able to kick any player\.
 + Added group chat channel. If you have a group, you can send messages to the group’s personal chat: /group <message>.
 + Updated configuration options:
  Client
@@ -61,7 +64,7 @@
 group will be synchronized properly with new member.
 
 0.8.0b
-+ Performance improvements.
++Performance improvements.
 
 0.1.4b
 + Last activity time tooltip for offline players now shows correct time (displayed when you 
