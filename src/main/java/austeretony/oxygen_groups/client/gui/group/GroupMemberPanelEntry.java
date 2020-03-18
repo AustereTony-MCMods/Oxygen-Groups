@@ -9,8 +9,8 @@ import austeretony.oxygen_core.client.api.EnumBaseGUISetting;
 import austeretony.oxygen_core.client.api.OxygenHelperClient;
 import austeretony.oxygen_core.client.gui.OxygenGUITextures;
 import austeretony.oxygen_core.client.gui.OxygenGUIUtils;
-import austeretony.oxygen_core.client.gui.elements.OxygenIndexedPanelEntry;
-import austeretony.oxygen_core.client.privilege.RoleDataClient;
+import austeretony.oxygen_core.client.gui.elements.OxygenWrapperPanelEntry;
+import austeretony.oxygen_core.client.privilege.RoleData;
 import austeretony.oxygen_core.common.EnumActivityStatus;
 import austeretony.oxygen_core.common.PlayerSharedData;
 import austeretony.oxygen_core.common.main.OxygenMain;
@@ -18,8 +18,9 @@ import austeretony.oxygen_core.common.util.OxygenUtils;
 import austeretony.oxygen_groups.client.GroupsManagerClient;
 import austeretony.oxygen_groups.client.gui.GroupsGUITextures;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.text.TextFormatting;
 
-public class GroupMemberPanelEntry extends OxygenIndexedPanelEntry<UUID> {
+public class GroupMemberPanelEntry extends OxygenWrapperPanelEntry<UUID> {
 
     private String lastActivity, dimension;
 
@@ -49,12 +50,15 @@ public class GroupMemberPanelEntry extends OxygenIndexedPanelEntry<UUID> {
         this.setTooltipScaleFactor(EnumBaseGUISetting.TEXT_TOOLTIP_SCALE.get().asFloat());
 
         int i, width, roleId;
-        RoleDataClient roleData;
+        RoleData roleData;
         for (i = 0; i < this.roles.length; i++) {
             roleId = sharedData.getByte(i + OxygenMain.ROLES_SHARED_DATA_STARTING_INDEX);
             if (roleId != OxygenMain.DEFAULT_ROLE_INDEX) {
-                roleData = OxygenManagerClient.instance().getPrivilegesManager().getRoleData(roleId);
-                this.roles[i] = roleData.nameColor + roleData.name;
+                roleData = OxygenManagerClient.instance().getPrivilegesContainer().getRoleData(roleId);
+                if (roleData != null)
+                    this.roles[i] = roleData.nameColor + roleData.name;
+                else
+                    this.roles[i] = TextFormatting.ITALIC + "Undefined";
                 this.rolesAmount = i + 1;
                 width = this.textWidth(roleData.name, this.getTooltipScaleFactor()) + 4;
                 if (this.rolesWidth < width)
@@ -107,7 +111,7 @@ public class GroupMemberPanelEntry extends OxygenIndexedPanelEntry<UUID> {
 
             if (this.isLeader) {
                 this.mc.getTextureManager().bindTexture(GroupsGUITextures.LEADER_MARK); 
-                drawCustomSizedTexturedRect(this.getWidth() - 20, 1, 0, 0, 8, 8, 8, 8);  
+                drawCustomSizedTexturedRect(this.getWidth() - 20, 2, 0, 0, 6, 6, 6, 6);  
             }
 
             GlStateManager.popMatrix();

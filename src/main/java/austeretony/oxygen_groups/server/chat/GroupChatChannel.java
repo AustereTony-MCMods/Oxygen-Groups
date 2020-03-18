@@ -78,6 +78,6 @@ public class GroupChatChannel extends AbstractChatChannel {
     @Override
     public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
         return sender instanceof EntityPlayerMP 
-                && GroupsManagerServer.instance().getGroupsDataContainer().haveGroup(CommonReference.getPersistentUUID((EntityPlayerMP) sender));
+                && GroupsManagerServer.instance().getGroupsDataContainer().getGroup(CommonReference.getPersistentUUID((EntityPlayerMP) sender)) != null;
     }
 }

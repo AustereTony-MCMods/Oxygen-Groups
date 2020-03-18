@@ -10,6 +10,7 @@ public enum EnumGroupsGUISetting {
     //Alignment
 
     GROUP_MENU_ALIGNMENT("alignment_group_menu", EnumValueType.INT, String.valueOf(0)),
+    GROUP_OVERLAY_ALIGNMENT("alignment_group_overlay", EnumValueType.INT, String.valueOf(0)),
 
     //Offset
 
@@ -53,7 +54,7 @@ public enum EnumGroupsGUISetting {
     }
 
     public static void register() {
-        for (EnumGroupsGUISetting setting : EnumGroupsGUISetting.values())
+        for (EnumGroupsGUISetting setting : values())
             OxygenManagerClient.instance().getClientSettingManager().register(SettingValueUtils.getValue(setting.type, setting.key, setting.baseValue));
     }
 }

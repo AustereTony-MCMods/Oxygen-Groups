@@ -12,7 +12,6 @@ import austeretony.oxygen_core.server.OxygenPlayerData;
 import austeretony.oxygen_core.server.api.OxygenHelperServer;
 import austeretony.oxygen_core.server.api.PrivilegesProviderServer;
 import austeretony.oxygen_groups.common.Group;
-import austeretony.oxygen_groups.common.GroupInviteRequest;
 import austeretony.oxygen_groups.common.config.GroupsConfig;
 import austeretony.oxygen_groups.common.main.EnumGroupsPrivilege;
 import austeretony.oxygen_groups.common.main.EnumGroupsStatusMessage;
@@ -22,7 +21,6 @@ import austeretony.oxygen_groups.common.network.client.CPLeaveGroup;
 import austeretony.oxygen_groups.common.network.client.CPRemovePlayerFromGroup;
 import austeretony.oxygen_groups.common.network.client.CPSyncGroup;
 import austeretony.oxygen_groups.common.network.client.CPUpdateGroupLeader;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public class GroupsDataManagerServer {
@@ -33,10 +31,10 @@ public class GroupsDataManagerServer {
         this.manager = manager;
     }
 
-    public void onPlayerLoaded(EntityPlayerMP playerMP) {    
+    public void playerLoaded(EntityPlayerMP playerMP) {    
         UUID playerUUID = CommonReference.getPersistentUUID(playerMP);
-        if (this.manager.getGroupsDataContainer().haveGroup(playerUUID)) {
-            Group group = this.manager.getGroupsDataContainer().getGroup(playerUUID);     
+        Group group = this.manager.getGroupsDataContainer().getGroup(playerUUID);    
+        if (group != null) {
             PlayerSharedData sharedData = OxygenHelperServer.getPlayerSharedData(playerUUID);
             OxygenPlayerData oxygenData = OxygenHelperServer.getOxygenPlayerData(playerUUID);
             for (UUID memberUUID : group.getMembers()) {
@@ -54,20 +52,19 @@ public class GroupsDataManagerServer {
         }
     }
 
-    public void onPlayerUnloaded(EntityPlayerMP playerMP) {
+    public void playerUnloaded(EntityPlayerMP playerMP) {
         UUID playerUUID = CommonReference.getPersistentUUID(playerMP);
-        if (this.manager.getGroupsDataContainer().haveGroup(playerUUID)) {
-            Group group = this.manager.getGroupsDataContainer().getGroup(playerUUID);
+        Group group = this.manager.getGroupsDataContainer().getGroup(playerUUID);
+        if (group != null)
             for (UUID memberUUID : group.getMembers())
                 if (!memberUUID.equals(playerUUID) && OxygenHelperServer.isPlayerOnline(memberUUID))
                     OxygenHelperServer.removePlayerSharedData(playerUUID, CommonReference.playerByUUID(memberUUID));
-        }
     }
 
-    public void onPlayerChangedStatusActivity(EntityPlayerMP playerMP, EnumActivityStatus newStatus) {
+    public void playerChangedStatusActivity(EntityPlayerMP playerMP, EnumActivityStatus newStatus) {
         UUID playerUUID = CommonReference.getPersistentUUID(playerMP);
-        if (this.manager.getGroupsDataContainer().haveGroup(playerUUID)) {
-            Group group = this.manager.getGroupsDataContainer().getGroup(playerUUID);
+        Group group = this.manager.getGroupsDataContainer().getGroup(playerUUID);
+        if (group != null) {
             PlayerSharedData sharedData = OxygenHelperServer.getPlayerSharedData(playerUUID);
 
             for (UUID memberUUID : group.getMembers())
@@ -76,9 +73,9 @@ public class GroupsDataManagerServer {
         }
     }
 
-    public void inviteToGroup(EntityPlayerMP playerMP, int targetIndex) {
+    public void inviteToGroup(EntityPlayerMP senderMP, int targetIndex) {
         UUID 
-        senderUUID = CommonReference.getPersistentUUID(playerMP),
+        senderUUID = CommonReference.getPersistentUUID(senderMP),
         targetUUID;
         if (PrivilegesProviderServer.getAsBoolean(senderUUID, EnumGroupsPrivilege.ALLOW_GROUP_CREATION.id(), true)) {
             if (OxygenHelperServer.isPlayerOnline(targetIndex)) {
@@ -86,35 +83,42 @@ public class GroupsDataManagerServer {
                 if (!senderUUID.equals(targetUUID) 
                         && this.canInvite(senderUUID) 
                         && this.canBeInvited(targetUUID)) {
-                    OxygenHelperServer.sendRequest(playerMP, CommonReference.playerByUUID(targetUUID), 
-                            new GroupInviteRequest(GroupsMain.GROUP_INVITATION_REQUEST_ID, senderUUID, CommonReference.getName(playerMP)));
+                    EntityPlayerMP targetMP = CommonReference.playerByUUID(targetUUID);
+                    OxygenHelperServer.sendRequest(senderMP, targetMP, new GroupInviteRequest(senderUUID, CommonReference.getName(senderMP)));
+
+                    if (GroupsConfig.ADVANCED_LOGGING.asBoolean())
+                        OxygenMain.LOGGER.info("[Groups] Player {}/{} sent group invitation to player <{}/{}>",
+                                CommonReference.getName(senderMP),
+                                CommonReference.getPersistentUUID(senderMP),
+                                CommonReference.getName(targetMP),
+                                CommonReference.getPersistentUUID(targetMP));
                 } else
-                    OxygenHelperServer.sendStatusMessage(playerMP, OxygenMain.OXYGEN_CORE_MOD_INDEX, EnumOxygenStatusMessage.REQUEST_RESET.ordinal());
+                    OxygenManagerServer.instance().sendStatusMessage(senderMP, EnumOxygenStatusMessage.REQUEST_RESET);
             }
         }
     }
 
-    public void processGroupCreation(EntityPlayer player, UUID leaderUUID) {
-        if (this.canBeInvited(CommonReference.getPersistentUUID(player))) {
-            if (this.manager.getGroupsDataContainer().haveGroup(leaderUUID))
-                this.addNewGroupMember(player, leaderUUID);
+    public void processGroupCreation(EntityPlayerMP playerMP, UUID leaderUUID) {
+        if (this.canBeInvited(CommonReference.getPersistentUUID(playerMP))) {
+            if (this.manager.getGroupsDataContainer().getGroup(leaderUUID) != null)
+                this.addNewGroupMember(playerMP, leaderUUID);
             else
-                this.createGroup(player, leaderUUID);
+                this.createGroup(playerMP, leaderUUID);
 
             this.manager.getGroupsDataContainer().setChanged(true);
         }
     }
 
-    private void createGroup(EntityPlayer player, UUID leaderUUID) {
-        UUID invitedUUID = CommonReference.getPersistentUUID(player);
+    private void createGroup(EntityPlayerMP playerMP, UUID leaderUUID) {
+        UUID invitedUUID = CommonReference.getPersistentUUID(playerMP);
         Group group = new Group();
-        group.setId(this.manager.getGroupsDataContainer().getNewGroupId());
+        group.setId(this.manager.getGroupsDataContainer().createId());
         group.setLeader(leaderUUID);
         group.addMember(leaderUUID);
         group.addMember(invitedUUID);
         this.manager.getGroupsDataContainer().addGroup(group);
-        this.manager.getGroupsDataContainer().addGroupAccess(group.getId(), leaderUUID);
-        this.manager.getGroupsDataContainer().addGroupAccess(group.getId(), invitedUUID);
+        this.manager.getGroupsDataContainer().playerJoinedGroup(leaderUUID, group.getId());
+        this.manager.getGroupsDataContainer().playerJoinedGroup(invitedUUID, group.getId());
 
         OxygenHelperServer.addTrackedEntity(leaderUUID, invitedUUID, true);
         OxygenHelperServer.addTrackedEntity(invitedUUID, leaderUUID, true);
@@ -122,48 +126,63 @@ public class GroupsDataManagerServer {
         OxygenHelperServer.addObservedPlayer(leaderUUID, invitedUUID);
         OxygenHelperServer.addObservedPlayer(invitedUUID, leaderUUID);
 
-        OxygenHelperServer.sendPlayerSharedData(invitedUUID, (EntityPlayerMP) player);
-        OxygenHelperServer.sendPlayerSharedData(leaderUUID, (EntityPlayerMP) player);
+        OxygenHelperServer.sendPlayerSharedData(invitedUUID, playerMP);
+        OxygenHelperServer.sendPlayerSharedData(leaderUUID, playerMP);
 
-        OxygenMain.network().sendTo(new CPSyncGroup(group), CommonReference.playerByUUID(leaderUUID));
-        OxygenMain.network().sendTo(new CPSyncGroup(group), (EntityPlayerMP) player);
+        EntityPlayerMP senderMP = CommonReference.playerByUUID(leaderUUID);
+        OxygenMain.network().sendTo(new CPSyncGroup(group), senderMP);
+        OxygenMain.network().sendTo(new CPSyncGroup(group), playerMP);
 
-        OxygenHelperServer.sendStatusMessage((EntityPlayerMP) player, GroupsMain.GROUPS_MOD_INDEX, EnumGroupsStatusMessage.JOINED_GROUP.ordinal());
+        this.manager.sendStatusMessage(playerMP, EnumGroupsStatusMessage.JOINED_GROUP);
+
+        if (GroupsConfig.ADVANCED_LOGGING.asBoolean())
+            OxygenMain.LOGGER.info("[Groups] Player {}/{} accepted group invitation from player <{}/{}>. Group created.",
+                    CommonReference.getName(playerMP),
+                    CommonReference.getPersistentUUID(playerMP),
+                    CommonReference.getName(senderMP),
+                    CommonReference.getPersistentUUID(senderMP));
     }   
 
-    private void addNewGroupMember(EntityPlayer player, UUID leaderUUID) {   
-        UUID invitedUUID = CommonReference.getPersistentUUID(player);
+    private void addNewGroupMember(EntityPlayerMP playerMP, UUID leaderUUID) {   
+        UUID invitedUUID = CommonReference.getPersistentUUID(playerMP);
         Group group = this.manager.getGroupsDataContainer().getGroup(leaderUUID);
+        if (group != null) {
+            for (UUID memberUUID : group.getMembers()) {
+                if (OxygenHelperServer.isPlayerOnline(memberUUID)) {
+                    OxygenHelperServer.addTrackedEntity(invitedUUID, memberUUID, true);
+                    OxygenHelperServer.addTrackedEntity(memberUUID, invitedUUID, true);
+                }
 
-        for (UUID memberUUID : group.getMembers()) {
-            if (OxygenHelperServer.isPlayerOnline(memberUUID)) {
-                OxygenHelperServer.addTrackedEntity(invitedUUID, memberUUID, true);
-                OxygenHelperServer.addTrackedEntity(memberUUID, invitedUUID, true);
+                OxygenHelperServer.addObservedPlayer(invitedUUID, memberUUID);
+                OxygenHelperServer.addObservedPlayer(memberUUID, invitedUUID);
             }
 
-            OxygenHelperServer.addObservedPlayer(invitedUUID, memberUUID);
-            OxygenHelperServer.addObservedPlayer(memberUUID, invitedUUID);
-        }
+            group.addMember(invitedUUID);
+            this.manager.getGroupsDataContainer().playerJoinedGroup(invitedUUID, group.getId());
 
-        group.addMember(invitedUUID);
-        this.manager.getGroupsDataContainer().addGroupAccess(group.getId(), invitedUUID);
-
-        PlayerSharedData invitedSharedData = OxygenHelperServer.getPlayerSharedData(invitedUUID);
-        OxygenManagerServer.instance().getSharedDataManager().syncObservedPlayersData((EntityPlayerMP) player);
-        for (UUID memberUUID : group.getMembers()) {
-            if (!memberUUID.equals(invitedUUID) && OxygenHelperServer.isPlayerOnline(memberUUID)) {
-                OxygenMain.network().sendTo(new CPAddNewGroupMember(invitedSharedData), CommonReference.playerByUUID(memberUUID));
-                OxygenHelperServer.sendPlayerSharedData(OxygenHelperServer.getPlayerSharedData(memberUUID), (EntityPlayerMP) player);
+            PlayerSharedData invitedSharedData = OxygenHelperServer.getPlayerSharedData(invitedUUID);
+            OxygenManagerServer.instance().getSharedDataManager().syncObservedPlayersData(playerMP);
+            for (UUID memberUUID : group.getMembers()) {
+                if (!memberUUID.equals(invitedUUID) && OxygenHelperServer.isPlayerOnline(memberUUID)) {
+                    OxygenMain.network().sendTo(new CPAddNewGroupMember(invitedSharedData), CommonReference.playerByUUID(memberUUID));
+                    OxygenHelperServer.sendPlayerSharedData(OxygenHelperServer.getPlayerSharedData(memberUUID), playerMP);
+                }
             }
-        }
-        OxygenMain.network().sendTo(new CPSyncGroup(group), (EntityPlayerMP) player);
+            OxygenMain.network().sendTo(new CPSyncGroup(group), playerMP);
 
-        OxygenHelperServer.sendStatusMessage((EntityPlayerMP) player, GroupsMain.GROUPS_MOD_INDEX, EnumGroupsStatusMessage.JOINED_GROUP.ordinal());
+            this.manager.sendStatusMessage(playerMP, EnumGroupsStatusMessage.JOINED_GROUP);
+
+            if (GroupsConfig.ADVANCED_LOGGING.asBoolean())
+                OxygenMain.LOGGER.info("[Groups] Player {}/{} joined group of player <{}>.",
+                        CommonReference.getName(playerMP),
+                        CommonReference.getPersistentUUID(playerMP),
+                        leaderUUID);
+        }
     }
 
     public void leaveGroup(UUID playerUUID) {
-        if (this.manager.getGroupsDataContainer().haveGroup(playerUUID)) {
-            Group group = this.manager.getGroupsDataContainer().getGroup(playerUUID);
+        Group group = this.manager.getGroupsDataContainer().getGroup(playerUUID);
+        if (group != null) {
             if (group.getSize() <= 2) {
                 this.disbandGroup(group);
                 return;
@@ -178,7 +197,7 @@ public class GroupsDataManagerServer {
             }
 
             group.removeMember(playerUUID);
-            this.manager.getGroupsDataContainer().removeGroupAccess(playerUUID);
+            this.manager.getGroupsDataContainer().playerLeftGroup(playerUUID);
 
             for (UUID memberUUID : group.getMembers()) {
                 OxygenHelperServer.removeObservedPlayer(playerUUID, memberUUID);
@@ -188,7 +207,7 @@ public class GroupsDataManagerServer {
             if (OxygenHelperServer.isPlayerOnline(playerUUID)) {
                 EntityPlayerMP playerMP = CommonReference.playerByUUID(playerUUID);
                 OxygenMain.network().sendTo(new CPLeaveGroup(), playerMP);
-                OxygenHelperServer.sendStatusMessage(playerMP, GroupsMain.GROUPS_MOD_INDEX, EnumGroupsStatusMessage.LEFT_GROUP.ordinal());
+                this.manager.sendStatusMessage(playerMP, EnumGroupsStatusMessage.LEFT_GROUP);
             }
 
             for (UUID memberUUID : group.getMembers())
@@ -196,12 +215,16 @@ public class GroupsDataManagerServer {
                     OxygenMain.network().sendTo(new CPRemovePlayerFromGroup(playerUUID), CommonReference.playerByUUID(memberUUID));
 
             this.manager.getGroupsDataContainer().setChanged(true);
+
+            if (GroupsConfig.ADVANCED_LOGGING.asBoolean())
+                OxygenMain.LOGGER.info("[Groups] Player {} left or kicked from group.",
+                        playerUUID);
         }
     }
 
     public void disbandGroup(Group group) {
         for (UUID memberUUID : group.getMembers()) {
-            this.manager.getGroupsDataContainer().removeGroupAccess(memberUUID);
+            this.manager.getGroupsDataContainer().playerLeftGroup(memberUUID);
 
             for (UUID uuid : group.getMembers())
                 OxygenHelperServer.removeObservedPlayer(memberUUID, uuid);
@@ -215,52 +238,64 @@ public class GroupsDataManagerServer {
         this.manager.getGroupsDataContainer().removeGroup(group.getId());
 
         this.manager.getGroupsDataContainer().setChanged(true);
+
+        if (GroupsConfig.ADVANCED_LOGGING.asBoolean())
+            OxygenMain.LOGGER.info("[Groups] Player {} disbanded group.",
+                    group.getLeader());
     }
 
     public void kickPlayer(EntityPlayerMP playerMP, UUID toKickUUID) {
         UUID leaderUUID = CommonReference.getPersistentUUID(playerMP);
-        if (this.manager.getGroupsDataContainer().haveGroup(leaderUUID)) {
-            Group group = this.manager.getGroupsDataContainer().getGroup(leaderUUID);
-            if (group.isLeader(leaderUUID)
-                    && group.isMember(toKickUUID)) {
-                this.leaveGroup(toKickUUID);
+        Group group = this.manager.getGroupsDataContainer().getGroup(leaderUUID);
+        if (group != null
+                &&group.isLeader(leaderUUID)
+                && group.isMember(toKickUUID)) {
+            this.leaveGroup(toKickUUID);
 
-                OxygenHelperServer.sendStatusMessage(playerMP, GroupsMain.GROUPS_MOD_INDEX, EnumGroupsStatusMessage.PLAYER_KICKED.ordinal());
+            OxygenHelperServer.sendStatusMessage(playerMP, GroupsMain.GROUPS_MOD_INDEX, EnumGroupsStatusMessage.PLAYER_KICKED.ordinal());
 
-                this.manager.getGroupsDataContainer().setChanged(true);
-            }
+            this.manager.getGroupsDataContainer().setChanged(true);
+
+            if (GroupsConfig.ADVANCED_LOGGING.asBoolean())
+                OxygenMain.LOGGER.info("[Groups] Player {}/{} kicked player {} from group.",
+                        CommonReference.getName(playerMP),
+                        CommonReference.getPersistentUUID(playerMP),
+                        toKickUUID);
         }
     }
 
     public void promoteToLeader(EntityPlayerMP playerMP, UUID newLeaderUUID) {
         UUID leaderUUID = CommonReference.getPersistentUUID(playerMP);
-        if (this.manager.getGroupsDataContainer().haveGroup(leaderUUID)) {
-            Group group = this.manager.getGroupsDataContainer().getGroup(leaderUUID);
-            if (group.isLeader(leaderUUID)
-                    && group.isMember(newLeaderUUID)) {
-                if (OxygenHelperServer.isPlayerOnline(newLeaderUUID)) {
-                    group.setLeader(newLeaderUUID);
-                    int newLeaderIndex = OxygenHelperServer.getPlayerSharedData(newLeaderUUID).getIndex();
-                    for (UUID memberUUID : group.getMembers())
-                        if (OxygenHelperServer.isPlayerOnline(memberUUID))
-                            OxygenMain.network().sendTo(new CPUpdateGroupLeader(newLeaderIndex), CommonReference.playerByUUID(memberUUID));
+        Group group = this.manager.getGroupsDataContainer().getGroup(leaderUUID);
+        if (group != null
+                && group.isLeader(leaderUUID)
+                && group.isMember(newLeaderUUID)) {
+            if (OxygenHelperServer.isPlayerOnline(newLeaderUUID)) {
+                group.setLeader(newLeaderUUID);
+                int newLeaderIndex = OxygenHelperServer.getPlayerSharedData(newLeaderUUID).getIndex();
+                for (UUID memberUUID : group.getMembers())
+                    if (OxygenHelperServer.isPlayerOnline(memberUUID))
+                        OxygenMain.network().sendTo(new CPUpdateGroupLeader(newLeaderIndex), CommonReference.playerByUUID(memberUUID));
 
-                    OxygenHelperServer.sendStatusMessage(playerMP, GroupsMain.GROUPS_MOD_INDEX, EnumGroupsStatusMessage.NEW_LEADER_SET.ordinal());
+                OxygenHelperServer.sendStatusMessage(playerMP, GroupsMain.GROUPS_MOD_INDEX, EnumGroupsStatusMessage.NEW_LEADER_SET.ordinal());
 
-                    this.manager.getGroupsDataContainer().setChanged(true);
-                }
+                this.manager.getGroupsDataContainer().setChanged(true);
+
+                if (GroupsConfig.ADVANCED_LOGGING.asBoolean())
+                    OxygenMain.LOGGER.info("[Groups] Player {}/{} promoted player {} to group leader.",
+                            CommonReference.getName(playerMP),
+                            CommonReference.getPersistentUUID(playerMP),
+                            newLeaderUUID);
             }
         }
     }
 
     private boolean canInvite(UUID playerUUID) {
-        if (!this.manager.getGroupsDataContainer().haveGroup(playerUUID))
-            return true;
         Group group = this.manager.getGroupsDataContainer().getGroup(playerUUID);
-        return group.isLeader(playerUUID) && group.getSize() < GroupsConfig.PLAYERS_PER_PARTY.asInt();
+        return group == null || (group.isLeader(playerUUID) && group.getSize() < GroupsConfig.PLAYERS_PER_PARTY.asInt());
     }
 
     private boolean canBeInvited(UUID playerUUID) {
-        return !this.manager.getGroupsDataContainer().haveGroup(playerUUID);
+        return this.manager.getGroupsDataContainer().getGroup(playerUUID) == null;
     }
 }

@@ -24,6 +24,7 @@ import austeretony.oxygen_groups.client.settings.EnumGroupsClientSetting;
 import austeretony.oxygen_groups.client.settings.gui.EnumGroupsGUISetting;
 import austeretony.oxygen_groups.common.config.GroupsConfig;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.potion.Potion;
@@ -66,19 +67,24 @@ public class GroupOverlay implements Overlay {
 
         this.scale = EnumBaseGUISetting.OVERLAY_SCALE.get().asFloat();
 
+        int xOffset = 0;
         switch (groupData.getMode()) {
         case SQUAD:
             this.scale *= EnumGroupsGUISetting.OVERLAY_SQUAD_SCALE_FACTOR.get().asFloat();
+            xOffset = (int) (90 * 1 * this.scale);
             break;
         case RAID:
             this.scale *= EnumGroupsGUISetting.OVERLAY_RAID_SCALE_FACTOR.get().asFloat();
+            xOffset = (int) (90 * 2 * this.scale);
             break;
         case PARTY:
             this.scale *= EnumGroupsGUISetting.OVERLAY_PARTY_SCALE_FACTOR.get().asFloat();
+            xOffset = (int) (90 * 3 * this.scale);
             break;
         }
 
-        this.x = EnumGroupsGUISetting.GROUP_OVERLAY_OFFSET_X.get().asInt();
+        ScaledResolution sr = new ScaledResolution(this.mc);
+        this.x = EnumGroupsGUISetting.GROUP_OVERLAY_ALIGNMENT.get().asInt() == 0 ? EnumGroupsGUISetting.GROUP_OVERLAY_OFFSET_X.get().asInt() : sr.getScaledWidth() - xOffset - EnumGroupsGUISetting.GROUP_OVERLAY_OFFSET_X.get().asInt();
         this.y = EnumGroupsGUISetting.GROUP_OVERLAY_OFFSET_Y.get().asInt();
 
         this.showEffects = EnumGroupsClientSetting.SHOW_ACTIVE_EFFECTS.get().asBoolean();

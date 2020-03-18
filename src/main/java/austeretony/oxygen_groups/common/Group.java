@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.annotation.Nullable;
+
 import austeretony.oxygen_core.client.api.ClientReference;
 import austeretony.oxygen_core.common.persistent.PersistentEntry;
 import austeretony.oxygen_core.common.sync.SynchronousEntry;
@@ -65,6 +67,7 @@ public class Group implements PersistentEntry, SynchronousEntry {
         this.members.remove(playerUUID);
     }   
 
+    @Nullable
     public UUID getRandomOnlinePlayer() {
         for (UUID playerUUID : this.members)
             if (OxygenHelperServer.isPlayerOnline(playerUUID) && !playerUUID.equals(this.leaderUUID))

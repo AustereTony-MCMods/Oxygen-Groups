@@ -8,9 +8,12 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.annotation.Nullable;
+
 import austeretony.oxygen_core.common.persistent.AbstractPersistentData;
 import austeretony.oxygen_core.common.util.StreamUtils;
 import austeretony.oxygen_core.server.api.OxygenHelperServer;
+import austeretony.oxygen_core.server.api.TimeHelperServer;
 import austeretony.oxygen_groups.common.Group;
 
 public class GroupsDataContainerServer extends AbstractPersistentData {
@@ -23,12 +26,15 @@ public class GroupsDataContainerServer extends AbstractPersistentData {
         return this.groups.values();
     }
 
+    @Nullable
     public Group getGroup(long groupId) {
         return this.groups.get(groupId);
     }
 
+    @Nullable
     public Group getGroup(UUID playerUUID) {
-        return this.groups.get(this.access.get(playerUUID));
+        Long groupId = this.access.get(playerUUID);
+        return groupId != null ? this.groups.get(groupId) : null;
     }
 
     public void addGroup(Group group) {
@@ -39,20 +45,16 @@ public class GroupsDataContainerServer extends AbstractPersistentData {
         this.groups.remove(groupId);
     }
 
-    public boolean haveGroup(UUID playerUUID) {
-        return this.access.containsKey(playerUUID);
-    }
-
-    public void addGroupAccess(long groupId, UUID playerUUID) {
+    public void playerJoinedGroup(UUID playerUUID, long groupId) {
         this.access.put(playerUUID, groupId);
     }
 
-    public void removeGroupAccess(UUID playerUUID) {
+    public void playerLeftGroup(UUID playerUUID) {
         this.access.remove(playerUUID);
     }
 
-    public long getNewGroupId() {
-        long id = System.currentTimeMillis();
+    public long createId() {
+        long id = TimeHelperServer.getCurrentMillis();
         while (this.groups.containsKey(id))
             id++;
         return id;
@@ -60,7 +62,7 @@ public class GroupsDataContainerServer extends AbstractPersistentData {
 
     @Override
     public String getDisplayName() {   
-        return "groups_data";
+        return "groups:groups_data_server";
     }
 
     @Override

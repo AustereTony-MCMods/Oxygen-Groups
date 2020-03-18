@@ -57,15 +57,15 @@ oxygen_groups.gui.callback.promoteToLeader.request=O Jogador será promovido par
 oxygen_groups.gui.callback.kickPlayer=Kickar Jogador
 oxygen_groups.gui.callback.kickPlayer.request=O Jogador será kickado.
 
-oxygen_groups.status.acceptedSender=Seu convite de grupo foi aceito
-oxygen_groups.status.acceptedTarget=Você aceitou o convite de grupo
-oxygen_groups.status.rejectedSender=Seu convite de grupo foi rejeitado
-oxygen_groups.status.rejectedTarget=Você rejeitou o convite de grupo
-oxygen_groups.status.joinedGroup=Você entrou no grupo
-oxygen_groups.status.leftGroup=Você saiu do grupo
-oxygen_groups.status.playerKicked=O Jogador foi kickado do grupo
-oxygen_groups.status.newLeaderSet=Um Novo Líder foi apontado
-oxygen_groups.status.groupSynchronized=Grupo sincronizado
+oxygen_groups.status.message.acceptedSender=Seu convite de grupo foi aceito
+oxygen_groups.status.message.acceptedTarget=Você aceitou o convite de grupo
+oxygen_groups.status.message.rejectedSender=Seu convite de grupo foi rejeitado
+oxygen_groups.status.message.rejectedTarget=Você rejeitou o convite de grupo
+oxygen_groups.status.message.joinedGroup=Você entrou no grupo
+oxygen_groups.status.message.leftGroup=Você saiu do grupo
+oxygen_groups.status.message.playerKicked=O Jogador foi kickado do grupo
+oxygen_groups.status.message.newLeaderSet=Um Novo Líder foi apontado
+oxygen_groups.status.message.groupSynchronized=Grupo sincronizado
 
 oxygen_groups.groupMode.squad=Esquadrão
 oxygen_groups.groupMode.raid=Raid

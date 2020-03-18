@@ -38,7 +38,7 @@ public class GroupMenuScreen extends AbstractGUIScreen {
             alignment = EnumGUIAlignment.CENTER;
             break;
         }
-        return new GUIWorkspace(this, 195, 178).setAlignment(alignment, 0, 0);
+        return new GUIWorkspace(this, 195, 188).setAlignment(alignment, 0, 0);
     }
 
     @Override

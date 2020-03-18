@@ -8,6 +8,6 @@ public class GroupsEventsClient {
 
     @SubscribeEvent     
     public void onClientInit(OxygenClientInitEvent event) {
-        GroupsManagerClient.instance().init();
+        GroupsManagerClient.instance().worldLoaded();
     }
 }

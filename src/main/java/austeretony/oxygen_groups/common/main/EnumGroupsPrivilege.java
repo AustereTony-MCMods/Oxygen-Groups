@@ -28,7 +28,7 @@ public enum EnumGroupsPrivilege {
     }
 
     public static void register() {
-        for (EnumGroupsPrivilege privilege : EnumGroupsPrivilege.values())
+        for (EnumGroupsPrivilege privilege : values())
             PrivilegeRegistry.registerPrivilege(privilege.name, privilege.id, privilege.type);
     }
 }

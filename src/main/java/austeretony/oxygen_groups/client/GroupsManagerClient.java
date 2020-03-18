@@ -38,7 +38,7 @@ public class GroupsManagerClient {
         return this.keyHandler;
     }
 
-    public void init() {
+    public void worldLoaded() {
         this.dataManager.reset();
     }
 }

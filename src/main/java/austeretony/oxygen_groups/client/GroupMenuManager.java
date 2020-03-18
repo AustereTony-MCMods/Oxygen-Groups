@@ -5,6 +5,14 @@ import austeretony.oxygen_groups.client.gui.group.GroupMenuScreen;
 
 public class GroupMenuManager {
 
+    public static void openGroupMenuDelegated() {
+        ClientReference.delegateToClientThread(GroupMenuManager::openGroupMenu);
+    }
+
+    public static void openGroupMenu() {
+        ClientReference.displayGuiScreen(new GroupMenuScreen());
+    }
+
     public void sharedDataSynchronized() {
         ClientReference.delegateToClientThread(()->{
             if (isMenuOpened())

@@ -1,4 +1,4 @@
-package austeretony.oxygen_groups.common;
+package austeretony.oxygen_groups.server;
 
 import java.util.UUID;
 
@@ -9,20 +9,16 @@ import austeretony.oxygen_core.server.api.OxygenHelperServer;
 import austeretony.oxygen_groups.common.config.GroupsConfig;
 import austeretony.oxygen_groups.common.main.EnumGroupsStatusMessage;
 import austeretony.oxygen_groups.common.main.GroupsMain;
-import austeretony.oxygen_groups.server.GroupsManagerServer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public class GroupInviteRequest extends AbstractNotification {
 
-    public final int index;
-
     public final UUID senderUUID;
 
     public final String senderUsername;
 
-    public GroupInviteRequest(int index, UUID senderUUID, String senderUsername) {
-        this.index = index;
+    public GroupInviteRequest(UUID senderUUID, String senderUsername) {
         this.senderUUID = senderUUID;
         this.senderUsername = senderUsername;
     }
@@ -44,7 +40,7 @@ public class GroupInviteRequest extends AbstractNotification {
 
     @Override
     public int getIndex() {
-        return this.index;
+        return GroupsMain.GROUP_INVITATION_REQUEST_ID;
     }
 
     @Override
@@ -58,7 +54,7 @@ public class GroupInviteRequest extends AbstractNotification {
     @Override
     public void accepted(EntityPlayer player) {
         if (OxygenHelperServer.isPlayerOnline(this.senderUUID)) {
-            GroupsManagerServer.instance().getGroupsDataManager().processGroupCreation(player, this.senderUUID);
+            GroupsManagerServer.instance().getGroupsDataManager().processGroupCreation((EntityPlayerMP) player, this.senderUUID);
             OxygenHelperServer.sendStatusMessage(CommonReference.playerByUUID(this.senderUUID), GroupsMain.GROUPS_MOD_INDEX, EnumGroupsStatusMessage.GROUP_REQUEST_ACCEPTED_SENDER.ordinal());
         }
         OxygenHelperServer.sendStatusMessage((EntityPlayerMP) player, GroupsMain.GROUPS_MOD_INDEX, EnumGroupsStatusMessage.GROUP_REQUEST_ACCEPTED_TARGET.ordinal());

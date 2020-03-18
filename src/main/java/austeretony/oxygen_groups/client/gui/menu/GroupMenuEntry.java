@@ -1,17 +1,17 @@
 package austeretony.oxygen_groups.client.gui.menu;
 
-import org.lwjgl.input.Keyboard;
-
 import austeretony.oxygen_core.client.api.ClientReference;
 import austeretony.oxygen_core.client.gui.menu.OxygenMenuEntry;
-import austeretony.oxygen_groups.client.gui.group.GroupMenuScreen;
+import austeretony.oxygen_groups.client.GroupMenuManager;
 import austeretony.oxygen_groups.client.settings.EnumGroupsClientSetting;
+import austeretony.oxygen_groups.common.config.GroupsConfig;
+import austeretony.oxygen_groups.common.main.GroupsMain;
 
 public class GroupMenuEntry implements OxygenMenuEntry {
 
     @Override
     public int getId() {
-        return 20;
+        return GroupsMain.GROUP_MENU_SCREEN_ID;
     }
 
     @Override
@@ -21,7 +21,7 @@ public class GroupMenuEntry implements OxygenMenuEntry {
 
     @Override
     public int getKeyCode() {
-        return Keyboard.KEY_P;
+        return GroupsConfig.GROUP_MENU_KEY.asInt();
     }
 
     @Override
@@ -31,6 +31,6 @@ public class GroupMenuEntry implements OxygenMenuEntry {
 
     @Override
     public void open() {
-        ClientReference.displayGuiScreen(new GroupMenuScreen());
+        GroupMenuManager.openGroupMenu();
     }
 }

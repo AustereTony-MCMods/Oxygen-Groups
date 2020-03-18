@@ -24,7 +24,7 @@ public class GroupDataManagerClient {
 
     public void updateGroup(Group group) {   
         this.reset();
-        
+
         this.groupData.setLeader(group.getLeader());
         PlayerSharedData sharedData;
         for (UUID memberUUID : group.getMembers()) {
@@ -33,9 +33,6 @@ public class GroupDataManagerClient {
                 this.groupData.addMember(memberUUID);
         }
         this.groupData.setActive(true);
-
-        //TODO 0.10 - Probably not needed
-        //OxygenHelperClient.syncSharedData(GroupsMain.GROUP_MENU_SCREEN_ID);
     }
 
     public void inviteToGroupSynced(int index) {

@@ -1,6 +1,10 @@
 package austeretony.oxygen_groups.server.command;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
+
+import javax.annotation.Nullable;
 
 import austeretony.oxygen_core.common.api.CommonReference;
 import austeretony.oxygen_core.common.command.ArgumentExecutor;
@@ -18,6 +22,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 
 public class GroupsArgumentServer implements ArgumentExecutor {
 
@@ -33,8 +38,8 @@ public class GroupsArgumentServer implements ArgumentExecutor {
                 EntityPlayerMP senderPlayerMP = CommandBase.getCommandSenderAsPlayer(sender);
                 UUID senderUUID = CommonReference.getPersistentUUID(senderPlayerMP);
                 if (OxygenHelperServer.isNetworkRequestAvailable(senderUUID, GroupsMain.GROUP_MANAGEMENT_REQUEST_ID)) {
-                    if (GroupsManagerServer.instance().getGroupsDataContainer().haveGroup(senderUUID)) {
-                        Group group = GroupsManagerServer.instance().getGroupsDataContainer().getGroup(senderUUID); 
+                    Group group = GroupsManagerServer.instance().getGroupsDataContainer().getGroup(senderUUID); 
+                    if (group != null) {
                         OxygenPlayerData senderData = OxygenHelperServer.getOxygenPlayerData(senderUUID);
                         if (group == null || senderData == null) return;
                         OxygenManagerServer.instance().getSharedDataManager().syncObservedPlayersData(senderPlayerMP);
@@ -51,5 +56,12 @@ public class GroupsArgumentServer implements ArgumentExecutor {
                 }
             }
         }
+    }
+
+    @Override
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
+        if (args.length == 2)
+            return CommandBase.getListOfStringsMatchingLastWord(args, "-sync-group");
+        return Collections.<String>emptyList();
     }
 }

@@ -2,6 +2,8 @@ package austeretony.oxygen_groups.server;
 
 import austeretony.oxygen_core.common.EnumActivityStatus;
 import austeretony.oxygen_core.server.api.OxygenHelperServer;
+import austeretony.oxygen_groups.common.main.EnumGroupsStatusMessage;
+import austeretony.oxygen_groups.common.main.GroupsMain;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public class GroupsManagerServer {
@@ -43,15 +45,19 @@ public class GroupsManagerServer {
         OxygenHelperServer.loadPersistentDataAsync(this.dataContainer);
     }
 
-    public void onPlayerLoaded(EntityPlayerMP playerMP) {   
-        this.dataManager.onPlayerLoaded(playerMP);
+    public void playerLoaded(EntityPlayerMP playerMP) {   
+        this.dataManager.playerLoaded(playerMP);
     }
 
-    public void onPlayerUnloaded(EntityPlayerMP playerMP) {
-        this.dataManager.onPlayerUnloaded(playerMP);
+    public void playerUnloaded(EntityPlayerMP playerMP) {
+        this.dataManager.playerUnloaded(playerMP);
     }
 
-    public void onPlayerChangedStatusActivity(EntityPlayerMP playerMP, EnumActivityStatus newStatus) {
-        this.dataManager.onPlayerChangedStatusActivity(playerMP, newStatus);
+    public void playerChangedStatusActivity(EntityPlayerMP playerMP, EnumActivityStatus newStatus) {
+        this.dataManager.playerChangedStatusActivity(playerMP, newStatus);
+    }
+
+    public void sendStatusMessage(EntityPlayerMP playerMP, EnumGroupsStatusMessage message) {
+        OxygenHelperServer.sendStatusMessage(playerMP, GroupsMain.GROUPS_MOD_INDEX, message.ordinal());
     }
 }

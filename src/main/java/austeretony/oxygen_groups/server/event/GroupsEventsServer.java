@@ -16,16 +16,16 @@ public class GroupsEventsServer {
 
     @SubscribeEvent
     public void onPlayerLoaded(OxygenPlayerLoadedEvent event) {        
-        GroupsManagerServer.instance().onPlayerLoaded(event.playerMP);
+        GroupsManagerServer.instance().playerLoaded(event.playerMP);
     }
 
     @SubscribeEvent
     public void onPlayerUnloaded(OxygenPlayerUnloadedEvent event) {        
-        GroupsManagerServer.instance().onPlayerUnloaded(event.playerMP);
+        GroupsManagerServer.instance().playerUnloaded(event.playerMP);
     }
 
     @SubscribeEvent
     public void onPlayerChangedStatusActivity(OxygenActivityStatusChangedEvent event) {    
-        GroupsManagerServer.instance().onPlayerChangedStatusActivity(event.playerMP, event.newStatus);
+        GroupsManagerServer.instance().playerChangedStatusActivity(event.playerMP, event.newStatus);
     }
 }

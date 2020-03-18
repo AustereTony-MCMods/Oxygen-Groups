@@ -7,6 +7,7 @@ oxygen_groups.gui.settings.option.hideGroupOverlay=Hide Group Overlay
 oxygen_groups.gui.settings.option.showActiveEffects=Show Active Effects
 
 oxygen_groups.gui.settings.option.alignmentGroupMenu=Group Menu
+oxygen_groups.gui.settings.option.alignmentGroupOverlay=Group Overlay
 oxygen_groups.gui.settings.option.groupOverlayOffsetX=Horizontal Group Overlay Offet
 oxygen_groups.gui.settings.option.groupOverlayOffsetY=Vertical Group Overlay Offset
 oxygen_groups.gui.settings.option.barColor=Bar
@@ -35,9 +36,8 @@ oxygen_groups.request.groupInvite=%s invited you to group.
 oxygen_groups.request.readinessCheck=Group readiness check. Are you ready?
 oxygen_groups.request.kickPlayer=Kick player %s from group?
 
-oxygen_groups.gui.inviteButton=Invite
-oxygen_groups.gui.leaveButton=Leave
-oxygen_groups.gui.checkButton=Check
+oxygen_groups.gui.group.button.invitePlayer=Invite Player
+oxygen_groups.gui.group.button.leaveGroup=Leave Group
 
 oxygen_groups.gui.groupMenu.title=Group
 
@@ -57,15 +57,15 @@ oxygen_groups.gui.callback.promoteToLeader.request=Player will be promoted to le
 oxygen_groups.gui.callback.kickPlayer=Kick Player
 oxygen_groups.gui.callback.kickPlayer.request=Player will be kicked.
 
-oxygen_groups.status.acceptedSender=Your group request accepted
-oxygen_groups.status.acceptedTarget=You accepted group request
-oxygen_groups.status.rejectedSender=Your group request rejected
-oxygen_groups.status.rejectedTarget=You rejected group request
-oxygen_groups.status.joinedGroup=You joined the group
-oxygen_groups.status.leftGroup=You left the group
-oxygen_groups.status.playerKicked=Player kicked from group
-oxygen_groups.status.newLeaderSet=New leader appointed
-oxygen_groups.status.groupSynchronized=Group synchronized
+oxygen_groups.status.message.acceptedSender=Your group request accepted
+oxygen_groups.status.message.acceptedTarget=You accepted group request
+oxygen_groups.status.message.rejectedSender=Your group request rejected
+oxygen_groups.status.message.rejectedTarget=You rejected group request
+oxygen_groups.status.message.joinedGroup=You joined the group
+oxygen_groups.status.message.leftGroup=You left the group
+oxygen_groups.status.message.playerKicked=Player kicked from group
+oxygen_groups.status.message.newLeaderSet=New leader appointed
+oxygen_groups.status.message.groupSynchronized=Group synchronized
 
 oxygen_groups.groupMode.squad=Squad
 oxygen_groups.groupMode.raid=Raid

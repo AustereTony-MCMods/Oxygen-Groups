@@ -1,8 +1,5 @@
 package austeretony.oxygen_groups.common.main;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import austeretony.oxygen_core.client.api.OxygenGUIHelper;
 import austeretony.oxygen_core.client.api.OxygenHelperClient;
 import austeretony.oxygen_core.client.api.PlayerInteractionMenuHelper;
@@ -27,6 +24,7 @@ import austeretony.oxygen_groups.client.gui.overlay.GroupOverlay;
 import austeretony.oxygen_groups.client.gui.settings.GroupsSettingsContainer;
 import austeretony.oxygen_groups.client.settings.EnumGroupsClientSetting;
 import austeretony.oxygen_groups.client.settings.gui.EnumGroupsGUISetting;
+import austeretony.oxygen_groups.common.Group;
 import austeretony.oxygen_groups.common.config.GroupsConfig;
 import austeretony.oxygen_groups.common.network.client.CPAddNewGroupMember;
 import austeretony.oxygen_groups.common.network.client.CPLeaveGroup;
@@ -50,7 +48,7 @@ import net.minecraftforge.fml.relauncher.Side;
         modid = GroupsMain.MODID, 
         name = GroupsMain.NAME, 
         version = GroupsMain.VERSION,
-        dependencies = "required-after:oxygen_core@[0.10.1,);",
+        dependencies = "required-after:oxygen_core@[0.11.0,);",
         certificateFingerprint = "@FINGERPRINT@",
         updateJSON = GroupsMain.VERSIONS_FORGE_URL)
 public class GroupsMain {
@@ -58,7 +56,7 @@ public class GroupsMain {
     public static final String 
     MODID = "oxygen_groups", 
     NAME = "Oxygen: Groups", 
-    VERSION = "0.10.1", 
+    VERSION = "0.11.0", 
     VERSION_CUSTOM = VERSION + ":beta:0",
     GAME_VERSION = "1.12.2",
     VERSIONS_FORGE_URL = "https://raw.githubusercontent.com/AustereTony-MCMods/Oxygen-Groups/info/mod_versions_forge.json";
@@ -73,8 +71,6 @@ public class GroupsMain {
     GROUP_MENU_SCREEN_ID = 20,
 
     GROUP_MANAGEMENT_REQUEST_ID = 20;
-
-    public static final Logger LOGGER = LogManager.getLogger(NAME);
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -93,8 +89,9 @@ public class GroupsMain {
         CommandOxygenServer.registerArgument(new GroupsArgumentServer());
         if (GroupsConfig.DISABLE_PVP_FOR_GROUP_MEMBERS.asBoolean())
             OxygenHelperServer.registerRestrictedAttacksValidator((attackerUUID, attackedUUID)->{
-                if (GroupsManagerServer.instance().getGroupsDataContainer().haveGroup(attackerUUID))
-                    return !GroupsManagerServer.instance().getGroupsDataContainer().getGroup(attackerUUID).isMember(attackedUUID);
+                Group group = GroupsManagerServer.instance().getGroupsDataContainer().getGroup(attackerUUID);
+                if (group != null)
+                    return !group.isMember(attackedUUID);
                 return false;
             });
         EnumGroupsPrivilege.register();
@@ -106,11 +103,11 @@ public class GroupsMain {
             PlayerInteractionMenuHelper.registerInteractionMenuEntry(new InviteToGroupInteractionExecutor());
             OxygenGUIHelper.registerContextAction(50, new InviteToGroupContextAction());//50 - players list menu id
             OxygenGUIHelper.registerContextAction(60, new InviteToGroupContextAction());//60 - friends list menu id
+            OxygenGUIHelper.registerContextAction(110, new InviteToGroupContextAction());//110 - guild menu id
             OxygenGUIHelper.registerOverlay(new GroupOverlay());
             OxygenGUIHelper.registerOxygenMenuEntry(GroupMenuScreen.GROUP_MENU_ENTRY);
             OxygenHelperClient.registerStatusMessagesHandler(new GroupsStatusMessagesHandler());
-            OxygenHelperClient.registerSharedDataSyncListener(GROUP_MENU_SCREEN_ID, 
-                    ()->GroupsManagerClient.instance().getGroupMenuManager().sharedDataSynchronized());
+            OxygenHelperClient.registerSharedDataSyncListener(GROUP_MENU_SCREEN_ID, GroupsManagerClient.instance().getGroupMenuManager()::sharedDataSynchronized);
             OxygenHelperClient.registerChatChannelProperties(new GroupChatChannelProperties());
             EnumGroupsClientSetting.register();
             EnumGroupsGUISetting.register();

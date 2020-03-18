@@ -19,7 +19,7 @@ public enum EnumGroupsStatusMessage {
     private final String status;
 
     EnumGroupsStatusMessage(String status) {
-        this.status = "oxygen_groups.status." + status;
+        this.status = "oxygen_groups.status.message." + status;
     }
 
     public String localizedName() {

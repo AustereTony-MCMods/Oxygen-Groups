@@ -5,6 +5,7 @@ oxygen_groups.gui.settings.option.hideGroupOverlay=Скрыть Оверлэй �
 oxygen_groups.gui.settings.option.showActiveEffects=Показывать Активные Эффекты
 
 oxygen_groups.gui.settings.option.alignmentGroupMenu=Меню Группы
+oxygen_groups.gui.settings.option.alignmentGroupOverlay=Оверлей Группы
 oxygen_groups.gui.settings.option.groupOverlayOffsetX=Горизонтальное Смещение Оверлэя Группы
 oxygen_groups.gui.settings.option.groupOverlayOffsetY=Вертикальное Смещение Оверлэя Группы
 oxygen_groups.gui.settings.option.barColor=Индикаторы
@@ -27,9 +28,8 @@ oxygen_groups.request.groupInvite=%s пригласил вас в группу.
 oxygen_groups.request.readinessCheck=Проверка готовности группы. Вы готовы?
 oxygen_groups.request.kickPlayer=Изгнать игрока %s из группы?
 
-oxygen_groups.gui.inviteButton=Пригласить
-oxygen_groups.gui.leaveButton=Выйти
-oxygen_groups.gui.checkButton=Проверка
+oxygen_groups.gui.group.button.invitePlayer=Пригласить Игрока
+oxygen_groups.gui.group.button.leaveGroup=Покинуть Группу
 
 oxygen_groups.gui.groupMenu.title=Группа
 
@@ -49,15 +49,15 @@ oxygen_groups.gui.callback.promoteToLeader.request=Игрок будет наз�
 oxygen_groups.gui.callback.kickPlayer=Изгнание Игрока
 oxygen_groups.gui.callback.kickPlayer.request=Игрок будет изгнан из группы.
 
-oxygen_groups.status.acceptedSender=Ваше приглашение в группу принято
-oxygen_groups.status.acceptedTarget=Вы приняли приглашение в группу
-oxygen_groups.status.rejectedSender=Ваше приглашение в группу отклонено
-oxygen_groups.status.rejectedTarget=Вы отклонили приглошение в группу
-oxygen_groups.status.joinedGroup=Вы присоединились к группе
-oxygen_groups.status.leftGroup=Вы покинули группу
-oxygen_groups.status.playerKicked=Игрок изгнан из группы
-oxygen_groups.status.newLeaderSet=Новый лидер назначен
-oxygen_groups.status.groupSynchronized=Группа синхронизирована
+oxygen_groups.status.message.acceptedSender=Ваше приглашение в группу принято
+oxygen_groups.status.message.acceptedTarget=Вы приняли приглашение в группу
+oxygen_groups.status.message.rejectedSender=Ваше приглашение в группу отклонено
+oxygen_groups.status.message.rejectedTarget=Вы отклонили приглошение в группу
+oxygen_groups.status.message.joinedGroup=Вы присоединились к группе
+oxygen_groups.status.message.leftGroup=Вы покинули группу
+oxygen_groups.status.message.playerKicked=Игрок изгнан из группы
+oxygen_groups.status.message.newLeaderSet=Новый лидер назначен
+oxygen_groups.status.message.groupSynchronized=Группа синхронизирована
 
 oxygen_groups.groupMode.squad=Отряд
 oxygen_groups.groupMode.raid=Рейд
