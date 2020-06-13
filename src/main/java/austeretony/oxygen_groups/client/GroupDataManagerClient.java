@@ -35,8 +35,8 @@ public class GroupDataManagerClient {
         this.groupData.setActive(true);
     }
 
-    public void inviteToGroupSynced(int index) {
-        OxygenMain.network().sendToServer(new SPInviteToGroup(index));
+    public void inviteToGroupSynced(UUID playerUUID) {
+        OxygenMain.network().sendToServer(new SPInviteToGroup(playerUUID));
     }
 
     public void addNewGroupMember(PlayerSharedData sharedData) {

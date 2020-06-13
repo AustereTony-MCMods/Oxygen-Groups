@@ -13,7 +13,6 @@ import javax.annotation.Nullable;
 import austeretony.oxygen_core.common.persistent.AbstractPersistentData;
 import austeretony.oxygen_core.common.util.StreamUtils;
 import austeretony.oxygen_core.server.api.OxygenHelperServer;
-import austeretony.oxygen_core.server.api.TimeHelperServer;
 import austeretony.oxygen_groups.common.Group;
 
 public class GroupsDataContainerServer extends AbstractPersistentData {
@@ -53,8 +52,8 @@ public class GroupsDataContainerServer extends AbstractPersistentData {
         this.access.remove(playerUUID);
     }
 
-    public long createId() {
-        long id = TimeHelperServer.getCurrentMillis();
+    public long createId(long seed) {
+        long id = ++seed;
         while (this.groups.containsKey(id))
             id++;
         return id;

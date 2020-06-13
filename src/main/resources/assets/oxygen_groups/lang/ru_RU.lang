@@ -20,6 +20,12 @@ oxygen_groups.gui.settings.tooltip.health=Здоровье
 oxygen_groups.gui.settings.tooltip.absorption=Поглощение
 oxygen_groups.gui.settings.tooltip.armor=Броня
 
+oxygen_groups.gui.overlay.barText.none=Нет
+oxygen_groups.gui.overlay.barText.healthAndMaxHealth=Тек. Зд./Макс. Зд.
+oxygen_groups.gui.overlay.barText.healthAndMaxHealthPlusAbsorption=Тек. Зд./Макс. Зд.+Поглощ.
+oxygen_groups.gui.overlay.barText.healthPercent=Тек. Зд.(%s)
+oxygen_groups.gui.overlay.barText.healthPercentPlusAbsorption=Тек. Зд.(%s)+Поглощ.
+
 oxygen_groups.gui.interaction.inviteToGroup=Пригласить в Группу
 
 oxygen_groups.context.inviteToGroup=Пригласить в Группу

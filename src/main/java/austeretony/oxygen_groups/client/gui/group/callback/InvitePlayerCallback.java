@@ -1,5 +1,7 @@
 package austeretony.oxygen_groups.client.gui.group.callback;
 
+import java.util.UUID;
+
 import org.lwjgl.input.Keyboard;
 
 import austeretony.alternateui.screen.callback.AbstractGUICallback;
@@ -31,7 +33,7 @@ public class InvitePlayerCallback extends AbstractGUICallback {
 
     private boolean initialized;
 
-    private int playerIndex;
+    private UUID playerUUID;
 
     public InvitePlayerCallback(GroupMenuScreen screen, GroupSection section, int width, int height) {
         super(screen, section, width, height);
@@ -51,7 +53,7 @@ public class InvitePlayerCallback extends AbstractGUICallback {
 
         this.addElement(this.usernameField = new OxygenUsernameField(6, 25, this.getWidth() - 12));     
         this.usernameField.setUsernameSelectListener((sharedData)->{
-            this.playerIndex = sharedData.getIndex();
+            this.playerUUID = sharedData.getPlayerUUID();
             this.confirmButton.setEnabled(PrivilegesProviderClient.getAsBoolean(EnumGroupsPrivilege.ALLOW_GROUP_CREATION.id(), true));
         });    
     }
@@ -69,7 +71,7 @@ public class InvitePlayerCallback extends AbstractGUICallback {
 
     private void confirm(boolean mouseClick) {
         if (mouseClick || !this.usernameField.isDragged()) {
-            GroupsManagerClient.instance().getGroupDataManager().inviteToGroupSynced(this.playerIndex);
+            GroupsManagerClient.instance().getGroupDataManager().inviteToGroupSynced(this.playerUUID);
             this.close();
         }
     }

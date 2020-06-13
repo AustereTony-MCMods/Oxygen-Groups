@@ -20,19 +20,27 @@ import io.netty.util.internal.ConcurrentSet;
 
 public class Group implements PersistentEntry, SynchronousEntry {
 
-    private long groupId;
+    private long id;
 
     private UUID leaderUUID;
 
     private final Set<UUID> members = new ConcurrentSet<>();
 
+    public Group() {}
+
+    public Group(long id, UUID leaderUUID) {
+        this.id = id;
+        this.leaderUUID = leaderUUID;
+        this.addMember(leaderUUID);
+    }
+
     @Override
     public long getId() {
-        return this.groupId;
+        return this.id;
     }
 
     public void setId(long id) {
-        this.groupId = id;
+        this.id = id;
     }
 
     public UUID getLeader() {
@@ -85,7 +93,7 @@ public class Group implements PersistentEntry, SynchronousEntry {
 
     @Override
     public void write(BufferedOutputStream bos) throws IOException {
-        StreamUtils.write(this.groupId, bos);
+        StreamUtils.write(this.id, bos);
         StreamUtils.write(this.leaderUUID, bos);
         StreamUtils.write((byte) this.members.size(), bos);
         for (UUID playerUUID : this.members)
@@ -94,7 +102,7 @@ public class Group implements PersistentEntry, SynchronousEntry {
 
     @Override
     public void read(BufferedInputStream bis) throws IOException {
-        this.groupId = StreamUtils.readLong(bis);
+        this.id = StreamUtils.readLong(bis);
         this.leaderUUID = StreamUtils.readUUID(bis);
         int amount = StreamUtils.readByte(bis);
         for (int i = 0; i < amount; i++)

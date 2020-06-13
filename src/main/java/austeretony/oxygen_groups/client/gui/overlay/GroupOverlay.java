@@ -9,6 +9,7 @@ import java.util.TreeSet;
 import java.util.UUID;
 
 import austeretony.alternateui.screen.core.GUIAdvancedElement;
+import austeretony.alternateui.util.UIUtils;
 import austeretony.oxygen_core.client.api.ClientReference;
 import austeretony.oxygen_core.client.api.EnumBaseGUISetting;
 import austeretony.oxygen_core.client.api.OxygenHelperClient;
@@ -163,9 +164,11 @@ public class GroupOverlay implements Overlay {
                 armorBarWidth = (int) ((float) entry.armor / (float) entry.maxArmor * 100.0F);
                 OxygenGUIUtils.drawRect(x, y + 11, x + armorBarWidth * 0.8D, y + 11.8D, this.armorBarColor);
 
+                float barTextScale = EnumBaseGUISetting.TEXT_SCALE.get().asFloat();
+
                 GlStateManager.pushMatrix();           
-                GlStateManager.translate(x + 1.0F, y + 12.0F, 0.0F);     
-                GlStateManager.scale(0.7F, 0.7F, 0.0F);  
+                GlStateManager.translate(x + 1.0F, y + 19.0F - UIUtils.getTextHeight(barTextScale), 0.0F); 
+                GlStateManager.scale(barTextScale, barTextScale, 0.0F);  
                 this.mc.fontRenderer.drawStringWithShadow(entry.barText, 0.0F, 0.0F, this.additionalOverlayTextColor);
                 GlStateManager.popMatrix();
 
@@ -201,9 +204,11 @@ public class GroupOverlay implements Overlay {
                 OxygenGUIUtils.drawRect(x + 1, y + 12, x + 81, y + 19, this.barBackgroundColor);
                 OxygenGUIUtils.drawRect(x, y + 11, x + 80, y + 18, this.barOfflineColor);
 
+                float barTextScale = EnumBaseGUISetting.TEXT_SCALE.get().asFloat();
+
                 GlStateManager.pushMatrix();           
-                GlStateManager.translate(x + 1.0F, y + 12.0F, 0.0F);     
-                GlStateManager.scale(0.7F, 0.7F, 0.0F);  
+                GlStateManager.translate(x + 1.0F, y + 19.0F - UIUtils.getTextHeight(barTextScale), 0.0F);     
+                GlStateManager.scale(barTextScale, barTextScale, 0.0F);  
                 this.mc.fontRenderer.drawStringWithShadow(this.offlineStr, 0.0F, 0.0F, this.additionalOverlayTextColor);
                 GlStateManager.popMatrix();
             }

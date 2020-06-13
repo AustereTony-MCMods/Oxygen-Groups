@@ -22,6 +22,6 @@ public class InviteToGroupInteractionExecutor implements PlayerInteractionMenuEn
 
     @Override
     public void execute(UUID playerUUID) {
-        GroupsManagerClient.instance().getGroupDataManager().inviteToGroupSynced(OxygenHelperClient.getPlayerIndex(playerUUID));
+        GroupsManagerClient.instance().getGroupDataManager().inviteToGroupSynced(playerUUID);
     }
 }

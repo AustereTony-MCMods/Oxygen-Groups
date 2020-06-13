@@ -11,6 +11,7 @@ import austeretony.oxygen_core.server.OxygenManagerServer;
 import austeretony.oxygen_core.server.OxygenPlayerData;
 import austeretony.oxygen_core.server.api.OxygenHelperServer;
 import austeretony.oxygen_core.server.api.PrivilegesProviderServer;
+import austeretony.oxygen_core.server.api.TimeHelperServer;
 import austeretony.oxygen_groups.common.Group;
 import austeretony.oxygen_groups.common.config.GroupsConfig;
 import austeretony.oxygen_groups.common.main.EnumGroupsPrivilege;
@@ -73,28 +74,24 @@ public class GroupsDataManagerServer {
         }
     }
 
-    public void inviteToGroup(EntityPlayerMP senderMP, int targetIndex) {
-        UUID 
-        senderUUID = CommonReference.getPersistentUUID(senderMP),
-        targetUUID;
-        if (PrivilegesProviderServer.getAsBoolean(senderUUID, EnumGroupsPrivilege.ALLOW_GROUP_CREATION.id(), true)) {
-            if (OxygenHelperServer.isPlayerOnline(targetIndex)) {
-                targetUUID = OxygenHelperServer.getPlayerSharedData(targetIndex).getPlayerUUID();
-                if (!senderUUID.equals(targetUUID) 
-                        && this.canInvite(senderUUID) 
-                        && this.canBeInvited(targetUUID)) {
-                    EntityPlayerMP targetMP = CommonReference.playerByUUID(targetUUID);
-                    OxygenHelperServer.sendRequest(senderMP, targetMP, new GroupInviteRequest(senderUUID, CommonReference.getName(senderMP)));
+    public void inviteToGroup(EntityPlayerMP senderMP, UUID targetUUID) {
+        UUID senderUUID = CommonReference.getPersistentUUID(senderMP);
+        if (!senderUUID.equals(targetUUID) 
+                && PrivilegesProviderServer.getAsBoolean(senderUUID, EnumGroupsPrivilege.ALLOW_GROUP_CREATION.id(), true)) {
+            EntityPlayerMP targetMP = CommonReference.playerByUUID(targetUUID);
+            if (targetMP != null
+                    && this.canInvite(senderUUID) 
+                    && this.canBeInvited(targetUUID)) {
+                OxygenHelperServer.sendRequest(senderMP, targetMP, new GroupInviteRequest(senderUUID, CommonReference.getName(senderMP)));
 
-                    if (GroupsConfig.ADVANCED_LOGGING.asBoolean())
-                        OxygenMain.LOGGER.info("[Groups] Player {}/{} sent group invitation to player <{}/{}>",
-                                CommonReference.getName(senderMP),
-                                CommonReference.getPersistentUUID(senderMP),
-                                CommonReference.getName(targetMP),
-                                CommonReference.getPersistentUUID(targetMP));
-                } else
-                    OxygenManagerServer.instance().sendStatusMessage(senderMP, EnumOxygenStatusMessage.REQUEST_RESET);
-            }
+                if (GroupsConfig.ADVANCED_LOGGING.asBoolean())
+                    OxygenMain.LOGGER.info("[Groups] Player {}/{} sent group invitation to player <{}/{}>",
+                            CommonReference.getName(senderMP),
+                            senderUUID,
+                            CommonReference.getName(targetMP),
+                            targetUUID);
+            } else
+                OxygenManagerServer.instance().sendStatusMessage(senderMP, EnumOxygenStatusMessage.REQUEST_RESET);
         }
     }
 
@@ -111,10 +108,9 @@ public class GroupsDataManagerServer {
 
     private void createGroup(EntityPlayerMP playerMP, UUID leaderUUID) {
         UUID invitedUUID = CommonReference.getPersistentUUID(playerMP);
-        Group group = new Group();
-        group.setId(this.manager.getGroupsDataContainer().createId());
-        group.setLeader(leaderUUID);
-        group.addMember(leaderUUID);
+        Group group = new Group(
+                this.manager.getGroupsDataContainer().createId(TimeHelperServer.getCurrentMillis()),
+                leaderUUID);
         group.addMember(invitedUUID);
         this.manager.getGroupsDataContainer().addGroup(group);
         this.manager.getGroupsDataContainer().playerJoinedGroup(leaderUUID, group.getId());
@@ -138,9 +134,9 @@ public class GroupsDataManagerServer {
         if (GroupsConfig.ADVANCED_LOGGING.asBoolean())
             OxygenMain.LOGGER.info("[Groups] Player {}/{} accepted group invitation from player <{}/{}>. Group created.",
                     CommonReference.getName(playerMP),
-                    CommonReference.getPersistentUUID(playerMP),
+                    invitedUUID,
                     CommonReference.getName(senderMP),
-                    CommonReference.getPersistentUUID(senderMP));
+                    leaderUUID);
     }   
 
     private void addNewGroupMember(EntityPlayerMP playerMP, UUID leaderUUID) {   
@@ -175,7 +171,7 @@ public class GroupsDataManagerServer {
             if (GroupsConfig.ADVANCED_LOGGING.asBoolean())
                 OxygenMain.LOGGER.info("[Groups] Player {}/{} joined group of player <{}>.",
                         CommonReference.getName(playerMP),
-                        CommonReference.getPersistentUUID(playerMP),
+                        invitedUUID,
                         leaderUUID);
         }
     }
@@ -248,7 +244,7 @@ public class GroupsDataManagerServer {
         UUID leaderUUID = CommonReference.getPersistentUUID(playerMP);
         Group group = this.manager.getGroupsDataContainer().getGroup(leaderUUID);
         if (group != null
-                &&group.isLeader(leaderUUID)
+                && group.isLeader(leaderUUID)
                 && group.isMember(toKickUUID)) {
             this.leaveGroup(toKickUUID);
 
@@ -259,7 +255,7 @@ public class GroupsDataManagerServer {
             if (GroupsConfig.ADVANCED_LOGGING.asBoolean())
                 OxygenMain.LOGGER.info("[Groups] Player {}/{} kicked player {} from group.",
                         CommonReference.getName(playerMP),
-                        CommonReference.getPersistentUUID(playerMP),
+                        leaderUUID,
                         toKickUUID);
         }
     }
@@ -284,7 +280,7 @@ public class GroupsDataManagerServer {
                 if (GroupsConfig.ADVANCED_LOGGING.asBoolean())
                     OxygenMain.LOGGER.info("[Groups] Player {}/{} promoted player {} to group leader.",
                             CommonReference.getName(playerMP),
-                            CommonReference.getPersistentUUID(playerMP),
+                            leaderUUID,
                             newLeaderUUID);
             }
         }

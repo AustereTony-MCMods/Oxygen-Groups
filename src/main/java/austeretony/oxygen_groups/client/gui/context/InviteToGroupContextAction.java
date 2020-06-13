@@ -26,6 +26,6 @@ public class InviteToGroupContextAction implements OxygenContextMenuAction {
     @Override
     public void execute(GUIBaseElement currElement) {
         UUID playerUUID = ((OxygenWrapperPanelEntry<UUID>) currElement).getWrapped();   
-        GroupsManagerClient.instance().getGroupDataManager().inviteToGroupSynced(OxygenHelperClient.getPlayerIndex(playerUUID));
+        GroupsManagerClient.instance().getGroupDataManager().inviteToGroupSynced(playerUUID);
     }
 }
