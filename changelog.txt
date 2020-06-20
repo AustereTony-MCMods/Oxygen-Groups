@@ -1,3 +1,12 @@
+0.11.1b [2020-06-13]
++ Fixed scaling of text in group overlay.
+
+0.11.1b [2020-06-07]
++ Added localizations: Chinese, Polish and French.
+
+0.11.0b [2020-03-19]
++ GUI optimization.
+
 0.10.1b [2020-01-30]
 + Added the ability to disable PVP for group members.
 
